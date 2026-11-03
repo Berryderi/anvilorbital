@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Anvil Orbital</title>
+<link rel="icon" href="data:,">
+<meta name="description" content="We want to turn retired satellites into data centers in orbit, and recycle the rest. We're starting with a free fleet retirement planner.">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap">
+<style>
+/* Same tokens and type pairing as the planner, so the two pages read as one site. */
+:root{
+  --bg:#eef1f4; --panel:#ffffff; --ink:#15212e; --muted:#566473; --line:#cdd5dd;
+  --accent:#0f5e8c; --on-accent:#ffffff; --warn:#8a5a00; --warn-soft:#f8ecc9;
+  --display:"Barlow Condensed","Arial Narrow",sans-serif; --body:"IBM Plex Sans",system-ui,sans-serif; --mono:"IBM Plex Mono",ui-monospace,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0d151d; --panel:#16212c; --ink:#e7edf3; --muted:#9dabb9; --line:#2d3b49;
+  --accent:#6fbce6; --on-accent:#0d151d; --warn:#f0c866; --warn-soft:#352a0d; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0d151d; --panel:#16212c; --ink:#e7edf3; --muted:#9dabb9; --line:#2d3b49;
+  --accent:#6fbce6; --on-accent:#0d151d; --warn:#f0c866; --warn-soft:#352a0d; color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.55 var(--body);padding:24px max(16px,env(safe-area-inset-right,0px)) 48px max(16px,env(safe-area-inset-left,0px))}
+.page{max-width:880px;margin:0 auto;display:grid;gap:40px}
+.brand{font:700 1.3rem/1 var(--display);letter-spacing:.03em;margin:0}
+h1{font:700 clamp(2.5rem,7vw,4rem)/1.02 var(--display);letter-spacing:.005em;margin:0 0 14px;text-wrap:balance}
+h2{font:600 1.6rem/1.15 var(--display);letter-spacing:.015em;margin:0 0 12px}
+p{margin:0}
+.lede{color:var(--muted);max-width:62ch}
+.button{display:inline-block;margin-top:20px;padding:12px 18px;background:var(--accent);color:var(--on-accent);font-weight:600;text-decoration:none;border-radius:3px}
+.button:hover{text-decoration:underline}
+a:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+a{color:var(--accent)}
+.flow{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+@media (max-width:640px){.flow{grid-template-columns:minmax(0,1fr)}}
+.flow li{background:var(--panel);border:1px solid var(--line);padding:16px;min-width:0}
+.tag{display:inline-block;font:500 .75rem/1.3 var(--mono);padding:3px 7px;border-radius:3px;background:var(--warn-soft);color:var(--warn);margin-bottom:10px}
+.flow h3{font:600 1.2rem/1.2 var(--display);letter-spacing:.015em;margin:0 0 6px}
+.flow p{font-size:.92rem;color:var(--muted)}
+.status{margin:0;padding:0 0 0 1.1em;max-width:68ch;display:grid;gap:8px}
+footer{border-top:1px solid var(--line);padding-top:14px;font-size:.85rem;color:var(--muted)}
+</style>
+<div class="page">
+  <header><p class="brand">Anvil Orbital</p></header>
+  <main style="display:grid;gap:40px">
+    <section>
+      <h1>We want to turn retired satellites into data centers in orbit, and recycle the rest.</h1>
+      <p class="lede">With their owners' agreement, tugs would bring retired satellites to a station in low orbit. There, each one would become a data center node and go back out, or have its working parts recovered. None of that hardware exists yet, so we're starting with software.</p>
+      <a class="button" href="planner/">Try the Fleet Retirement Planner</a>
+    </section>
+    <section aria-labelledby="path">
+      <h2 id="path">How we plan to get there</h2>
+      <ol class="flow">
+        <li><span class="tag">Working demo</span><h3>Planner</h3><p>Enter a fleet. See when its satellites fall on their own, what disposal costs, what burning up releases, and when servicing beats burning up.</p></li>
+        <li><span class="tag">Next</span><h3>Ask fleet designers</h3><p>Find out whether the people designing new fleets see retirement as an open problem, and whether anyone would pay to solve it.</p></li>
+        <li><span class="tag">Not built</span><h3>Tugs and a station</h3><p>Only if the numbers and the customers support it. Most of this technology doesn't exist yet.</p></li>
+      </ol>
+    </section>
+    <section aria-labelledby="stands">
+      <h2 id="stands">Where this really stands</h2>
+      <ul class="status">
+        <li>We haven't asked anyone to pay, and nobody has agreed to.</li>
+        <li>At our first estimates, the station costs far more per satellite than the recovered parts are worth.</li>
+        <li>Data center nodes only work in our model if servicing gets about 7 to 10 times cheaper and someone buys the compute. Older satellites have little power, so they're the hardest case.</li>
+        <li>The planner is a simple model. No spacecraft engineer has checked it, and we don't have one on the team yet.</li>
+        <li>A dead satellite still belongs to its owner, so we'd only work with owners who agree.</li>
+        <li>This is a two-founder project at the idea stage. No company has been formed.</li>
+      </ul>
+    </section>
+  </main>
+  <footer>Anvil Orbital. Estimates are unchecked models, not quotes or promises.</footer>
+</div>
