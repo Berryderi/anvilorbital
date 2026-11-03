@@ -3,9 +3,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Fleet Retirement Planner</title>
-<link rel="icon" href="data:,">
+<link rel="icon" href="../assets/mark.svg" type="image/svg+xml">
 <meta name="description" content="Enter a satellite fleet. See when its satellites fall on their own, what disposal costs, what burning up releases, and when servicing beats burning up.">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="../assets/nav.css">
 <style>
 /* Layout: an orbital operations worksheet. Fleet inputs on the left, four answers and a decay chart on the right. */
 :root{
@@ -53,8 +54,9 @@ svg text{fill:var(--muted);font:11px var(--mono)}
 a{color:var(--accent)}
 </style>
 <div class="page">
-  <header>
-    <p class="lede" style="margin:0 0 10px"><a href="../">Anvil Orbital</a></p>
+  <a class="skip" href="#main">Skip to content</a>
+  <header class="site-head"><a class="brand" href="../"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 7h20c0 3.2-3.4 4.8-7 5v2.2l3.5 3.8H5.5L9 14.2V12C5.4 11.8 2 10.2 2 7z"/></svg>Anvil Orbital</a><nav class="site-nav" aria-label="Main"><a href="../idea/">The idea</a><a href="../planner/" aria-current="page">Planner</a><a href="../findings/">Findings</a><a href="../roadmap/">Roadmap</a><a href="../about/">About</a><a href="../contact/">Contact</a></nav></header>
+  <header id="main">
     <h1>Fleet Retirement Planner</h1>
     <p class="lede">Enter a satellite fleet. See when its satellites fall on their own, what disposal costs, what burning up releases into the upper atmosphere, and when servicing beats burning up.</p>
     <div class="flags"><span class="flag">Early demo, built 2026-11-02</span><span class="flag">Simple model, not checked by a spacecraft engineer</span><span class="flag">Example fleets are illustrations, not real company data</span></div>
@@ -101,6 +103,7 @@ a{color:var(--accent)}
     <p><b>Burning up:</b> 30 kg of aluminum oxide per 250 kg satellite, from Ferreira et al. 2024 (a molecular-dynamics model), scaled by mass. Real satellites differ. Other research suggests effects on ozone could differ, so this is an estimate of mass released, not of harm.</p>
     <p><b>Servicing:</b> it wins when its price is at or below the disposal it replaces plus the value recovered. Service prices and recovered value are your inputs. We found nobody offering this service for these fleets today, and no buyer for recovered parts.</p>
   </section>
+  <footer class="site-foot"><span>Anvil Orbital. Estimates are unchecked models, not quotes or promises.</span><span><a href="../privacy/">Privacy</a> &middot; <a href="https://github.com/Berryderi/anvilorbital">Code</a></span></footer>
 </div>
 <script>
 // MODEL-START

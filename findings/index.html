@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Findings | Anvil Orbital</title>
+<meta name="description" content="What our desk research and simple models say so far about retiring satellites, including the parts that argue against our own idea.">
+<meta property="og:title" content="Findings | Anvil Orbital">
+<meta property="og:description" content="What our desk research and simple models say so far about retiring satellites, including the parts that argue against our own idea.">
+<meta property="og:type" content="website">
+<link rel="icon" href="../assets/mark.svg" type="image/svg+xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap">
+<link rel="stylesheet" href="../assets/site.css">
+<link rel="stylesheet" href="../assets/nav.css">
+<div class="page">
+  <a class="skip" href="#main">Skip to content</a>
+  <header class="site-head"><a class="brand" href="../"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 7h20c0 3.2-3.4 4.8-7 5v2.2l3.5 3.8H5.5L9 14.2V12C5.4 11.8 2 10.2 2 7z"/></svg>Anvil Orbital</a><nav class="site-nav" aria-label="Main"><a href="../idea/">The idea</a><a href="../planner/">Planner</a><a href="../findings/" aria-current="page">Findings</a><a href="../roadmap/">Roadmap</a><a href="../about/">About</a><a href="../contact/">Contact</a></nav></header>
+  <main id="main">
+    <section>
+      <h1 class="short">What we've found so far</h1>
+      <p class="lede">Desk research and simple models from November 2026. Some of it argues against our own idea, and we'd rather show that than hide it.</p>
+    </section>
+    <section class="note" aria-label="How far to trust this">
+      <p><strong>How far to trust this:</strong> no spacecraft engineer or lawyer has checked it, and every cost is an unchecked assumption. We've had one informal industry call and no customer interviews. We used AI tools for the research and the models. This isn't engineering, legal or investment advice. <a href="../contact/">Tell us if you find a mistake</a>.</p>
+    </section>
+    <ol class="rows">
+      <li><span class="num">01</span><div class="with-chart"><div>
+        <h2>Altitude decides whether retirement is even a problem</h2>
+        <p>New low-orbit satellites have five years after their mission ends to come down, under <a href="https://www.ecfr.gov/current/title-47/chapter-I/subchapter-B/part-25/subpart-C/section-25.283">US</a> and <a href="https://ised-isde.canada.ca/site/spectrum-management-telecommunications/en/learn-more/key-documents/consultations/decision-changes-licensing-requirements-and-conditions-licence-space-debris-mitigation">Canadian</a> rules.</p>
+        <p>In our model, large-array satellites at or below about 650 km mostly clear that limit with no help. At 750 km and above, they mostly miss it. Compact satellites miss it at every altitude we ran, at average solar activity.</p>
+        <p class="source">Trust the split, not the exact years. A second method gave the same split, and the model runs 1.8 to 4.3 times shorter than <a href="https://www.spaceacademy.net.au/watch/debris/orblife.htm">one published rough guide</a>.</p>
+      </div><figure class="chart">
+          <div class="legend"><span style="--c:var(--series-1)">Large array, average sun (band: active to quiet sun)</span><span style="--c:var(--series-2)">Compact satellite, average sun</span></div>
+          <svg viewBox="0 0 480 300" role="img" aria-label="Years for a dead satellite to fall on its own, by altitude. Large-array satellites go from about 1 year at 600 km to about 30 years at 850 km, crossing the 5-year limit near 700 km. Compact satellites go from about 12 years to about 330 years, above the limit throughout.">
+            <line x1="44" x2="468" y1="266.0" y2="266.0" stroke="var(--line)"/><text x="38" y="271.0" text-anchor="end">0.1</text><line x1="44" x2="468" y1="202.5" y2="202.5" stroke="var(--line)"/><text x="38" y="207.5" text-anchor="end">1</text><line x1="44" x2="468" y1="139.0" y2="139.0" stroke="var(--line)"/><text x="38" y="144.0" text-anchor="end">10</text><line x1="44" x2="468" y1="75.5" y2="75.5" stroke="var(--line)"/><text x="38" y="80.5" text-anchor="end">100</text><line x1="44" x2="468" y1="12.0" y2="12.0" stroke="var(--line)"/><text x="38" y="17.0" text-anchor="end">1,000</text><text x="44.0" y="290" text-anchor="middle">600</text><text x="213.6" y="290" text-anchor="middle">700</text><text x="383.2" y="290" text-anchor="middle">800</text>
+            <path d="M44.0 167.2 L128.8 146.2 L213.6 126.4 L298.4 107.8 L383.2 90.7 L468.0 75.4 L468.0 139.0 L383.2 154.0 L298.4 171.3 L213.6 189.5 L128.8 208.7 L44.0 227.8 Z" fill="var(--band)" opacity=".75"/>
+            <line x1="44" x2="468" y1="158.1" y2="158.1" stroke="var(--ink)" stroke-width="1.5" stroke-dasharray="5 4"/>
+            <text class="ink" x="468" y="176.1" text-anchor="end">5-year limit</text>
+            <path d="M44.0 199.9 L128.8 179.5 L213.6 159.2 L298.4 141.0 L383.2 123.9 L468.0 108.7" fill="none" stroke="var(--series-1)" stroke-width="2"/><circle cx="44.0" cy="199.9" r="4" fill="var(--series-1)" stroke="var(--panel)" stroke-width="2"><title>Large array, 600 km: about 1.1 years</title></circle><circle cx="128.8" cy="179.5" r="4" fill="var(--series-1)" stroke="var(--panel)" stroke-width="2"><title>Large array, 650 km: about 2.3 years</title></circle><circle cx="213.6" cy="159.2" r="4" fill="var(--series-1)" stroke="var(--panel)" stroke-width="2"><title>Large array, 700 km: about 4.8 years</title></circle><circle cx="298.4" cy="141.0" r="4" fill="var(--series-1)" stroke="var(--panel)" stroke-width="2"><title>Large array, 750 km: about 9.3 years</title></circle><circle cx="383.2" cy="123.9" r="4" fill="var(--series-1)" stroke="var(--panel)" stroke-width="2"><title>Large array, 800 km: about 17.3 years</title></circle><circle cx="468.0" cy="108.7" r="4" fill="var(--series-1)" stroke="var(--panel)" stroke-width="2"><title>Large array, 850 km: about 30 years</title></circle>
+            <path d="M44.0 134.2 L128.8 113.1 L213.6 93.1 L298.4 74.6 L383.2 57.5 L468.0 42.3" fill="none" stroke="var(--series-2)" stroke-width="2"/><circle cx="44.0" cy="134.2" r="4" fill="var(--series-2)" stroke="var(--panel)" stroke-width="2"><title>Compact satellite, 600 km: about 11.9 years</title></circle><circle cx="128.8" cy="113.1" r="4" fill="var(--series-2)" stroke="var(--panel)" stroke-width="2"><title>Compact satellite, 650 km: about 25.6 years</title></circle><circle cx="213.6" cy="93.1" r="4" fill="var(--series-2)" stroke="var(--panel)" stroke-width="2"><title>Compact satellite, 700 km: about 52.8 years</title></circle><circle cx="298.4" cy="74.6" r="4" fill="var(--series-2)" stroke="var(--panel)" stroke-width="2"><title>Compact satellite, 750 km: about 103.4 years</title></circle><circle cx="383.2" cy="57.5" r="4" fill="var(--series-2)" stroke="var(--panel)" stroke-width="2"><title>Compact satellite, 800 km: about 192 years</title></circle><circle cx="468.0" cy="42.3" r="4" fill="var(--series-2)" stroke="var(--panel)" stroke-width="2"><title>Compact satellite, 850 km: about 333.9 years</title></circle>
+            <text x="46" y="28.0">Years to fall, log scale</text>
+            <text x="468" y="290" text-anchor="end">km</text>
+          </svg>
+          <details><summary>See the numbers</summary>
+            <div class="table-wrap"><table>
+              <thead><tr><th scope="col">Years to fall</th><th scope="col" class="n">600 km</th><th scope="col" class="n">650 km</th><th scope="col" class="n">700 km</th><th scope="col" class="n">750 km</th><th scope="col" class="n">800 km</th><th scope="col" class="n">850 km</th></tr></thead>
+              <tbody>
+                <tr><th scope="row">Large array, average sun</th><td class="n">1.1</td><td class="n">2.3</td><td class="n">4.8</td><td class="n">9.3</td><td class="n">17.3</td><td class="n">30</td></tr>
+                <tr><th scope="row">Large array, active sun</th><td class="n">0.4</td><td class="n">0.8</td><td class="n">1.6</td><td class="n">3.1</td><td class="n">5.8</td><td class="n">10</td></tr>
+                <tr><th scope="row">Large array, quiet sun</th><td class="n">3.6</td><td class="n">7.7</td><td class="n">15.8</td><td class="n">31</td><td class="n">57.6</td><td class="n">100.2</td></tr>
+                <tr><th scope="row">Compact, average sun</th><td class="n">11.9</td><td class="n">25.6</td><td class="n">52.8</td><td class="n">103.4</td><td class="n">192</td><td class="n">333.9</td></tr>
+              </tbody>
+            </table></div>
+          </details>
+        </figure></div></li>
+      <li><span class="num">02</span><div>
+        <h2>A working satellite can retire itself cheaply</h2>
+        <p>Lowering a 3-tonne satellite from 700 km takes about 46 kg of propellant in our model, or about $159k with launch at $500/kg. That excludes design and operations cost. So burning up is our real competitor, and a paid service matters mostly for satellites that fail before they can lower themselves.</p>
+      </div></li>
+      <li><span class="num">03</span><div>
+        <h2>Parts alone don't pay</h2>
+        <p>Collecting a dead satellite and taking out its parts costs about $18.6M per satellite in our model, and about $3M with every input in our favour. The parts are worth at most about $750k if launch costs $3,245/kg, and $46k to $116k at the $200 to $500/kg that orbital data center plans need. Cheaper launch makes used parts worth less. We found no buyer for them.</p>
+      </div></li>
+      <li><span class="num">04</span><div>
+        <h2>Data center nodes depend on which satellite you start with</h2>
+        <p><strong>High-power satellites:</strong> ten years of a retiring 3-tonne satellite's power is worth about $0.97M to $5.10M in our model. Servicing it costs about $8.32M at default inputs and $0.80M at best. So this needs servicing about 7 to 10 times cheaper, and a buyer for the compute. We haven't found one.</p>
+        <p><strong>Older, smaller satellites:</strong> one 200 kW node would take about 82 of them, at about $246M with best inputs. A new unit costs about $2.9M to $11M to launch in the same model.</p>
+      </div></li>
+      <li><span class="num">05</span><div>
+        <h2>The money so far is small, and mostly government</h2>
+        <p>By our rough count, the world spends about $80M a year on removing and disposing of satellites, nearly all of it government money. That count uses assumed contract lengths. We haven't asked anyone to pay us.</p>
+      </div></li>
+      <li><span class="num">06</span><div>
+        <h2>The hardest hardware step is still unproven</h2>
+        <p>We found no completed capture of an unprepared dead satellite in low orbit. Katalyst's Link, a <a href="https://www.clickorlando.com/tech/2026/09/25/private-spacecraft-falls-back-to-earth-after-failing-to-rescue-aging-nasa-telescope/">$30M NASA-sponsored effort to rescue the Swift telescope</a>, re-entered in September 2026 without reaching it. Astroscale's project manager on its ADRAS-J inspection mission called the work <a href="https://astroscale.com/en/news/astroscales-adras-j-mission-completes-operations-begins-deorbit">"far more difficult than expected"</a>.</p>
+      </div></li>
+      <li><span class="num">07</span><div>
+        <h2>A dead satellite still belongs to someone</h2>
+        <p>The <a href="https://www.unoosa.org/oosa/en/ourwork/spacelaw/treaties/outerspacetreaty.html">Outer Space Treaty, Article VIII</a>, says ownership "is not affected" by being in space. So we'd only work with owners who agree. There is a precedent for agreed servicing: <a href="https://www.northropgrumman.com/space/space-logistics-services">Northrop's MEV-1 docked with an Intelsat client satellite in 2020</a>. About half of dead low-orbit satellites are Russian or Soviet, and we treat those as off limits.</p>
+      </div></li>
+      <li><span class="num">08</span><div>
+        <h2>We aren't first</h2>
+        <div class="table-wrap"><table>
+          <thead><tr><th scope="col">Who</th><th scope="col">What they're doing</th></tr></thead>
+          <tbody>
+            <tr><th scope="row"><a href="https://www.kallmorris.com/future">KMI Space</a></th><td>Has a written plan for an orbital collection station and for repurposing debris. Closest to our long-term idea.</td></tr>
+            <tr><th scope="row"><a href="https://www.esa.int/Enabling_Support/Preparing_for_the_Future/Discovery_and_Preparation/Building_a_circular_economy_in_space_ESA_studies_pave_the_way">ESA</a></th><td>Has funded studies on swapping parts between satellites and on recycling in orbit.</td></tr>
+            <tr><th scope="row"><a href="https://www.astroscale.com/en">Astroscale</a></th><td>Removal and servicing, including an end-of-life service for prepared satellites.</td></tr>
+            <tr><th scope="row"><a href="https://www.starfishspace.com/missions/">Starfish Space</a></th><td>A docking tug, including an attempt to dock with an unprepared satellite.</td></tr>
+            <tr><th scope="row"><a href="https://www.northropgrumman.com/space/space-logistics-services">Northrop SpaceLogistics</a></th><td>Life extension for client satellites, already flying.</td></tr>
+            <tr><th scope="row"><a href="https://orbitaldebris.jsc.nasa.gov/mitigation/debris-assessment-software.html">NASA DAS</a></th><td>Checks compliance with NASA's debris requirements. The planner adds fleet cost and a servicing break-even, and nobody has told us that's worth paying for.</td></tr>
+          </tbody>
+        </table></div>
+      </div></li>
+    </ol>
+  </main>
+  <footer class="site-foot"><span>Anvil Orbital. Estimates are unchecked models, not quotes or promises.</span><span><a href="../privacy/">Privacy</a> &middot; <a href="https://github.com/Berryderi/anvilorbital">Code</a></span></footer>
+</div>

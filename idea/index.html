@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The idea | Anvil Orbital</title>
+<meta name="description" content="A station in low orbit that, with owners' agreement, turns retired satellites into data center nodes and recovers parts from the rest. What it is and what has to be true.">
+<meta property="og:title" content="The idea | Anvil Orbital">
+<meta property="og:description" content="A station in low orbit that, with owners' agreement, turns retired satellites into data center nodes and recovers parts from the rest. What it is and what has to be true.">
+<meta property="og:type" content="website">
+<link rel="icon" href="../assets/mark.svg" type="image/svg+xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap">
+<link rel="stylesheet" href="../assets/site.css">
+<link rel="stylesheet" href="../assets/nav.css">
+<div class="page">
+  <a class="skip" href="#main">Skip to content</a>
+  <header class="site-head"><a class="brand" href="../"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 7h20c0 3.2-3.4 4.8-7 5v2.2l3.5 3.8H5.5L9 14.2V12C5.4 11.8 2 10.2 2 7z"/></svg>Anvil Orbital</a><nav class="site-nav" aria-label="Main"><a href="../idea/" aria-current="page">The idea</a><a href="../planner/">Planner</a><a href="../findings/">Findings</a><a href="../roadmap/">Roadmap</a><a href="../about/">About</a><a href="../contact/">Contact</a></nav></header>
+  <main id="main">
+    <section>
+      <h1 class="short">What happens to a satellite when it retires?</h1>
+      <p class="lede">Today, most low-orbit satellites either burn up or stay up as dead objects. We want to find out whether some of them are worth more in orbit.</p>
+    </section>
+    <section aria-labelledby="why">
+      <h2 id="why">Why we think it's worth asking</h2>
+      <ul class="plain">
+        <li><strong>Very large fleets are being planned.</strong> Starcloud has <a href="https://interestingengineering.com/space/starcloud-orbital-ai-datacenter-satellites">filed for up to 88,000 satellites</a>. SpaceX's filing proposes 1 million, and <a href="https://arstechnica.com/science/2026/08/spacexs-orbital-data-centers-would-create-a-new-category-of-e-waste/">one estimate from Ars Technica</a> has about 200,000 of those retiring every year. These are filings, not flying fleets.</li>
+        <li><strong>Burning up isn't free of side effects.</strong> One model has a 250 kg satellite releasing <a href="https://talksatellite.com/Geophysical%20Research%20Letters%20-%202024%20-%20Ferreira%20-%20Potential%20Ozone%20Depletion%20From%20Satellite%20Demise%20During%20Atmospheric%20Reentry.pdf">about 30 kg of aluminum oxide</a>. <a href="https://cires.colorado.edu/news/within-15-years-plummeting-satellites-could-release-enough-aluminum-alter-winds-temp">CIRES researchers</a> estimate re-entries could rival natural meteor dust by 2040. The effect on ozone is still uncertain.</li>
+        <li><strong>Dead satellites already exist.</strong> Public catalogs list about 500 to 1,900 dead satellites in low orbit, depending on the catalog (<a href="https://celestrak.org/">CelesTrak</a> 529, <a href="https://planet4589.org/space/gcat/">GCAT</a> 1,878). Nobody has checked each one with its owner.</li>
+      </ul>
+    </section>
+    <section aria-labelledby="concept">
+      <span class="label">Concept only. None of this is built.</span>
+      <h2 id="concept">The concept</h2>
+      <ol class="chain">
+        <li><span class="label">Start</span><h3>A retired satellite</h3><p>Its owner has agreed. Nothing happens without that.</p></li>
+        <li><span class="label">Move</span><h3>A tug</h3><p>A small spacecraft brings it to the station.</p></li>
+        <li><span class="label">Work</span><h3>A station in low orbit</h3><p>Robots service it there.</p></li>
+      </ol>
+      <div class="outcomes">
+        <div><span class="label">Then, if it has the power</span><h3>A data center node</h3><p>It gets a compute module and goes back out. This fits high-power satellites, if servicing gets about 7 to 10 times cheaper and someone buys the compute.</p></div>
+        <div><span class="label">Otherwise</span><h3>Recovered parts</h3><p>Working parts and materials get reused in orbit. We haven't found a buyer for them yet.</p></div>
+      </div>
+    </section>
+    <section aria-labelledby="true">
+      <h2 id="true">What has to be true</h2>
+      <p>We don't know yet whether any of these hold. <a href="../findings/">Our findings so far</a> say several don't at today's estimates.</p>
+      <ul class="plain">
+        <li>Fleet designers see retirement as an open problem, and someone would pay to solve it.</li>
+        <li>Servicing gets about 7 to 10 times cheaper than our model's default, and someone buys the compute.</li>
+        <li>A robot can capture a satellite that wasn't built for it. We found no completed example in low orbit.</li>
+        <li>Owners, and the countries that registered their satellites, agree. Ideally the agreement is signed before launch.</li>
+        <li>A spacecraft engineer joins us. Neither of us has that experience.</li>
+      </ul>
+    </section>
+    <section aria-labelledby="first">
+      <h2 id="first">Why we started with software</h2>
+      <p>Hardware takes years and far more money than we have. A planner can run today for free, and it gets us talking to the people who would have to want this. <a href="../planner/">Try it</a>.</p>
+    </section>
+  </main>
+  <footer class="site-foot"><span>Anvil Orbital. Estimates are unchecked models, not quotes or promises.</span><span><a href="../privacy/">Privacy</a> &middot; <a href="https://github.com/Berryderi/anvilorbital">Code</a></span></footer>
+</div>
