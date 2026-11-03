@@ -1,0 +1,13 @@
+/* Site header and footer. Shared by every page, including the planner, which keeps its own stylesheet. */
+.skip{position:absolute;left:-999px;top:0;padding:8px 12px;background:var(--panel);color:var(--ink);border:1px solid var(--line);z-index:10}
+.skip:focus{left:16px;top:8px}
+.site-head{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px 24px;padding-bottom:12px;border-bottom:1px solid var(--line)}
+.brand{display:inline-flex;align-items:center;gap:8px;min-height:32px;font:700 1.375rem/1 var(--display);letter-spacing:.02em;color:var(--ink);text-decoration:none}
+.brand svg{width:24px;height:24px;fill:currentColor;flex:none}
+.site-nav{display:flex;flex-wrap:wrap;gap:0 4px;margin-left:-8px}
+.site-nav a{display:inline-block;padding:8px;font:500 .875rem/1.15 var(--body);color:var(--muted);text-decoration:none}
+.site-nav a:hover{color:var(--ink);text-decoration:underline;text-underline-offset:4px}
+.site-nav a[aria-current="page"]{color:var(--ink);text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:4px}
+.site-foot{display:flex;flex-wrap:wrap;gap:8px 24px;justify-content:space-between;border-top:1px solid var(--line);padding-top:16px;font-size:.875rem;color:var(--muted)}
+.site-foot a{color:inherit}
+.site-head a:focus-visible,.site-foot a:focus-visible,.skip:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
