@@ -105,7 +105,7 @@ a{color:var(--accent)}
     <p><b>5-year limit:</b> US and Canadian rules for new low-orbit licences. Older satellites can be exempt. Check your own licence.</p>
     <p><b>Disposal:</b> low-thrust fuel to reach 300 km, bought and launched. It excludes design and operations cost. It assumes the satellite still works. Failed satellites can't do this.</p>
     <p><b>Burning up:</b> 30 kg of aluminum oxide per 250 kg satellite, from Ferreira et al. 2024 (a molecular-dynamics model), scaled by mass. Real satellites differ. Other research suggests effects on ozone could differ, so this is an estimate of mass released, not of harm.</p>
-    <p><b>Real fleets:</b> each input links to its source; anything without one is our assumption. Satellite counts for flying fleets are satellites in orbit on the date shown; for filings, the number filed with the FCC, not approved. Drag area is rarely published, so we estimate it one way: a dead satellite tumbles, so its average area facing drag is its total surface area / 4, and a thin solar array counts as half its one-side area. Where the operator publishes an area-to-mass figure, we use that instead. The answers are model outputs, not a statement about any operator.</p>
+    <p><b>Real fleets:</b> each input links to its source; anything without one is our assumption. Satellite counts for flying fleets are satellites in orbit on the date shown; for filings, the number filed with the FCC, not approved. Drag area is rarely published, so we estimate it one way: a dead satellite tumbles, so its average area facing drag is its total surface area / 4, and a thin solar array counts as half its one-side area. Where an operator has published an area-to-mass figure, even for one satellite, we use that instead. The answers are model outputs, not a statement about any operator.</p>
     <p><b>Servicing:</b> it wins when its price is at or below the disposal it replaces plus the value recovered. Service prices and recovered value are your inputs. We found nobody offering this service for these fleets today, and no buyer for recovered parts.</p>
   </section>
   <footer class="site-foot"><span>Anvil Orbital. Estimates are unchecked models, not quotes or promises.</span><span><a href="../privacy/">Privacy</a> &middot; <a href="https://github.com/Berryderi/anvilorbital">Code</a></span></footer>
@@ -141,9 +141,9 @@ const MCD="Jonathan McDowell, planet4589.org",FAIL=["Fail before disposal: our a
  BB={fail:1,launch:3245,prop:3000,isp:1500,service:2000000,value:0},DC={fail:1,launch:500,prop:3000,isp:1500,service:8320000,value:0};
 const REAL={
  "Starlink V2 Mini (SpaceX)":{...BB,count:8061,mass:575,area:43.1,alt:470,life:5,src:[
-  ["Satellites: 8,061 Gen2 (V2 Mini family) in orbit on 2026-11-09, "+MCD,"https://planet4589.org/space/con/star/stats.html"],
-  ["Mass: 575 kg, V2 Mini Optimized; earlier V2 Minis were heavier (SpaceX)","https://starlink.com/public-files/starlinkProgressReport_2024.pdf"],
-  ["Drag area: 43.1 m², SpaceX's own area-to-mass figure for a Gen2 satellite (0.075 m²/kg) times 575 kg (SpaceX FCC report, July 2026)","https://api-prod.fcc.gov/icfs-attachment/exp/api/v1/bff0244acfb947505791bf252f851ce6"],
+  ["Satellites: 8,061 Gen2 in orbit on 2026-11-09, mixing original, Optimized and direct-to-cell V2 Minis, all modelled at 575 kg, "+MCD,"https://planet4589.org/space/con/star/stats.html"],
+  ["Mass: 575 kg, V2 Mini Optimized; the original V2 Minis are heavier, so mass is low for part of the fleet (SpaceX)","https://starlink.com/public-files/starlinkProgressReport_2024.pdf"],
+  ["Drag area: 43.1 m², our estimate per satellite: the area-to-mass SpaceX reported for one Gen2 satellite (STARLINK-32445, 0.075 m²/kg) times 575 kg (SpaceX FCC report, July 2026)","https://api-prod.fcc.gov/icfs-attachment/exp/api/v1/bff0244acfb947505791bf252f851ce6"],
   ["Altitude: 470 km, middle of SpaceX's stated 450 to 490 km; service life: 5 years, SpaceX says designed for 5+ (SpaceX)","https://space-safety.starlink.com/docs/space-safety-articles/constellation_altitudes/"],
   FAIL,COSTS_BB]},
  "Eutelsat OneWeb Gen 1":{...BB,count:654,mass:150,area:1.8,alt:1200,life:5,src:[
@@ -155,7 +155,7 @@ const REAL={
  "Amazon Leo (formerly Kuiper)":{...BB,count:392,mass:554,area:41.6,alt:630,life:7,src:[
   ["Satellites: 392 in orbit on 2026-11-09, "+MCD,"https://planet4589.org/space/con/kp/stats.html"],
   ["Mass: 554 kg, middle of a 537 to 571 kg press estimate; Amazon hasn't published it (Gigazine, reporting Ars Technica)","https://gigazine.net/gsc_news/en/20250514-amazon-kuiper-satellite"],
-  ["Drag area: 41.6 m², our assumption: the Starlink area-to-mass figure (0.075 m²/kg) times 554 kg. Amazon hasn't published the size"],
+  ["Drag area: 41.6 m², our assumption: the area-to-mass SpaceX reported for one Starlink satellite (0.075 m²/kg) times 554 kg. Amazon hasn't published the size"],
   ["Altitude: 630 km, the assigned operational altitude (Amazon)","https://www.aboutamazon.com/news/innovation-at-amazon/project-kuiper-satellite-rocket-launch-progress-updates"],
   ["Service life: 7 years, the mission length in the FCC's disposal condition (ExecutiveGov)","https://www.executivegov.com/articles/fcc-oks-amazons-updated-orbital-debris-mitigation-plan-for-broadband-satellite"],
   FAIL,COSTS_BB]},
@@ -169,6 +169,7 @@ const REAL={
   ["Satellites: 100,000 filed with the FCC, the first phase of up to 1,000,000, not approved; altitude: 475 km, the upper of two filed bands; power: 250 kW each, as reported (Advanced Television)","https://www.advanced-television.com/?p=292409"],
   ["Mass: up to 4,000 kg each (SatNews, on SpaceX's FCC submission)","https://satnews.com/2026/09/19/spacex-submits-fcc-re-entry-debris-and-collision-risk-analysis-for-starmind-orbital-data-center-constellation/"],
   ["Drag area: 400 m², our assumption: a reported 250 kW at Starcloud's white-paper 3.2 m² per kW, counted at half. Radiators left out, so the estimate is low","https://starcloudinc.github.io/wp.pdf"],
+  ["Size: a 75 m wingspan is reported, but not the array width, so it can't give an area and isn't used (Advanced Television)","https://www.advanced-television.com/?p=292409"],
   ["Service life: 5 years, our assumption (not published)"],
   FAIL,COSTS_DC]}};
 const EX_SRC=[["Illustration: every input is our assumption, not a real fleet"]];
