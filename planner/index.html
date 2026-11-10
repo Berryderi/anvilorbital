@@ -52,6 +52,9 @@ svg text{fill:var(--muted);font:11px var(--mono)}
 .notes p{margin:0 0 8px;break-inside:avoid}
 @media (max-width:700px){.notes{columns:1}}
 a{color:var(--accent)}
+.src{grid-column:1/-1;font-size:.76rem;color:var(--muted);margin:-2px 0 0}
+.src ul{margin:4px 0 0;padding-left:16px}
+.src li{margin:0 0 2px}
 </style>
 <div class="page">
   <a class="skip" href="#main">Skip to content</a>
@@ -59,13 +62,14 @@ a{color:var(--accent)}
   <header id="main">
     <h1>Fleet Retirement Planner</h1>
     <p class="lede">Enter a satellite fleet. See when its satellites fall on their own, what disposal costs, what burning up releases into the upper atmosphere, and when servicing beats burning up.</p>
-    <div class="flags"><span class="flag">Early demo, built 2026-11-02</span><span class="flag">Simple model, not checked by a spacecraft engineer</span><span class="flag">Example fleets are illustrations, not real company data</span></div>
+    <div class="flags"><span class="flag">Early demo, built 2026-11-02</span><span class="flag">Simple model, not checked by a spacecraft engineer</span><span class="flag">Presets use public figures where linked and our assumptions elsewhere; not company data</span></div>
   </header>
   <div class="grid">
     <form class="panel" id="form" autocomplete="off">
       <h2>Your fleet</h2>
       <div class="fields">
-        <label class="wide">Example fleet<select id="preset"></select></label>
+        <label class="wide">Fleet<select id="preset"></select></label>
+        <div class="src" id="src" aria-live="polite"></div>
         <label>Satellites<input id="count" type="number" min="1" step="1"></label>
         <label>Mass each, kg<input id="mass" type="number" min="1"></label>
         <label>Area facing drag, m&sup2;<input id="area" type="number" min="0.01" step="any"></label>
@@ -101,6 +105,7 @@ a{color:var(--accent)}
     <p><b>5-year limit:</b> US and Canadian rules for new low-orbit licences. Older satellites can be exempt. Check your own licence.</p>
     <p><b>Disposal:</b> low-thrust fuel to reach 300 km, bought and launched. It excludes design and operations cost. It assumes the satellite still works. Failed satellites can't do this.</p>
     <p><b>Burning up:</b> 30 kg of aluminum oxide per 250 kg satellite, from Ferreira et al. 2024 (a molecular-dynamics model), scaled by mass. Real satellites differ. Other research suggests effects on ozone could differ, so this is an estimate of mass released, not of harm.</p>
+    <p><b>Real fleets:</b> each input links to its source; anything without one is our assumption. Satellite counts for flying fleets are satellites in orbit on the date shown; for filings, the number filed with the FCC, not approved. Drag area is rarely published, so we estimate it one way: a dead satellite tumbles, so its average area facing drag is its total surface area / 4, and a thin solar array counts as half its one-side area. Where the operator publishes an area-to-mass figure, we use that instead. The answers are model outputs, not a statement about any operator.</p>
     <p><b>Servicing:</b> it wins when its price is at or below the disposal it replaces plus the value recovered. Service prices and recovered value are your inputs. We found nobody offering this service for these fleets today, and no buyer for recovered parts.</p>
   </section>
   <footer class="site-foot"><span>Anvil Orbital. Estimates are unchecked models, not quotes or promises.</span><span><a href="../privacy/">Privacy</a> &middot; <a href="https://github.com/Berryderi/anvilorbital">Code</a></span></footer>
@@ -123,13 +128,50 @@ function evaluate(count,mass,area,alt,life,fail,launch,prop,isp,service,value){
   return {mean,high,low,status:status(mean,high,low),propellant_kg:propellant,fuel_usd:fuel,alternative_usd:alt_cost,retired_per_year:retired,failed_per_year:failed,fleet_fuel_usd_per_year:retired*alt_cost,alumina_t_per_year:retired*mass*ALUMINA/1000,breakeven_usd:be,service_wins:service<=be};
 }
 // MODEL-END
-const PRESETS={
+const EXAMPLES={
  "Big-array data center fleet (example)":{count:1000,mass:3000,area:333.3,alt:700,life:5,fail:1,launch:500,prop:3000,isp:1500,service:8320000,value:0},
  "Same fleet, flying lower (example)":{count:1000,mass:3000,area:333.3,alt:600,life:5,fail:1,launch:500,prop:3000,isp:1500,service:8320000,value:0},
  "Much better servicer, if parts found a buyer (example)":{count:1000,mass:3000,area:333.3,alt:750,life:5,fail:1,launch:500,prop:3000,isp:1500,service:800000,value:770000},
  "Reuse a retiring satellite's power for compute, best-case servicer (example)":{count:1000,mass:3000,area:333.3,alt:700,life:5,fail:1,launch:500,prop:3000,isp:1500,service:800000,value:969000},
  "Small imaging constellation (example)":{count:100,mass:150,area:1.5,alt:550,life:5,fail:3,launch:3245,prop:3000,isp:1500,service:2000000,value:0},
  "Mid-size broadband fleet, high orbit (example)":{count:300,mass:150,area:1.5,alt:1200,life:7,fail:2,launch:3245,prop:3000,isp:1500,service:2000000,value:0}};
+// Real fleets: every input carries its source (checked 2026-11-10). Unlinked = our assumption.
+const MCD="Jonathan McDowell, planet4589.org",FAIL=["Fail before disposal: our assumption (planner default)"],
+ COSTS_BB=["Costs: our assumptions, same as the broadband example"],COSTS_DC=["Costs: our assumptions, same as the data center example"],
+ BB={fail:1,launch:3245,prop:3000,isp:1500,service:2000000,value:0},DC={fail:1,launch:500,prop:3000,isp:1500,service:8320000,value:0};
+const REAL={
+ "Starlink V2 Mini (SpaceX)":{...BB,count:8061,mass:575,area:43.1,alt:470,life:5,src:[
+  ["Satellites: 8,061 Gen2 (V2 Mini family) in orbit on 2026-11-09, "+MCD,"https://planet4589.org/space/con/star/stats.html"],
+  ["Mass: 575 kg, V2 Mini Optimized; earlier V2 Minis were heavier (SpaceX)","https://starlink.com/public-files/starlinkProgressReport_2024.pdf"],
+  ["Drag area: 43.1 m², SpaceX's own area-to-mass figure for a Gen2 satellite (0.075 m²/kg) times 575 kg (SpaceX FCC report, July 2026)","https://api-prod.fcc.gov/icfs-attachment/exp/api/v1/bff0244acfb947505791bf252f851ce6"],
+  ["Altitude: 470 km, middle of SpaceX's stated 450 to 490 km; service life: 5 years, SpaceX says designed for 5+ (SpaceX)","https://space-safety.starlink.com/docs/space-safety-articles/constellation_altitudes/"],
+  FAIL,COSTS_BB]},
+ "Eutelsat OneWeb Gen 1":{...BB,count:654,mass:150,area:1.8,alt:1200,life:5,src:[
+  ["Satellites: 654 in orbit on 2026-11-09, "+MCD,"https://planet4589.org/space/con/ow/stats.html"],
+  ["Mass: about 150 kg; service life: at least 5 years at 1,200 km (eoPortal)","https://directory.eoportal.org/satellite-missions/oneweb"],
+  ["Drag area: 1.8 m², our estimate from the 1 x 1 x 1.3 m body (eoPortal). Array size isn't published, so it's left out and the estimate is low","https://directory.eoportal.org/satellite-missions/oneweb"],
+  ["Altitude: 1,200 km (Eutelsat)","https://www.eutelsat.com/satellite-network/oneweb-leo-constellation"],
+  FAIL,COSTS_BB]},
+ "Amazon Leo (formerly Kuiper)":{...BB,count:392,mass:554,area:41.6,alt:630,life:7,src:[
+  ["Satellites: 392 in orbit on 2026-11-09, "+MCD,"https://planet4589.org/space/con/kp/stats.html"],
+  ["Mass: 554 kg, middle of a 537 to 571 kg press estimate; Amazon hasn't published it (Gigazine, reporting Ars Technica)","https://gigazine.net/gsc_news/en/20250514-amazon-kuiper-satellite"],
+  ["Drag area: 41.6 m², our assumption: the Starlink area-to-mass figure (0.075 m²/kg) times 554 kg. Amazon hasn't published the size"],
+  ["Altitude: 630 km, the assigned operational altitude (Amazon)","https://www.aboutamazon.com/news/innovation-at-amazon/project-kuiper-satellite-rocket-launch-progress-updates"],
+  ["Service life: 7 years, the mission length in the FCC's disposal condition (ExecutiveGov)","https://www.executivegov.com/articles/fcc-oks-amazons-updated-orbital-debris-mitigation-plan-for-broadband-satellite"],
+  FAIL,COSTS_BB]},
+ "Starcloud orbital data center filing":{...DC,count:88000,mass:3000,area:320,alt:725,life:5,src:[
+  ["Satellites: up to 88,000 filed with the FCC, not approved; altitude: 725 km, middle of the filed 600 to 850 km (Starcloud filing)","https://api-prod.fcc.gov/icfs-attachment/exp/api/v1/5c6840321b3e365068b6a64ce54bcb49"],
+  ["Mass: 3,000 kg, the planned 200 kW Starcloud-3 (The Next Web)","https://thenextweb.com/news/starcloud-170m-series"],
+  ["Drag area: 320 m², our estimate: 200 kW at 3.2 m² of array per kW (Starcloud white paper: 4 x 4 km for 5 GW), counted at half. Radiators left out, so the estimate is low","https://starcloudinc.github.io/wp.pdf"],
+  ["Service life: 5 years, our assumption (not published)"],
+  FAIL,COSTS_DC]},
+ "SpaceX orbital data center filing (Starmind)":{...DC,count:100000,mass:4000,area:400,alt:475,life:5,src:[
+  ["Satellites: 100,000 filed with the FCC, the first phase of up to 1,000,000, not approved; altitude: 475 km, the upper of two filed bands; power: 250 kW each, as reported (Advanced Television)","https://www.advanced-television.com/?p=292409"],
+  ["Mass: up to 4,000 kg each (SatNews, on SpaceX's FCC submission)","https://satnews.com/2026/09/19/spacex-submits-fcc-re-entry-debris-and-collision-risk-analysis-for-starmind-orbital-data-center-constellation/"],
+  ["Drag area: 400 m², our assumption: a reported 250 kW at Starcloud's white-paper 3.2 m² per kW, counted at half. Radiators left out, so the estimate is low","https://starcloudinc.github.io/wp.pdf"],
+  ["Service life: 5 years, our assumption (not published)"],
+  FAIL,COSTS_DC]}};
+const EX_SRC=[["Illustration: every input is our assumption, not a real fleet"]];
 const $=id=>document.getElementById(id),IDS=["count","mass","area","alt","life","fail","launch","prop","isp","service","value"];
 const money=v=>v>=1e9?"$"+(v/1e9).toFixed(2)+"B":v>=1e6?"$"+(v/1e6).toFixed(2)+"M":v>=1e3?"$"+Math.round(v/1e3)+"k":"$"+Math.round(v);
 const yrs=y=>y>=100?Number(y.toPrecision(2)).toLocaleString():y>=10?y.toFixed(0):y.toFixed(1);
@@ -164,8 +206,10 @@ function run(){
   $("a4p").textContent="Depends on your inputs";$("a4p").className="pill "+(r.service_wins?"good":"bad");
   chart(v.mass/v.area,v.alt,r.mean);
 }
-function load(name){const p=PRESETS[name];for(const id of IDS){$(id).value=p[id];}run();}
-Object.keys(PRESETS).forEach(n=>{const o=document.createElement("option");o.textContent=n;$("preset").append(o);});
+const PRESETS={...REAL,...EXAMPLES};
+function showSrc(list){const ul=document.createElement("ul");for(const [text,url] of list){const li=document.createElement("li");if(url){const a=document.createElement("a");a.href=url;a.rel="noopener";a.textContent=text;li.append(a);}else li.textContent=text;ul.append(li);}$("src").replaceChildren("Sources:",ul);}
+function load(name){const p=PRESETS[name];for(const id of IDS){$(id).value=p[id];}showSrc(p.src||EX_SRC);run();}
+for(const [label,group] of [["Real fleets (public figures)",REAL],["Examples (illustrations)",EXAMPLES]]){const g=document.createElement("optgroup");g.label=label;Object.keys(group).forEach(n=>{const o=document.createElement("option");o.textContent=n;g.append(o);});$("preset").append(g);}
 $("preset").addEventListener("change",e=>load(e.target.value));
 $("form").addEventListener("input",e=>{if(e.target.id!=="preset")run();});
 $("form").addEventListener("submit",e=>e.preventDefault());
