@@ -159,8 +159,9 @@ const REAL={
   ["Altitude: 630 km, the assigned operational altitude (Amazon)","https://www.aboutamazon.com/news/innovation-at-amazon/project-kuiper-satellite-rocket-launch-progress-updates"],
   ["Service life: 7 years, the mission length in the FCC's disposal condition (ExecutiveGov)","https://www.executivegov.com/articles/fcc-oks-amazons-updated-orbital-debris-mitigation-plan-for-broadband-satellite"],
   FAIL,COSTS_BB]},
- "Starcloud orbital data center filing":{...DC,count:88000,mass:3000,area:320,alt:725,life:5,src:[
+ "Starcloud orbital data center (count and altitude from its FCC filing)":{...DC,count:88000,mass:3000,area:320,alt:725,life:5,src:[
   ["Satellites: up to 88,000 filed with the FCC, not approved; altitude: 725 km, middle of the filed 600 to 850 km (Starcloud filing)","https://api-prod.fcc.gov/icfs-attachment/exp/api/v1/5c6840321b3e365068b6a64ce54bcb49"],
+  ["Disposal: the filing gives heights and plans \"controlled atmospheric re-entry\", each satellite \"designed for full demisability\", but gives no mass or size. The disposal-cost card prices a different plan, lowering by thruster to 300 km, which is our assumption (Starcloud filing)","https://api-prod.fcc.gov/icfs-attachment/exp/api/v1/5c6840321b3e365068b6a64ce54bcb49"],
   ["Mass: 3,000 kg, the planned 200 kW Starcloud-3 (The Next Web)","https://thenextweb.com/news/starcloud-170m-series"],
   ["Drag area: 320 m², our estimate: 200 kW at 3.2 m² of array per kW (Starcloud white paper: 4 x 4 km for 5 GW), counted at half. Radiators left out, so the estimate is low","https://starcloudinc.github.io/wp.pdf"],
   ["Service life: 5 years, our assumption (not published)"],
@@ -172,6 +173,7 @@ const REAL={
   ["Size: a 75 m wingspan is reported, but not the array width, so it can't give an area and isn't used (Advanced Television)","https://www.advanced-television.com/?p=292409"],
   ["Service life: 5 years, our assumption (not published)"],
   FAIL,COSTS_DC]}};
+const TABLE_TOP=T[T.length-1][0],SHOWN_MAX_YEARS=1000;
 const EX_SRC=[["Illustration: every input is our assumption, not a real fleet"]];
 const $=id=>document.getElementById(id),IDS=["count","mass","area","alt","life","fail","launch","prop","isp","service","value"];
 const money=v=>v>=1e9?"$"+(v/1e9).toFixed(2)+"B":v>=1e6?"$"+(v/1e6).toFixed(2)+"M":v>=1e3?"$"+Math.round(v/1e3)+"k":"$"+Math.round(v);
@@ -196,6 +198,9 @@ function run(){
   const r=evaluate(v.count,v.mass,v.area,v.alt,v.life,v.fail/100,v.launch,v.prop,v.isp,v.service,v.value);
   $("a1").textContent=yrs(r.mean)+" years";
   $("a1s").textContent=`${yrs(r.high)} with an active sun, ${yrs(r.low)} with a quiet sun.`;
+  // The density table ends at TABLE_TOP km; above it the model extrapolates, so only the order of magnitude is shown.
+  if(v.alt>TABLE_TOP){if(r.mean>=SHOWN_MAX_YEARS)$("a1").textContent=`More than ${SHOWN_MAX_YEARS.toLocaleString()} years`;
+    $("a1s").textContent=`Above ${TABLE_TOP.toLocaleString()} km the model isn't reliable: its atmosphere table stops there.`;}
   const s={clears:["Clears the 5-year limit unaided","good"],depends:["Depends on the sun","warn"],misses:["Misses the 5-year limit unaided","bad"]}[r.status];
   $("a1p").textContent=s[0];$("a1p").className="pill "+s[1];
   if(r.alternative_usd===0){$("a2").textContent="$0 in fuel";$("a2s").textContent=`It can fall on its own. Lowering it anyway would take ${num(r.propellant_kg)} kg of propellant, ${money(r.fuel_usd)} each.`;}
@@ -210,7 +215,7 @@ function run(){
 const PRESETS={...REAL,...EXAMPLES};
 // Link ids: /planner/#<id> opens that preset, so a message can link straight to one fleet.
 const LINK_IDS={"Starlink V2 Mini (SpaceX)":"starlink","Eutelsat OneWeb Gen 1":"oneweb","Amazon Leo (formerly Kuiper)":"amazon-leo",
- "Starcloud orbital data center filing":"starcloud","SpaceX orbital data center filing (Starmind)":"starmind",
+ "Starcloud orbital data center (count and altitude from its FCC filing)":"starcloud","SpaceX orbital data center filing (Starmind)":"starmind",
  "Big-array data center fleet (example)":"data-center","Same fleet, flying lower (example)":"data-center-lower",
  "Much better servicer, if parts found a buyer (example)":"better-servicer","Reuse a retiring satellite's power for compute, best-case servicer (example)":"reuse-power",
  "Small imaging constellation (example)":"imaging","Mid-size broadband fleet, high orbit (example)":"broadband-high"};
