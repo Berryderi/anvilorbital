@@ -1,0 +1,29 @@
+Vendored libraries. Taken from the npm tarballs below with tar; nothing installed, no scripts run.
+three 0.186.1, npm publisher mrdoob, MIT, https://registry.npmjs.org/three/-/three-0.186.1.tgz
+  dist.integrity sha512-blFeqb49wRCSGUGj7gtpfnSGHy2lwDk94RhUmS1c/hTby70kvChbWpkJ4Pm1390LqzzvTmzgXKHPEafJwCb8jA== (tarball checked)
+satellite.js 7.1.0, npm publisher 1valdis, MIT, https://registry.npmjs.org/satellite.js/-/satellite.js-7.1.0.tgz
+  dist.integrity sha512-U6nRml9Nb7dV9LJPiMNPyna7U7ry+1nXYkOeCEG7K/YbojQQLHHmcjPisp03VNY+HLcbQHqbt7t4t1vQMaKCLQ== (tarball checked)
+  only the dist/ files reached from io.js, propagation.js and transforms.js
+
+sha256 of each file, path in tarball:
+39efed0e8259640b7132afefd116197a6eee4171479143b363829e4f04237df1  satellite.js/constants.js  <- package/dist/constants.js
+55702c1ae12f68ca43e6fcd8e9ec0a4d5a61a4013c7873db134ebca6b988da3d  satellite.js/ext.js  <- package/dist/ext.js
+24f9618bdadfea6951ac0b1f7e4bb3d867c66719d1c4eb3f7a03306debb32d77  satellite.js/io.js  <- package/dist/io.js
+1432ff8b94b91db9f242d908e09f2ecb1a0804a03f76ba844cf052c7bb614d9e  satellite.js/LICENSE.md  <- package/LICENSE.md
+cd13c5ca230657ae6f94f47cac8cc2201d60a5f23f8ddf6a79bf93f580844ee1  satellite.js/propagation/check-for-decay.js  <- package/dist/propagation/check-for-decay.js
+ccd5dbde780f132298da240369e685a0654f6feeca2ca99e8c1234206e632b20  satellite.js/propagation/dpper.js  <- package/dist/propagation/dpper.js
+4163f176bb7bc196c46f05d5f485fbb64c759fd47ce9fd3c82362b746c641d4d  satellite.js/propagation/dscom.js  <- package/dist/propagation/dscom.js
+5d7ebdc2a28eefcb10e1d857c86cfee4b3db2443541d11d55fcb6a79a561e9ec  satellite.js/propagation/dsinit.js  <- package/dist/propagation/dsinit.js
+5b34f0cd64c12080583b1b75d1d7a48100aaddbfaad267daa45cb3538e22ae17  satellite.js/propagation/dspace.js  <- package/dist/propagation/dspace.js
+a84b7910bec97f8c07723d0054ee4d29ef1c3e9a0c746e848529b627bcc8d7cf  satellite.js/propagation/gstime.js  <- package/dist/propagation/gstime.js
+fe57ab8af951bccfd95f8e6166f1d5374a9dd126291fda183b658ddfa9523ac7  satellite.js/propagation/initl.js  <- package/dist/propagation/initl.js
+98bffd4671df7ba2550f65c2cd4c2a3e100ed59cf6861044352462b9ec98ba06  satellite.js/propagation.js  <- package/dist/propagation.js
+e937521a49439d9881b46b5c015f9d8e4716ae9646797b34a3a55f4f00ce7ee4  satellite.js/propagation/propagate.js  <- package/dist/propagation/propagate.js
+edcffa5f13d8960b4480ff844286ca76ca9d2952e989d9f32fad82c14aa6fd7b  satellite.js/propagation/SatRec.js  <- package/dist/propagation/SatRec.js
+cc47b4efcf8bf9ecca73f40e7a922e18668d0de7082f942b4bdedddaca182b78  satellite.js/propagation/sgp4init.js  <- package/dist/propagation/sgp4init.js
+1d0b43d56db60da74b009465711e2f22c5aab4ba7bf62b9c5260b3f87e9d0d0d  satellite.js/propagation/sgp4.js  <- package/dist/propagation/sgp4.js
+01350aab059aeeb1091d38431f7fd60abb346152fa84fa7a6220886a9688f32b  satellite.js/transforms.js  <- package/dist/transforms.js
+8b378ebe60e2fe500158cb0ac71cb5e8b7d92953c2abcc63a0eb90499653b5bc  three/LICENSE  <- package/LICENSE
+3d79d07ecb686b4e5d93232eedab255331c1beef711e13164eaa1f68655a5f2b  three/OrbitControls.js  <- package/examples/jsm/controls/OrbitControls.js
+9edde002b066a9a05676a6127f67735b62baf399bdea529f2f7e31657da769e6  three/three.core.js  <- package/build/three.core.js
+9052042d676cb0fdc1ddfefe193053f34b7ac0513a616fdac4535d49987812ea  three/three.module.js  <- package/build/three.module.js

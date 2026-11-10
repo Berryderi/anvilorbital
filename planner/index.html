@@ -58,7 +58,7 @@ a{color:var(--accent)}
 </style>
 <div class="page">
   <a class="skip" href="#main">Skip to content</a>
-  <header class="site-head"><a class="brand" href="../"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 7h20c0 3.2-3.4 4.8-7 5v2.2l3.5 3.8H5.5L9 14.2V12C5.4 11.8 2 10.2 2 7z"/></svg>Anvil Orbital</a><nav class="site-nav" aria-label="Main"><a href="../idea/">The idea</a><a href="../planner/" aria-current="page">Planner</a><a href="../findings/">Findings</a><a href="../roadmap/">Roadmap</a><a href="../about/">About</a><a href="../contact/">Contact</a></nav></header>
+  <header class="site-head"><a class="brand" href="../"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 7h20c0 3.2-3.4 4.8-7 5v2.2l3.5 3.8H5.5L9 14.2V12C5.4 11.8 2 10.2 2 7z"/></svg>Anvil Orbital</a><nav class="site-nav" aria-label="Main"><a href="../idea/">The idea</a><a href="../planner/" aria-current="page">Planner</a><a href="../simulator/">Simulator</a><a href="../findings/">Findings</a><a href="../roadmap/">Roadmap</a><a href="../about/">About</a><a href="../contact/">Contact</a></nav></header>
   <header id="main">
     <h1>Fleet Retirement Planner</h1>
     <p class="lede">Enter a satellite fleet. See when its satellites fall on their own, what disposal costs, what burning up releases into the upper atmosphere, and when servicing beats burning up.</p>
@@ -96,6 +96,7 @@ a{color:var(--accent)}
         <h2>Years to fall, by starting altitude</h2>
         <svg id="chart" viewBox="0 0 640 250" role="img" aria-label="Years to fall on its own against altitude, for this fleet's satellite shape, with the 5-year limit marked"></svg>
         <p class="sub">Line: average density. Band: active sun to quiet sun. Dot: your fleet. Log scale.</p>
+        <p class="sub"><a id="sim-link" href="../simulator/">See it in 3D</a>: this satellite falling from two heights.</p>
       </section>
     </div>
   </div>
@@ -152,7 +153,7 @@ function run(){
   chart(v.mass/v.area,v.alt,r.mean);
 }
 function showSrc(list){const ul=document.createElement("ul");for(const [text,url] of list){const li=document.createElement("li");if(url){const a=document.createElement("a");a.href=url;a.rel="noopener";a.textContent=text;li.append(a);}else li.textContent=text;ul.append(li);}$("src").replaceChildren("Sources:",ul);}
-function load(name){const p=PRESETS[name];$("preset").value=name;for(const id of IDS){$(id).value=p[id];}showSrc(p.src||EX_SRC);run();}
+function load(name){const p=PRESETS[name];$("preset").value=name;$("sim-link").href="../simulator/#"+LINK_IDS[name];for(const id of IDS){$(id).value=p[id];}showSrc(p.src||EX_SRC);run();}
 // An unknown or empty hash falls back to the first preset.
 function loadFromHash(){load(BY_LINK_ID[location.hash.slice(1).toLowerCase()]||Object.keys(PRESETS)[0]);}
 for(const [label,group] of [["Real fleets (public figures)",REAL],["Examples (illustrations)",EXAMPLES]]){const g=document.createElement("optgroup");g.label=label;Object.keys(group).forEach(n=>{const o=document.createElement("option");o.textContent=n;g.append(o);});$("preset").append(g);}
