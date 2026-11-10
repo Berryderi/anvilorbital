@@ -1,0 +1,13 @@
+blue-marble-2004-11-1536.webp: Earth texture for /simulator/.
+Source page: https://science.nasa.gov/earth/earth-observatory/blue-marble-next-generation/base-topography-bathymetry/
+  (Visible Earth record 73909 redirects there)
+Source file: https://assets.science.nasa.gov/content/dam/science/esd/eo/images/bmng/bmng-topography-bathymetry/november/world.topo.bathy.200411.3x5400x2700.jpg
+  5400x2700 JPEG, 2,540,426 bytes, sha256 388422e3bfc62517af2a9d538989a2f859fc193e6f6cde72c3d230ef29c2e69f (downloaded once, 2026-11-10)
+Made with Pillow: resize to 1536x768 (Lanczos), WebP quality 70, method 6. 92,442 bytes,
+  sha256 84d6d0c036744ed9df76c8072b69564a73173ebdb07659f1a3d1487cb8a48cd3
+Licence: NASA Images and Media Usage Guidelines (https://www.nasa.gov/nasa-brand-center/images-and-media/):
+  "NASA content - images, audio, video, and media files used in the rendition of 3-dimensional models,
+  such as texture maps and polygon data in any format - generally are not subject to copyright in the
+  United States." NASA must be acknowledged as the source; use must not imply NASA endorsement.
+  No NASA logos or people in this image.
+Credit shown on the page: NASA Earth Observatory, Blue Marble: Next Generation (November 2004).
