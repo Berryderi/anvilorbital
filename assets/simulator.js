@@ -316,9 +316,11 @@ function recompute2() {
 
 // Same rule as the planner card: above the model's atmosphere table, show only the order of magnitude and say so.
 const TABLE_TOP_KM = T[T.length - 1][0];
-function fallText(start, years) {
-  if (start <= TABLE_TOP_KM) return `${yrs(years)} years`;
-  return (years >= MAX_CLOCK_YEARS ? `more than ${fmt(MAX_CLOCK_YEARS)} years` : `${yrs(years)} years`)
+// approx adds "about " before a number only, so the text never reads "about more than".
+function fallText(start, years, approx = false) {
+  const n = `${approx ? 'about ' : ''}${yrs(years)} years`;
+  if (start <= TABLE_TOP_KM) return n;
+  return (years >= MAX_CLOCK_YEARS ? `more than ${fmt(MAX_CLOCK_YEARS)} years` : n)
     + ` (the model isn't reliable above ${fmt(TABLE_TOP_KM)} km)`;
 }
 function satLine(name, start, h, fallYears) {
@@ -367,8 +369,8 @@ function summarize() {
     const five = m2.five === null ? 'From every height up to 1,200 km it falls within 5 years.'
       : m2.five <= REENTRY + 1 ? 'It misses the 5-year limit from every height shown.'
       : `It falls within 5 years from below about ${fmt(m2.five)} km.`;
-    out.textContent = `A dead "${m2.shape}" satellite (${m2.mA.toFixed(1)} kg per m² facing drag) with ${sunName} sun: from ${fmt(m2.a)} km it falls in about ${fallText(m2.a, m2.L[m2.a])}, `
-      + `from ${fmt(m2.b)} km in about ${fallText(m2.b, m2.L[m2.b])}. ${five} Planner model, not checked by a spacecraft engineer.`;
+    out.textContent = `A dead "${m2.shape}" satellite (${m2.mA.toFixed(1)} kg per m² facing drag) with ${sunName} sun: from ${fmt(m2.a)} km it falls in ${fallText(m2.a, m2.L[m2.a], true)}, `
+      + `from ${fmt(m2.b)} km in ${fallText(m2.b, m2.L[m2.b], true)}. ${five} Planner model, not checked by a spacecraft engineer.`;
   }
 }
 
