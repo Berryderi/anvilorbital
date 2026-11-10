@@ -208,11 +208,22 @@ function run(){
   chart(v.mass/v.area,v.alt,r.mean);
 }
 const PRESETS={...REAL,...EXAMPLES};
+// Link ids: /planner/#<id> opens that preset, so a message can link straight to one fleet.
+const LINK_IDS={"Starlink V2 Mini (SpaceX)":"starlink","Eutelsat OneWeb Gen 1":"oneweb","Amazon Leo (formerly Kuiper)":"amazon-leo",
+ "Starcloud orbital data center filing":"starcloud","SpaceX orbital data center filing (Starmind)":"starmind",
+ "Big-array data center fleet (example)":"data-center","Same fleet, flying lower (example)":"data-center-lower",
+ "Much better servicer, if parts found a buyer (example)":"better-servicer","Reuse a retiring satellite's power for compute, best-case servicer (example)":"reuse-power",
+ "Small imaging constellation (example)":"imaging","Mid-size broadband fleet, high orbit (example)":"broadband-high"};
+// No prototype, so a hash like #constructor or #__proto__ can't match an inherited property.
+const BY_LINK_ID=Object.assign(Object.create(null),Object.fromEntries(Object.entries(LINK_IDS).map(([n,id])=>[id,n])));
 function showSrc(list){const ul=document.createElement("ul");for(const [text,url] of list){const li=document.createElement("li");if(url){const a=document.createElement("a");a.href=url;a.rel="noopener";a.textContent=text;li.append(a);}else li.textContent=text;ul.append(li);}$("src").replaceChildren("Sources:",ul);}
-function load(name){const p=PRESETS[name];for(const id of IDS){$(id).value=p[id];}showSrc(p.src||EX_SRC);run();}
+function load(name){const p=PRESETS[name];$("preset").value=name;for(const id of IDS){$(id).value=p[id];}showSrc(p.src||EX_SRC);run();}
+// An unknown or empty hash falls back to the first preset.
+function loadFromHash(){load(BY_LINK_ID[location.hash.slice(1).toLowerCase()]||Object.keys(PRESETS)[0]);}
 for(const [label,group] of [["Real fleets (public figures)",REAL],["Examples (illustrations)",EXAMPLES]]){const g=document.createElement("optgroup");g.label=label;Object.keys(group).forEach(n=>{const o=document.createElement("option");o.textContent=n;g.append(o);});$("preset").append(g);}
-$("preset").addEventListener("change",e=>load(e.target.value));
+$("preset").addEventListener("change",e=>{load(e.target.value);history.replaceState(null,"","#"+LINK_IDS[e.target.value]);});
+window.addEventListener("hashchange",loadFromHash);
 $("form").addEventListener("input",e=>{if(e.target.id!=="preset")run();});
 $("form").addEventListener("submit",e=>e.preventDefault());
-load(Object.keys(PRESETS)[0]);
+loadFromHash();
 </script>
