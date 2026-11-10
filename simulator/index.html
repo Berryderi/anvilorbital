@@ -25,7 +25,7 @@ main{gap:32px}
 .sim{display:grid;gap:16px;grid-template-columns:minmax(0,1fr)}
 .sim>*,.controls label{min-width:0;max-width:100%}
 .sim select{max-width:100%;text-overflow:ellipsis}
-.stage{position:relative;background:var(--panel);border:1px solid var(--line);aspect-ratio:16/10;max-height:72vh;min-width:0}
+.stage{position:relative;background:var(--scene-bg);border:1px solid var(--line);aspect-ratio:16/10;max-height:72vh;min-width:0}
 @media (max-width:560px){.stage{aspect-ratio:1/1}}
 .stage canvas{display:block;width:100%;height:100%}
 .stage .status{position:absolute;left:12px;top:12px;margin:0;font:500 .8125rem/1.3 var(--mono);color:var(--muted);background:var(--panel);padding:4px 8px}
@@ -65,6 +65,7 @@ main{gap:32px}
         <p class="status" id="status" aria-live="polite"></p>
       </div>
       <p class="small" id="keys">Drag to turn, scroll or pinch to zoom, click a satellite to see it. Keyboard: focus the view, then arrow keys turn it and + or − zoom.</p>
+      <p class="small" id="earth-credit">Earth image: <a href="https://science.nasa.gov/earth/earth-observatory/blue-marble-next-generation/base-topography-bathymetry/" rel="noopener">NASA Earth Observatory, Blue Marble: Next Generation</a> (November 2004), reduced and served from this site. Stars are decoration, not a real sky.</p>
       <p class="note" id="nogl" hidden>This browser can't show 3D graphics here. The summary below still works, and the <a href="../planner/">planner</a> shows the same decay model in 2D.</p>
 
       <div id="panel-1">

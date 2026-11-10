@@ -4,6 +4,9 @@
   --bg:#eef1f4; --panel:#ffffff; --ink:#15212e; --muted:#566473; --line:#cdd5dd;
   --accent:#0f5e8c; --on-accent:#ffffff; --warn:#8a5a00; --warn-soft:#f8ecc9;
   --series-1:#0f5e8c; --series-2:#c2410c; --series-3:#2f7d4f; --series-4:#7a4cb0; --band:#c9dfec;
+  /* Simulator scene only: space is dark in both themes, so these are not redefined for dark mode. */
+  --scene-bg:#04070c; --scene-star:#dce6f0; --scene-1:#4aaeea; --scene-2:#ff8c42; --scene-3:#62d996; --scene-4:#c49cff;
+  --scene-filed-1:#f0c866; --scene-filed-2:#b8c6d4; --scene-atmo:#5aa8ff; --scene-five:#f0c866;
   --display:"Barlow Condensed","Arial Narrow",sans-serif; --body:"IBM Plex Sans",system-ui,sans-serif; --mono:"IBM Plex Mono",ui-monospace,monospace;
 }
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
