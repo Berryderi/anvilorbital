@@ -82,3 +82,10 @@ th,td{text-align:left;padding:8px 12px 8px 0;border-bottom:1px solid var(--line)
 th{font-weight:600;color:var(--ink)}
 td.n,th.n{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
 .note{background:var(--panel);border:1px solid var(--line);padding:16px;max-width:760px}
+
+/* Long-form write-up on the findings page */
+.prose{display:grid;gap:32px}
+.prose h3{margin-bottom:8px}
+.prose .table-wrap,.prose ul.plain{margin-bottom:12px}
+.prose .table-wrap.narrow{max-width:68ch}
+.prose p a,.prose li a{white-space:nowrap}
