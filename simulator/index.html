@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Orbit simulator | Anvil Orbital</title>
+<meta name="description" content="Real satellite fleets where they are now, propagated from a dated snapshot, and what happens to one satellite after it dies, using the planner's decay model.">
+<meta property="og:title" content="Orbit simulator | Anvil Orbital">
+<meta property="og:description" content="Real satellite fleets where they are now, and what happens to one satellite after it dies.">
+<meta property="og:type" content="website">
+<link rel="icon" href="../assets/mark.svg" type="image/svg+xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap">
+<link rel="stylesheet" href="../assets/site.css">
+<link rel="stylesheet" href="../assets/nav.css">
+<script type="importmap">{"imports":{"three":"../assets/vendor/three/three.module.js"}}</script>
+<link rel="modulepreload" href="../assets/vendor/three/three.module.js">
+<link rel="modulepreload" href="../assets/vendor/three/three.core.js">
+<style>
+/* Simulator layout: the 3D stage, then its controls, readouts and a plain-text summary. Colours are site tokens only. */
+main{gap:32px}
+.mode-switch{display:flex;flex-wrap:wrap;gap:8px}
+.ctl,.sim select,.sim input{font:500 .9375rem/1.2 var(--body);min-height:44px;padding:8px 12px;background:var(--panel);color:var(--ink);border:1px solid var(--line);border-radius:0}
+.ctl{cursor:pointer}
+.ctl[aria-pressed="true"]{background:var(--accent);color:var(--on-accent);border-color:var(--accent)}
+.ctl:focus-visible,.sim select:focus-visible,.sim input:focus-visible,.stage canvas:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.sim{display:grid;gap:16px;grid-template-columns:minmax(0,1fr)}
+.sim>*,.controls label{min-width:0;max-width:100%}
+.sim select{max-width:100%;text-overflow:ellipsis}
+.stage{position:relative;background:var(--panel);border:1px solid var(--line);aspect-ratio:16/10;max-height:72vh;min-width:0}
+@media (max-width:560px){.stage{aspect-ratio:1/1}}
+.stage canvas{display:block;width:100%;height:100%}
+.stage .status{position:absolute;left:12px;top:12px;margin:0;font:500 .8125rem/1.3 var(--mono);color:var(--muted);background:var(--panel);padding:4px 8px}
+.controls{display:flex;flex-wrap:wrap;align-items:end;gap:12px}
+.controls label{display:grid;grid-template-columns:minmax(0,1fr);gap:4px;font-size:.8125rem;color:var(--muted)}
+.controls .group{display:flex;gap:4px}
+.readout{font:500 .9375rem/1.5 var(--mono);margin:0;font-variant-numeric:tabular-nums}
+.legend{display:flex;flex-wrap:wrap;gap:4px 16px;margin:0;padding:0;list-style:none;font-size:.875rem;color:var(--muted)}
+.legend li::before{content:"";display:inline-block;width:10px;height:10px;margin-right:6px;vertical-align:-1px;background:var(--c);border-radius:50%}
+.legend li.shell::before{background:none;border:1px dashed var(--c)}
+.legend li.ring::before{border-radius:0;height:3px;vertical-align:3px}
+.info{min-height:48px}
+#panel-1,#panel-2{display:grid;gap:12px}
+.cols{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+@media (max-width:560px){.cols{grid-template-columns:minmax(0,1fr)}}
+.cols .readout{background:var(--panel);border:1px solid var(--line);padding:12px;border-left:4px solid var(--c)}
+[hidden]{display:none !important}
+</style>
+<div class="page">
+  <a class="skip" href="#main">Skip to content</a>
+  <header class="site-head"><a class="brand" href="../"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 7h20c0 3.2-3.4 4.8-7 5v2.2l3.5 3.8H5.5L9 14.2V12C5.4 11.8 2 10.2 2 7z"/></svg>Anvil Orbital</a><nav class="site-nav" aria-label="Main"><a href="../idea/">The idea</a><a href="../planner/">Planner</a><a href="../simulator/" aria-current="page">Simulator</a><a href="../findings/">Findings</a><a href="../roadmap/">Roadmap</a><a href="../about/">About</a><a href="../contact/">Contact</a></nav></header>
+  <main id="main">
+    <section>
+      <h1 class="short">Orbit simulator</h1>
+      <p class="lede">Real fleets where they are now, and what happens to one satellite after it dies.</p>
+      <p class="actions"><span class="tag">Simulation. Simplified physics, not checked by a spacecraft engineer.</span></p>
+    </section>
+
+    <section class="sim" aria-label="Simulator">
+      <div class="mode-switch" role="group" aria-label="Mode">
+        <button class="ctl" type="button" id="mode-1" aria-pressed="true">Real fleets, real positions</button>
+        <button class="ctl" type="button" id="mode-2" aria-pressed="false">When a satellite dies</button>
+      </div>
+
+      <div class="stage" id="stage">
+        <canvas id="scene" tabindex="0" role="img" aria-label="3D view of Earth and satellites. Described in the summary below the controls." aria-describedby="keys"></canvas>
+        <p class="status" id="status" aria-live="polite"></p>
+      </div>
+      <p class="small" id="keys">Drag to turn, scroll or pinch to zoom, click a satellite to see it. Keyboard: focus the view, then arrow keys turn it and + or − zoom.</p>
+      <p class="note" id="nogl" hidden>This browser can't show 3D graphics here. The summary below still works, and the <a href="../planner/">planner</a> shows the same decay model in 2D.</p>
+
+      <div id="panel-1">
+        <div class="controls">
+          <div class="group" role="group" aria-label="Time">
+            <button class="ctl" type="button" id="play-1">Pause</button>
+            <button class="ctl" type="button" id="now-1">Reset to now</button>
+          </div>
+          <label>Speed<select id="speed-1"><option value="1">x1 (real time)</option><option value="10">x10</option><option value="100" selected>x100</option><option value="1000">x1,000</option><option value="10000">x10,000</option></select></label>
+          <div class="group" role="group" aria-label="Turn and zoom" id="view-ctl">
+            <button class="ctl" type="button" data-turn="-1" aria-label="Turn left">←</button>
+            <button class="ctl" type="button" data-turn="1" aria-label="Turn right">→</button>
+            <button class="ctl" type="button" data-zoom="0.8" aria-label="Zoom in">+</button>
+            <button class="ctl" type="button" data-zoom="1.25" aria-label="Zoom out">−</button>
+          </div>
+          <label>Fleet<select id="fleet-pick"></select></label>
+          <button class="ctl" type="button" id="next-sat">Next satellite</button>
+        </div>
+        <p class="readout" id="clock-1"></p>
+        <ul class="legend" id="legend-1"></ul>
+        <p class="small" id="data-note"></p>
+        <p class="readout info" id="info" aria-live="polite">Click a satellite, or pick a fleet and press Next satellite.</p>
+      </div>
+
+      <div id="panel-2" hidden>
+        <div class="controls">
+          <label>Satellite shape (planner preset)<select id="shape"></select></label>
+          <label>Height A, km<input id="alt-a" type="number" min="300" max="1200" step="1" value="550" inputmode="numeric"></label>
+          <label>Height B, km<input id="alt-b" type="number" min="300" max="1200" step="1" value="800" inputmode="numeric"></label>
+          <label>Sun<select id="sun"><option value="3">Active</option><option value="1" selected>Average</option><option value="0.3">Quiet</option></select></label>
+        </div>
+        <div class="controls">
+          <div class="group" role="group" aria-label="Time">
+            <button class="ctl" type="button" id="play-2">Pause</button>
+            <button class="ctl" type="button" id="reset-2">Start again</button>
+          </div>
+          <label>Speed<select id="speed-2"><option value="0.0833333">1 month a second</option><option value="1" selected>1 year a second</option><option value="10">10 years a second</option></select></label>
+          <label>Years passed<input id="years" type="range" min="0" max="20" step="any" value="0"></label>
+        </div>
+        <p class="readout" id="clock-2"></p>
+        <div class="cols">
+          <p class="readout" id="sat-a" style="--c:var(--series-1)"></p>
+          <p class="readout" id="sat-b" style="--c:var(--series-2)"></p>
+        </div>
+        <ul class="legend">
+          <li style="--c:var(--series-1)">Satellite A</li>
+          <li style="--c:var(--series-2)">Satellite B</li>
+          <li class="ring" style="--c:var(--warn)">Five-year line: from below it, this shape falls within 5 years on its own</li>
+        </ul>
+        <p class="small">Uses the planner's own decay model (the same code file). Heights are drawn 4 times taller than real so the difference shows; orbit speed is not to scale. Above 1,000 km the model isn't reliable: its atmosphere table stops there.</p>
+      </div>
+    </section>
+
+    <section aria-labelledby="summary-h">
+      <h2 id="summary-h">What the view shows</h2>
+      <p id="summary">Loading.</p>
+      <noscript><p>The simulator needs JavaScript. The <a href="../planner/">planner</a> shows the same decay model without it.</p></noscript>
+    </section>
+  </main>
+  <footer class="site-foot"><span>Anvil Orbital. Estimates are unchecked models, not quotes or promises.</span><span><a href="../privacy/">Privacy</a> &middot; <a href="https://github.com/Berryderi/anvilorbital">Code</a></span></footer>
+</div>
+<script src="../assets/model.js"></script>
+<script src="../assets/presets.js"></script>
+<script type="module" src="../assets/simulator.js"></script>

@@ -3,17 +3,17 @@
 :root{
   --bg:#eef1f4; --panel:#ffffff; --ink:#15212e; --muted:#566473; --line:#cdd5dd;
   --accent:#0f5e8c; --on-accent:#ffffff; --warn:#8a5a00; --warn-soft:#f8ecc9;
-  --series-1:#0f5e8c; --series-2:#c2410c; --band:#c9dfec;
+  --series-1:#0f5e8c; --series-2:#c2410c; --series-3:#2f7d4f; --series-4:#7a4cb0; --band:#c9dfec;
   --display:"Barlow Condensed","Arial Narrow",sans-serif; --body:"IBM Plex Sans",system-ui,sans-serif; --mono:"IBM Plex Mono",ui-monospace,monospace;
 }
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
   --bg:#0d151d; --panel:#16212c; --ink:#e7edf3; --muted:#9dabb9; --line:#2d3b49;
   --accent:#6fbce6; --on-accent:#0d151d; --warn:#f0c866; --warn-soft:#352a0d;
-  --series-1:#2e90cc; --series-2:#dd7428; --band:#1f3d52; color-scheme:dark}}
+  --series-1:#2e90cc; --series-2:#dd7428; --series-3:#5cc58a; --series-4:#b48ae8; --band:#1f3d52; color-scheme:dark}}
 :root[data-theme="dark"]{
   --bg:#0d151d; --panel:#16212c; --ink:#e7edf3; --muted:#9dabb9; --line:#2d3b49;
   --accent:#6fbce6; --on-accent:#0d151d; --warn:#f0c866; --warn-soft:#352a0d;
-  --series-1:#2e90cc; --series-2:#dd7428; --band:#1f3d52; color-scheme:dark}
+  --series-1:#2e90cc; --series-2:#dd7428; --series-3:#5cc58a; --series-4:#b48ae8; --band:#1f3d52; color-scheme:dark}
 *{box-sizing:border-box}
 html{-webkit-text-size-adjust:100%}
 body{margin:0;background:var(--bg);color:var(--ink);font:400 1.0625rem/1.55 var(--body);padding:16px max(16px,env(safe-area-inset-right,0px)) 40px max(16px,env(safe-area-inset-left,0px))}
