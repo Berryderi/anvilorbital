@@ -55,8 +55,8 @@ let renderer = null, scene = null, camera = null, controls = null;
 const earthRadius = R_EARTH_KM / UNIT_KM;
 
 if (gl) {
-  renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
-  renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+  renderer = new THREE.WebGLRenderer({ canvas, antialias: false });
+  renderer.setPixelRatio(1);   // 1 CSS pixel per drawn pixel: up to 4x fewer pixels than before on high-DPI screens
   scene = new THREE.Scene();
   camera = new THREE.PerspectiveCamera(40, 1, 0.1, 400);
   camera.position.set(14, 9, 22);
@@ -92,7 +92,7 @@ function setSun(date) {
 
 // ---------- Mode 1: real fleets ----------
 const m1 = { group: gl ? new THREE.Group() : null, sats: [], recs: [], geom: null, points: null, sel: null, selIndex: -1,
-  t: Date.now(), playing: !reduceMotion.matches, speed: 100, cursor: 0, loaded: false, loading: false, meta: null, failed: 0 };
+  t: Date.now(), playing: false, speed: 100, cursor: 0, loaded: false, loading: false, meta: null, failed: 0 };
 if (gl) scene.add(m1.group);
 
 function circle(rKm, exaggerate = 1, segments = 128) {
@@ -250,7 +250,7 @@ function clock1() {
 }
 
 // ---------- Mode 2: one dead satellite ----------
-const m2 = { group: gl ? new THREE.Group() : null, years: 0, playing: !reduceMotion.matches, speed: 1, shape: null,
+const m2 = { group: gl ? new THREE.Group() : null, years: 0, playing: false, speed: 1, shape: null,
   L: null, angleA: 0, angleB: Math.PI, rings: {} };
 if (gl) {
   scene.add(m2.group); m2.group.visible = false;
@@ -411,11 +411,26 @@ function applyHash() {
   } else setMode(1, false);
 }
 
-// ---------- Loop: renders only while something moves, and never while the tab is hidden ----------
-let raf = 0, last = 0, dirty = true;
-function requestRender() { dirty = true; if (!raf && !document.hidden) raf = requestAnimationFrame(frame); }
+// ---------- Loop: renders only while something moves, at most FPS_CAP times a second, and never while the
+// tab is hidden or the view is off screen. One frame is pending at a time: requestRender is a no-op while
+// one is scheduled or running, so calls made during a frame (update2, showSatellite, controls) never start
+// a second chain. The cap waits with a timer, so a paced frame costs one callback, not several skipped ones.
+// Frames follow a fixed schedule (due += FRAME_MS), so an early wake never adds frames over a second.
+const FPS_CAP = 30;
+const FRAME_MS = 1000 / FPS_CAP;
+const VSYNC_SLACK_MS = 4;             // wake a little early so the frame lands on the display refresh it is due at
+let raf = 0, timer = 0, pending = false, last = 0, due = -Infinity, onScreen = true;
+function requestRender() {
+  if (pending || document.hidden || !onScreen) return;
+  pending = true;
+  const wait = due - VSYNC_SLACK_MS - performance.now();
+  if (wait > 0) timer = setTimeout(() => { timer = 0; raf = requestAnimationFrame(frame); }, wait);
+  else raf = requestAnimationFrame(frame);
+}
+function stopLoop() { clearTimeout(timer); cancelAnimationFrame(raf); timer = raf = 0; pending = false; last = 0; }
 function frame(ts) {
   raf = 0;
+  due = ts - due > FRAME_MS ? ts + FRAME_MS : due + FRAME_MS;   // after an idle or slow spell, restart the schedule; never catch up
   const dt = last ? Math.min(MAX_FRAME_S, (ts - last) / 1000) : 0; last = ts;
   let moving = false;
   if (mode === 1 && m1.playing && m1.loaded) {
@@ -433,13 +448,12 @@ function frame(ts) {
     moving = m2.playing;
   }
   const damping = controls ? controls.update() : false;
-  if (gl && (dirty || moving || damping)) renderer.render(scene, camera);
-  dirty = false;
-  if (moving || damping) raf = requestAnimationFrame(frame); else last = 0;
+  if (gl) renderer.render(scene, camera);
+  pending = false;
+  if (moving || damping) requestRender(); else last = 0;
 }
-document.addEventListener('visibilitychange', () => {
-  if (document.hidden) { cancelAnimationFrame(raf); raf = 0; last = 0; } else requestRender();
-});
+document.addEventListener('visibilitychange', () => { if (document.hidden) stopLoop(); else requestRender(); });
+if (gl) new IntersectionObserver(([e]) => { onScreen = e.isIntersecting; if (onScreen) requestRender(); else stopLoop(); }).observe($('stage'));
 
 // ---------- Resize, input ----------
 function resize() {
