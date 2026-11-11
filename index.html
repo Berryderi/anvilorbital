@@ -1,94 +1,130 @@
 <!doctype html>
 <html lang="en">
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Anvil Orbital</title>
 <meta name="description" content="We want to turn retired satellites into data centers in orbit, and recycle the rest. We're starting with a free fleet retirement planner.">
 <meta property="og:title" content="Anvil Orbital">
 <meta property="og:description" content="We want to turn retired satellites into data centers in orbit, and recycle the rest. We're starting with a free fleet retirement planner.">
 <meta property="og:type" content="website">
-<link rel="icon" href="assets/mark.svg" type="image/svg+xml">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap">
-<link rel="stylesheet" href="assets/site.css">
-<link rel="stylesheet" href="assets/nav.css">
-<div class="page">
-  <a class="skip" href="#main">Skip to content</a>
-  <header class="site-head"><a class="brand" href="./"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 7h20c0 3.2-3.4 4.8-7 5v2.2l3.5 3.8H5.5L9 14.2V12C5.4 11.8 2 10.2 2 7z"/></svg>Anvil Orbital</a><nav class="site-nav" aria-label="Main"><a href="simulator/">Simulator</a><a href="planner/">Planner</a><a href="findings/">Findings</a><a href="about/">About</a></nav></header>
-  <main id="main">
-    <section class="hero">
-      <div>
-        <h1>We want to turn retired satellites into data centers in orbit, and recycle the rest.</h1>
-        <p class="lede">With their owners' agreement, tugs would bring retired satellites to a station in low orbit. None of that hardware exists yet, so we started with software you can use today.</p>
-        <div class="actions"><a class="button" href="planner/">Try the Fleet Retirement Planner</a><a href="findings/">Read what we've found so far</a></div>
-      </div>
-      <figure class="scene" id="hero-scene" hidden>
-        <canvas id="hero-canvas" role="img" aria-label="Animation: Earth with two orbit shells."></canvas>
-        <figcaption><span id="hero-line"></span>
-          <span class="actions"><button class="ghost" type="button" id="hero-replay">Replay</button><a href="planner/">Try your fleet</a></span></figcaption>
-      </figure>
-    </section>
-    <figure class="shot">
-      <a href="planner/"><img src="assets/planner.webp" width="1200" height="736" alt="The Fleet Retirement Planner with an example fleet of 1,000 satellites at 700 km. It shows 4.8 years to fall, $159k disposal cost each, 72 tonnes of aluminum oxide a year, and that burning up beats servicing at the price entered."></a>
-      <figcaption>The planner running an example fleet. Enter your own numbers and all four answers update.</figcaption>
-    </figure>
-    <section aria-labelledby="stands">
-      <h2 id="stands">Where this really stands</h2>
-      <ul class="plain">
+<meta name="color-scheme" content="dark">
+<link rel="icon" href="/assets/mark.svg" type="image/svg+xml">
+<link rel="preload" href="/assets/vendor/fonts/archivo/archivo-latin-wdth-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/assets/tokens.css">
+<link rel="stylesheet" href="/assets/base.css">
+<link rel="stylesheet" href="/assets/page.css">
+<script>{const h=document.documentElement;h.classList.add("js");if(!matchMedia("(prefers-reduced-motion: reduce)").matches)h.classList.add("reveal-ready");}</script>
+<script type="importmap">{"imports":{"three":"/assets/vendor/three/three.module.js"}}</script>
+<body class="home">
+<canvas id="space" aria-hidden="true"></canvas>
+<a class="skip" href="#main">Skip to content</a>
+<header class="nav" id="nav">
+  <a class="nav-brand" href="/" aria-label="Anvil Orbital, home"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 7h20c0 3.2-3.4 4.8-7 5v2.2l3.5 3.8H5.5L9 14.2V12C5.4 11.8 2 10.2 2 7z"/></svg><span>Anvil Orbital</span></a>
+  <nav aria-label="Chapters"><ul class="nav-links"><li><a href="#simulator" data-ch="simulator">Simulator</a></li><li><a href="#planner" data-ch="planner">Planner</a></li><li><a href="#findings" data-ch="findings">Findings</a></li><li><a href="#about" data-ch="about">About</a></li></ul><span class="nav-marker" aria-hidden="true"></span></nav>
+</header>
+<main id="main" class="chapters">
+
+  <section class="chapter ch-hero" id="hero" aria-labelledby="hero-h">
+    <div class="ch-text">
+      <h1 id="hero-h" data-reveal="lines">We want to turn retired satellites into data centers in orbit, and recycle the rest.</h1>
+      <p class="lede" data-reveal="lines">With their owners' agreement, tugs would bring retired satellites to a station in low orbit. None of that hardware exists yet, so we started with software you can use today.</p>
+      <div class="actions" data-reveal><a class="btn btn-primary" href="#planner">Try your fleet</a><a href="#findings">Read what we've found so far</a></div>
+    </div>
+    <div class="ch-aside" data-reveal>
+      <h2 class="label" id="stands">Where this really stands</h2>
+      <ul class="list" data-reveal>
         <li>We haven't asked anyone to pay, and nobody has agreed to.</li>
         <li>At our first estimates, the station costs far more per satellite than the recovered parts are worth.</li>
         <li>The planner is a simple model. No spacecraft engineer has checked it, and we don't have one on the team yet.</li>
         <li>This is a two-founder project at the idea stage. No company has been formed.</li>
       </ul>
-      <div class="actions"><a href="#roadmap">See the steps, and what would make us stop</a><a href="about/#contact">Tell us where we're wrong</a></div>
-    </section>
-    <div class="part" id="idea" aria-labelledby="idea-h" role="region">
-      <section>
-        <h2 id="idea-h">What happens to a satellite when it retires?</h2>
-        <p class="lede">Today, most low-orbit satellites either burn up or stay up as dead objects. We want to find out whether some of them are worth more in orbit.</p>
-      </section>
-      <section aria-labelledby="why">
-        <h3 id="why">Why we think it's worth asking</h3>
-        <ul class="plain">
+    </div>
+    <p class="scene-note small" data-scene-only hidden>Positions from public CelesTrak data, snapshot of 10 Nov 2026. <span class="pointer-only">Point at a satellite to see what it is.</span><span class="touch-only">Tap a satellite to see what it is.</span></p>
+  </section>
+
+  <section class="chapter ch-retire" id="retire" aria-labelledby="retire-h">
+    <span id="idea" class="anchor"></span>
+    <div class="ch-text">
+      <h2 id="retire-h" data-reveal="lines">What happens to a satellite when it retires?</h2>
+      <p class="lede" data-reveal="lines">Today, most low-orbit satellites either burn up or stay up as dead objects. We want to find out whether some of them are worth more in orbit.</p>
+      <p class="data fall-line" id="fall-line" data-reveal hidden></p>
+    </div>
+    <div class="ch-text ch-later" id="why">
+      <h3 data-reveal>Why we think it's worth asking</h3>
+      <ul class="list" data-reveal>
           <li><strong>Very large fleets are being planned.</strong> Starcloud has <a href="https://interestingengineering.com/space/starcloud-orbital-ai-datacenter-satellites">filed for up to 88,000 satellites</a>. SpaceX's filing proposes 1 million, and <a href="https://arstechnica.com/science/2026/08/spacexs-orbital-data-centers-would-create-a-new-category-of-e-waste/">one estimate from Ars Technica</a> has about 200,000 of those retiring every year. These are filings, not flying fleets.</li>
           <li><strong>Burning up isn't free of side effects.</strong> One model has a 250 kg satellite releasing <a href="https://talksatellite.com/Geophysical%20Research%20Letters%20-%202024%20-%20Ferreira%20-%20Potential%20Ozone%20Depletion%20From%20Satellite%20Demise%20During%20Atmospheric%20Reentry.pdf">about 30 kg of aluminum oxide</a>. <a href="https://cires.colorado.edu/news/within-15-years-plummeting-satellites-could-release-enough-aluminum-alter-winds-temp">CIRES researchers</a> estimate re-entries could rival natural meteor dust by 2040. The effect on ozone is still uncertain.</li>
           <li><strong>Dead satellites already exist.</strong> Public catalogs list about 500 to 1,900 dead satellites in low orbit, depending on the catalog (<a href="https://celestrak.org/">CelesTrak</a> 529, <a href="https://planet4589.org/space/gcat/">GCAT</a> 1,878). Nobody has checked each one with its owner.</li>
         </ul>
-      </section>
-      <section aria-labelledby="concept">
-        <span class="label">Concept only. None of this is built.</span>
-        <h3 id="concept">The concept</h3>
-        <ol class="chain">
-          <li><span class="label">Start</span><h4>A retired satellite</h4><p>Its owner has agreed. Nothing happens without that.</p></li>
-          <li><span class="label">Move</span><h4>A tug</h4><p>A small spacecraft brings it to the station.</p></li>
-          <li><span class="label">Work</span><h4>A station in low orbit</h4><p>Robots service it there.</p></li>
-        </ol>
-        <div class="outcomes">
-          <div><span class="label">Then, if it has the power</span><h4>A data center node</h4><p>It gets a compute module and goes back out. This fits high-power satellites, if servicing gets about 7 to 10 times cheaper and someone buys the compute.</p></div>
-          <div><span class="label">Otherwise</span><h4>Recovered parts</h4><p>Working parts and materials get reused in orbit. We haven't found a buyer for them yet.</p></div>
-        </div>
-      </section>
-      <section aria-labelledby="true">
-        <h3 id="true">What has to be true</h3>
-        <p>We don't know yet whether any of these hold. <a href="findings/">Our findings so far</a> say several don't at today's estimates.</p>
-        <ul class="plain">
+    </div>
+    <div class="ch-text ch-later" id="concept">
+      <p class="label" data-reveal>Concept only. None of this is built.</p>
+      <h3 data-reveal>The concept</h3>
+      <ol class="flow" data-reveal><li><span class="label">Start</span><h4>A retired satellite</h4><p>Its owner has agreed. Nothing happens without that.</p></li>
+        <li><span class="label">Move</span><h4>A tug</h4><p>A small spacecraft brings it to the station.</p></li>
+        <li><span class="label">Work</span><h4>A station in low orbit</h4><p>Robots service it there.</p></li>
+        <li class="outcome"><span class="label">Then, if it has the power</span><h4>A data center node</h4><p>It gets a compute module and goes back out. This fits high-power satellites, if servicing gets about 7 to 10 times cheaper and someone buys the compute.</p></li>
+        <li class="outcome"><span class="label">Otherwise</span><h4>Recovered parts</h4><p>Working parts and materials get reused in orbit. We haven't found a buyer for them yet.</p></li></ol>
+    </div>
+    <div class="ch-text ch-later" id="true">
+      <h3 data-reveal>What has to be true</h3>
+      <p data-reveal>We don't know yet whether any of these hold. <a href="/findings/">Our findings so far</a> say several don't at today's estimates.</p>
+      <ul class="list" data-reveal>
           <li>Fleet designers see retirement as an open problem, and someone would pay to solve it.</li>
           <li>Servicing gets about 7 to 10 times cheaper than our model's default, and someone buys the compute.</li>
           <li>A robot can capture a satellite that wasn't built for it. We found no completed example in low orbit.</li>
           <li>Owners, and the countries that registered their satellites, agree. Ideally the agreement is signed before launch.</li>
           <li>A spacecraft engineer joins us. Neither of us has that experience.</li>
         </ul>
-      </section>
-      <section aria-labelledby="first">
-        <h3 id="first">Why we started with software</h3>
-        <p>Hardware takes years and far more money than we have. A planner can run today for free, and it gets us talking to the people who would have to want this. <a href="planner/">Try it</a>.</p>
-      </section>
+      <h3 data-reveal>Why we started with software</h3>
+      <p data-reveal>Hardware takes years and far more money than we have. A planner can run today for free, and it gets us talking to the people who would have to want this. <a href="/planner/">Try it</a>.</p>
     </div>
-    <div class="part" id="roadmap" aria-labelledby="roadmap-h" role="region">
-      <section>
-        <h2 id="roadmap-h">Six steps. We're on the first.</h2>
-        <p class="lede">Each step has to prove the next one. This is our current plan and it will change. If the early answers come back bad, we'd rather stop than keep building.</p>
-      </section>
-      <ol class="rows">
+  </section>
+
+  <section class="chapter ch-simulator ch-right" id="simulator" aria-labelledby="simulator-h">
+    <div class="ch-text">
+      <h2 id="simulator-h" data-reveal="lines">Orbit simulator</h2>
+      <p class="lede" data-reveal="lines">Real fleets where they are now, and what happens to one satellite after it dies.</p>
+      <p data-reveal><span class="tag tag-caution">Simulation. Simplified physics, not checked by a spacecraft engineer.</span></p>
+      <p data-reveal><a class="btn" href="/simulator/">Open full simulator</a></p>
+    </div>
+  </section>
+
+  <section class="chapter ch-planner" id="planner" aria-labelledby="planner-h">
+    <div class="ch-text">
+      <h2 id="planner-h" data-reveal="lines">Fleet Retirement Planner</h2>
+      <p class="lede" data-reveal="lines">Enter a satellite fleet. See when its satellites fall on their own, what disposal costs, what burning up releases into the upper atmosphere, and when servicing beats burning up.</p>
+    </div>
+    <form class="mini" id="mini" data-reveal hidden>
+      <label>Fleet<select id="mini-preset"></select></label>
+      <dl class="answers" aria-live="polite">
+        <div><dt>When does it fall on its own?</dt><dd class="data-big" id="m1"></dd><dd><span class="tag" id="m1p"></span></dd></div>
+        <div><dt>What does disposal cost?</dt><dd class="data-big" id="m2"></dd></div>
+        <div><dt>What does burning up release?</dt><dd class="data-big" id="m3"></dd></div>
+        <div><dt>Does servicing beat burning up?</dt><dd class="data-big" id="m4"></dd><dd><span class="tag" id="m4p"></span></dd></div>
+      </dl>
+      <p class="small">Simple model, not checked by a spacecraft engineer. Sources, assumptions and every input are in the full planner.</p>
+      <p><a class="btn btn-primary" id="mini-open" href="/planner/">Open full planner</a></p>
+    </form>
+    <p class="ch-text no-js-only"><a class="btn btn-primary" href="/planner/">Open the planner</a></p>
+  </section>
+
+  <section class="chapter ch-findings ch-right" id="findings" aria-labelledby="findings-h">
+    <div class="ch-text ch-read">
+      <h2 id="findings-h" data-reveal="lines">What we've found so far</h2>
+      <p class="lede" data-reveal="lines">Desk research and simple models from November 2026. Some of it argues against our own idea, and we'd rather show that than hide it.</p>
+      <p data-reveal>One verdict we already have: collecting dead satellites for their hardware doesn't pay. In our model it costs about $18.6M per satellite, or about $3M with every input in its favour [our model]. Assuming a third of a 700 kg satellite is reusable, its parts are worth $46k-$116k at launch prices of $200-500/kg: a Google projection for the mid-2030s [<a href="https://research.google/blog/exploring-a-space-based-scalable-ai-infrastructure-system-design/">odc-13</a>] and Starcloud's CEO's stated cost threshold [<a href="https://thenextweb.com/news/starcloud-170m-series">odc-08</a>]. That is why we are asking about retirement instead.</p>
+      <p class="trust small" data-reveal><strong>How far to trust this:</strong> no spacecraft engineer or lawyer has checked it, and every cost is an unchecked assumption. We've had one informal industry call and no customer interviews. We used AI tools for the research and the models. This isn't engineering, legal or investment advice. <a href="/about/#contact">Tell us if you find a mistake</a>.</p>
+      <p data-reveal><a class="btn" href="/findings/">Read all findings</a></p>
+    </div>
+  </section>
+
+  <section class="chapter ch-roadmap" id="roadmap" aria-labelledby="roadmap-h">
+    <div class="ch-text">
+      <h2 id="roadmap-h" data-reveal="lines">Six steps. We're on the first.</h2>
+      <p class="lede" data-reveal="lines">Each step has to prove the next one. This is our current plan and it will change. If the early answers come back bad, we'd rather stop than keep building.</p>
+    </div>
+    <ol class="steps" data-reveal>
         <li><span class="num">01</span><div><span class="tag">Running now</span><h3>Planner</h3><p>A free tool that shows a fleet when its satellites fall, what disposal costs, and when servicing beats burning up.</p><p class="small"><strong>To move on:</strong> people outside the team use it. Nobody has yet.</p></div></li>
         <li><span class="num">02</span><div><span class="tag">Next</span><h3>Calls with fleet designers</h3><p>Ten conversations with the people designing new fleets, by December 1, 2026.</p><p class="small"><strong>To move on:</strong> at least 2 of 10 call retirement an open design question. If not, we stop.</p></div></li>
         <li><span class="num">03</span><div><span class="tag">Not started</span><h3>Paid work</h3><p>Studies or software, if anyone will pay for them.</p><p class="small"><strong>To move on:</strong> a written budget line from an operator or builder, and a named engineer on the record. If there's no paid work, we stop the company plans.</p></div></li>
@@ -96,10 +132,47 @@
         <li><span class="num">05</span><div><span class="tag">Not started</span><h3>Tug and station</h3><p>Hardware, and far more money. Going by what other companies raised, not a quote: about $21M to $72M for a flight demo, 2030 to 2033 at the earliest, and about $100M to $380M or more to reach a working service.</p><p class="small"><strong>To move on:</strong> the flight demo works and a customer comes back. We can't give a profit date.</p></div></li>
         <li><span class="num">06</span><div><span class="tag">Not started</span><h3>Data center nodes and parts</h3><p>What the whole thing is for.</p><p class="small"><strong>To get here:</strong> servicing gets far cheaper and someone buys the compute.</p></div></li>
       </ol>
+  </section>
+
+  <section class="chapter ch-about" id="about" aria-labelledby="about-h">
+    <div class="ch-text">
+      <h2 id="about-h" data-reveal="lines">Two founders, at the very start</h2>
+      <p class="lede" data-reveal="lines">We're two high school students in Ontario. We started on this on November 2, 2026, and we work on it alongside school.</p>
+      <h3 data-reveal>Who does what</h3>
+      <p data-reveal>One of us builds the software. The other leads the non-technical side. We use AI coding and research tools, and we say where nobody has checked the results.</p>
+      <h3 data-reveal>What we don't have</h3>
+      <ul class="list" data-reveal>
+        <li><strong>Spacecraft experience.</strong> Neither of us has built a spacecraft, a robot or space hardware. This is our first gap.</li>
+        <li><strong>Customers.</strong> Nobody has used this and nobody has agreed to pay.</li>
+        <li><strong>A company.</strong> None has been formed, and we've taken no investment. We're under 18, so an adult would need to sign any contract.</li>
+      </ul>
+      <h3 data-reveal>Who we'd like to hear from</h3>
+      <p data-reveal>Spacecraft engineers who can tell us what's wrong with our models, and people designing or running satellite fleets who think about end of life. <a href="#contact">Get in touch</a>.</p>
     </div>
-  </main>
-  <footer class="site-foot"><span>Anvil Orbital. Estimates are unchecked models, not quotes or promises.</span><span><a href="privacy/">Privacy</a> &middot; <a href="https://github.com/Berryderi/anvilorbital">Code</a></span></footer>
-</div>
-<script src="assets/model.js" defer></script>
-<script src="assets/presets.js" defer></script>
-<script src="assets/home.js" defer></script>
+    <div class="ch-text contact" id="contact">
+      <p class="label" data-reveal>Reach us</p>
+      <h2 data-reveal="lines">Tell us where we're wrong</h2>
+      <p class="lede" data-reveal="lines">We especially want to hear from spacecraft engineers and from people who design or run satellite fleets. A correction helps us more than encouragement does.</p>
+      <p data-reveal>If we emailed you, just reply to that email, and we won't quote you without your permission.</p>
+      <p data-reveal><a class="btn btn-primary" href="https://github.com/Berryderi/anvilorbital/issues/new">Leave us a note on GitHub</a></p>
+      <p class="small" data-reveal>This needs a free GitHub account, and notes are public, so please don't include anything private.</p>
+      <h3 data-reveal>What would help most</h3>
+      <ul class="list" data-reveal>
+          <li>A number or assumption in the <a href="/planner/">planner</a> or <a href="/findings/">findings</a> that's wrong, and what it should be.</li>
+          <li>How your team plans for satellites at end of life today.</li>
+          <li>Why this wouldn't work, if you already know.</li>
+        </ul>
+    </div>
+  </section>
+</main>
+<footer class="foot">
+  <p>Anvil Orbital. Estimates are unchecked models, not quotes or promises.</p>
+  <p><a href="/privacy/">Privacy</a> <span aria-hidden="true">·</span> <a href="https://github.com/Berryderi/anvilorbital">Code</a></p>
+  <p class="small" data-scene-only hidden>Earth: NASA Earth Observatory, Blue Marble / Black Marble</p>
+</footer>
+<div class="pick" id="pick" aria-hidden="true" hidden></div>
+<script src="/assets/model.js" defer></script>
+<script src="/assets/presets.js" defer></script>
+<script src="/assets/page.js" defer></script>
+</body>
+</html>

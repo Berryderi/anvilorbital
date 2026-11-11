@@ -9,7 +9,7 @@
    3. Engineer to engineer: concrete nouns (shell, plane, km/s, kg), short declarative sentences.
    Two banned constructions:
    - The contrast pivot: "It's not just X, it's Y", "Not X. Y."
-   - Hype verbs and futures: transform, revolutionize, unlock, seamless, "the future of", "validated". */
+   - Hype verbs and futures: transform, revolutionize, unlock, seamless, "the future of"; plus the words the house rules ban. */
 
 /* ---------- Type ----------
    Archivo: a grotesque drawn for both headlines and text, with a width axis, so one 90 KB file gives tight
@@ -56,7 +56,7 @@
   --font-sans: "Archivo", system-ui, -apple-system, "Segoe UI", sans-serif;
   --font-mono: "Martian Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
 
-  --display-size: clamp(2.75rem, 1.55rem + 5vw, 5.5rem);   --display-lh: 0.98;  --display-track: -0.035em; --display-wght: 560; --display-wdth: 96%;
+  --display-size: clamp(2.5rem, 1.45rem + 4.2vw, 4.75rem);   --display-lh: 0.98;  --display-track: -0.035em; --display-wght: 560; --display-wdth: 96%;
   --h2-size:      clamp(2rem, 1.35rem + 2.6vw, 3.25rem);   --h2-lh: 1.04;       --h2-track: -0.025em;      --h2-wght: 560;      --h2-wdth: 98%;
   --h3-size:      1.375rem;                                --h3-lh: 1.2;        --h3-track: -0.01em;       --h3-wght: 600;      --h3-wdth: 100%;
   --lede-size:    clamp(1.125rem, 1.02rem + 0.45vw, 1.3125rem); --lede-lh: 1.5; --lede-track: -0.005em;

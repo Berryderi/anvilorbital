@@ -1,0 +1,182 @@
+/* Remake page layer (WQ-027): nav, chapters, footer, reveals and the home's widgets. Tokens only.
+   The WebGL scene (#space, dev-1) sits behind; the text is real HTML above it and reads fine without it. */
+
+/* ---------- Scrims: text over the scene gets a soft fade of space behind it, never a box with edges ---------- */
+:root {
+  --scrim-strong: color-mix(in oklab, var(--bg) 84%, transparent);
+  --scrim-soft: color-mix(in oklab, var(--bg) 48%, transparent);
+  --scrim-nav: var(--bg);
+  --nav-h: 64px;
+}
+
+/* ---------- The scene canvas: fixed behind everything; the scene sizes its own drawing buffer ---------- */
+#space { position: fixed; inset: 0; z-index: 0; display: block; width: 100%; height: 100%; border-radius: var(--radius-0); pointer-events: none; }
+
+/* ---------- Nav: logo plus four chapter links; the active marker slides between them ---------- */
+.nav {
+  position: fixed; inset: 0 0 auto 0; z-index: 5; height: var(--nav-h);
+  display: flex; align-items: center; justify-content: space-between; gap: var(--space-5);
+  padding: 0 var(--gutter); padding-top: env(safe-area-inset-top, 0px);
+  background: var(--scrim-nav);
+}
+/* Below the bar, a short fade so text slides under it instead of meeting a hard edge. */
+.nav::after { content: ""; position: absolute; inset: 100% 0 auto 0; height: var(--space-5); pointer-events: none;
+  background: linear-gradient(to bottom, var(--scrim-nav), transparent); }
+.nav-brand { display: inline-flex; align-items: center; gap: var(--space-2); min-height: 44px; color: var(--ink); text-decoration: none;
+  font: var(--label-wght) 0.8125rem/1 var(--font-sans); font-stretch: var(--label-wdth); letter-spacing: var(--label-track); text-transform: uppercase; }
+.nav-brand svg { width: 22px; height: 22px; fill: currentColor; flex: none; }
+.nav nav { position: relative; }
+.nav-links { display: flex; gap: var(--space-1); margin: 0; padding: 0; list-style: none; }
+.nav-links a {
+  display: inline-flex; align-items: center; min-height: 44px; padding: 0 var(--space-3); text-decoration: none; color: var(--ink-3);
+  font: var(--label-wght) var(--label-size)/1 var(--font-sans); font-stretch: var(--label-wdth); letter-spacing: var(--label-track); text-transform: uppercase;
+  transition: color var(--dur-micro) var(--ease-enter);
+}
+.nav-links a:hover { color: var(--ink); }
+.nav-links a:active { color: var(--accent); }
+.nav-links a[aria-current] { color: var(--ink); }
+.nav-marker {
+  position: absolute; left: 0; bottom: var(--space-1); height: 2px; width: var(--mw, 0px); border-radius: var(--radius-pill); background: var(--accent);
+  transform: translateX(var(--mx, 0px)); opacity: var(--mo, 0); pointer-events: none;
+  transition: transform var(--dur-section) var(--ease-move), width var(--dur-section) var(--ease-move), opacity var(--dur-small) var(--ease-enter);
+}
+@media (max-width: 560px) {
+  .nav-brand span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+  .nav { gap: var(--space-3); }
+  .nav-links { gap: 0; }
+  .nav-links a { padding: 0 var(--space-1); letter-spacing: 0.04em; font-stretch: 100%; }
+}
+
+/* ---------- Chapters ---------- */
+.chapters { position: relative; z-index: 1; }
+.chapter {
+  position: relative; display: grid; grid-template-columns: minmax(0, 1fr); align-content: start; gap: var(--space-6);
+  width: 100%; max-width: var(--page-max); margin-inline: auto; padding: var(--space-8) var(--gutter);
+  scroll-margin-top: var(--nav-h);
+}
+/* The scrim lives on the chapter's text side and fades to nothing, so chapters melt into one another.
+   Only drawn once the scene runs (html.has-scene): over plain space it changes nothing and only adds banding. */
+.chapter::before { display: none; }
+.has-scene .chapter::before { display: block; }
+.chapter::before { content: ""; position: absolute; inset: 0 auto 0 calc(50% - 50vw); width: 100vw; z-index: -1; pointer-events: none;
+  background: linear-gradient(90deg, var(--scrim-strong) 0%, var(--scrim-soft) 46%, transparent 72%); }
+.ch-right::before { background: linear-gradient(270deg, var(--scrim-strong) 0%, var(--scrim-soft) 46%, transparent 72%); }
+/* Each scrim also fades out at its top and bottom, so a left-hand chapter and a right-hand one blend with no seam. */
+.chapter::before { -webkit-mask-image: linear-gradient(to bottom, transparent, #000 var(--space-8), #000 calc(100% - var(--space-8)), transparent);
+  mask-image: linear-gradient(to bottom, transparent, #000 var(--space-8), #000 calc(100% - var(--space-8)), transparent); }
+.ch-text { display: grid; gap: var(--space-5); max-width: 38rem; min-width: 0; }
+.ch-text > h3 { margin-top: var(--space-3); }
+.ch-read { max-width: var(--measure-wide); }
+@media (min-width: 900px) {
+  .ch-right { justify-items: end; }
+  .ch-right .ch-text { text-align: left; }
+}
+@media (max-width: 899px) {
+  .chapter::before, .ch-right::before { background: linear-gradient(180deg, transparent, var(--scrim-strong) var(--space-7), var(--scrim-strong) calc(100% - var(--space-7)), transparent); }
+}
+.actions { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-3) var(--space-5); }
+
+/* Uneven rhythm on purpose: the scene carries the long pauses. */
+.ch-hero { min-height: 100svh; align-content: end; padding-top: calc(var(--nav-h) + var(--space-7)); padding-bottom: var(--space-7); }
+.ch-hero .ch-text { max-width: 52rem; }
+.ch-aside { display: grid; gap: var(--space-3); max-width: 34rem; }
+.ch-aside .list { gap: var(--space-2); font-size: var(--small-size); line-height: var(--small-lh); color: var(--ink-2); }
+.scene-note { max-width: 34rem; }
+@media (min-width: 1100px) {
+  .ch-hero { grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); column-gap: var(--space-7); align-items: end; }
+  .ch-hero .scene-note { grid-column: 1 / -1; }
+}
+.ch-retire { padding-top: var(--space-9); gap: var(--space-8); }
+.ch-retire .ch-later { padding-top: var(--space-6); }
+.ch-simulator { min-height: 80svh; align-content: center; }
+.ch-about { padding-bottom: var(--space-9); }
+.contact { padding-top: var(--space-7); }
+.anchor { position: absolute; top: 0; }
+.fall-line { color: var(--ink-2); max-width: 38rem; }
+
+/* ---------- Lists ---------- */
+.list { display: grid; gap: var(--space-3); margin: 0; padding: 0; list-style: none; }
+.list > li { position: relative; padding-left: var(--space-5); }
+.list > li::before { content: ""; position: absolute; left: 0; top: 0.8em; width: var(--space-3); height: 1px; background: var(--edge); }
+
+/* ---------- The concept as a path, not a row of cards ---------- */
+.flow { position: relative; display: grid; gap: var(--space-5); margin: 0; padding: 0 0 0 var(--space-6); list-style: none; }
+.flow::before { content: ""; position: absolute; left: 7px; top: 6px; bottom: 6px; width: 1px; background: linear-gradient(var(--edge), var(--line)); }
+.flow > li { position: relative; display: grid; gap: var(--space-1); }
+.flow > li::before { content: ""; position: absolute; left: calc(-1 * var(--space-6) + 3px); top: 4px; width: 9px; height: 9px; border-radius: 50%; background: var(--bg); border: 1px solid var(--ink-3); }
+.flow > li.outcome { padding-left: var(--space-5); }
+.flow > li.outcome::before { border-color: var(--orbit-high); }
+.flow h4 { margin: 0; font-size: var(--h3-size); line-height: var(--h3-lh); letter-spacing: var(--h3-track); font-weight: var(--h3-wght); }
+.flow p { color: var(--ink-2); }
+
+/* ---------- Mini planner ---------- */
+.mini { display: grid; gap: var(--space-5); max-width: 46rem; padding: var(--space-6) 0; border-block: 1px solid var(--line); }
+.mini label { max-width: 30rem; }
+.answers { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-6) var(--space-6); margin: 0; }
+.answers > div { display: grid; gap: var(--space-2); align-content: start; min-width: 0; }
+.answers dt { font-size: var(--small-size); color: var(--ink-3); }
+.answers dd { margin: 0; }
+@media (max-width: 560px) { .answers { grid-template-columns: minmax(0, 1fr); gap: var(--space-5); } }
+.js .no-js-only { display: none; }
+
+/* ---------- Roadmap: a track of six steps; the selected one shows below. Without JS the list shows in full. ---------- */
+.steps { display: grid; gap: var(--space-5); margin: 0; padding: 0; list-style: none; max-width: 52rem; }
+.steps > li { display: grid; grid-template-columns: var(--space-7) minmax(0, 1fr); gap: var(--space-2) var(--space-4); padding-top: var(--space-5); border-top: 1px solid var(--line); }
+.steps > li[hidden] { display: none; }
+.steps .num { font-family: var(--font-mono); font-size: var(--data-size); color: var(--ink-3); }
+.steps > li > div { display: grid; gap: var(--space-2); justify-items: start; }
+.steps .tag { color: var(--ink-3); }
+.steps .small { color: var(--ink-3); }
+.track { position: relative; display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: var(--space-2); max-width: 52rem; }
+.track::before { content: ""; position: absolute; left: 6px; right: 6px; top: 22px; height: 1px; background: var(--line); }
+.track button {
+  position: relative; display: grid; justify-items: start; align-content: start; gap: var(--space-2); min-height: 44px; padding: var(--space-4) var(--space-1) var(--space-3) 0;
+  background: none; border: 0; border-bottom: 2px solid transparent; color: var(--ink-3); text-align: left; cursor: pointer;
+  font: 500 var(--small-size)/1.3 var(--font-sans);
+  transition: color var(--dur-micro) var(--ease-enter), border-color var(--dur-small) var(--ease-enter);
+}
+.track button:hover { color: var(--ink); }
+.track button:active .dot { transform: scale(0.85); }
+.track button[aria-selected="true"] { color: var(--ink); border-bottom-color: var(--accent); }
+.track .dot { width: 13px; height: 13px; border-radius: 50%; background: var(--bg); border: 1px solid var(--edge); transition: transform var(--dur-micro) var(--ease-enter); }
+.track .now .dot { background: var(--ok); border-color: var(--ok); }
+.track .n { font: 500 0.75rem/1 var(--font-mono); color: var(--ink-3); }
+@media (max-width: 560px) { .track { grid-template-columns: repeat(3, minmax(0, 1fr)); } .track::before { display: none; } }
+.steps.panels > li { border-top: 0; padding-top: var(--space-3); }
+
+/* ---------- Satellite label (from the scene's pick event) ---------- */
+.pick { position: fixed; left: 0; top: 0; z-index: 6; pointer-events: none; display: grid; gap: var(--space-1);
+  padding: var(--space-2) var(--space-3); background: var(--surface-2); border: 1px solid var(--edge); border-radius: var(--radius-1);
+  font-family: var(--font-mono); font-size: 0.75rem; line-height: 1.4; font-stretch: var(--data-wdth); color: var(--ink-2);
+  transform: translate(calc(var(--px, 0px) + var(--space-3)), calc(var(--py, 0px) + var(--space-3))); }
+.pick b { color: var(--ink); font-weight: 600; }
+@media (hover: none) { .pointer-only { display: none; } }
+@media (hover: hover) { .touch-only { display: none; } }
+
+/* ---------- Footer ---------- */
+.foot { position: relative; z-index: 1; display: flex; flex-wrap: wrap; gap: var(--space-2) var(--space-6); justify-content: space-between;
+  max-width: var(--page-max); margin-inline: auto; padding: var(--space-6) var(--gutter) calc(var(--space-6) + env(safe-area-inset-bottom, 0px));
+  border-top: 1px solid var(--line); font-size: var(--small-size); color: var(--ink-3); }
+.foot p { max-width: none; }
+.foot a { color: var(--ink-2); }
+
+/* ---------- Reveals ----------
+   Hidden only when JS is running and motion is allowed (html.reveal-ready, set in <head>). If page.js never
+   starts (html stays without .reveal-live), the failsafe animation shows everything after 2.5 s. */
+.reveal-ready [data-reveal]:not([data-reveal="lines"]):not(.is-in) { opacity: 0; transform: translateY(var(--reveal-shift)); }
+[data-reveal]:not([data-reveal="lines"]) { transition: opacity var(--dur-section) var(--ease-enter), transform calc(var(--dur-section) * 1.6) var(--ease-enter); transition-delay: var(--d, 0ms); }
+.line { display: block; overflow: hidden; padding-bottom: 0.14em; margin-bottom: -0.14em; }
+.line-inner { display: block; transition: transform calc(var(--dur-section) * 2) var(--ease-enter); transition-delay: calc(var(--i, 0) * var(--stagger)); }
+.reveal-ready [data-reveal="lines"]:not(.is-in) .line-inner { transform: translateY(108%); }
+.reveal-ready:not(.reveal-live) [data-reveal] { animation: reveal-failsafe 0s 2.5s forwards; }
+.reveal-ready:not(.reveal-live) .line-inner { animation: reveal-failsafe 0s 2.5s forwards; }
+@keyframes reveal-failsafe { to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) {
+  [data-reveal], .line-inner { opacity: 1 !important; transform: none !important; transition: none !important; }
+}
+
+/* ---------- Cross-document view transitions: the scene seems to continue between pages ---------- */
+@view-transition { navigation: auto; }
+#space { view-transition-name: space; }
+::view-transition-old(root), ::view-transition-new(root) { animation-duration: var(--dur-route); animation-timing-function: var(--ease-move); }
+@media (prefers-reduced-motion: reduce) { ::view-transition-group(*), ::view-transition-old(*), ::view-transition-new(*) { animation-duration: 1ms !important; } }
