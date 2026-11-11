@@ -1,0 +1,1 @@
+Build: origin/remake 32238a9 + origin/feat/remake-tools 7a6554154a2b36651969d1c1ebb6b17fec69bac7 (#19) + origin/feat/hero-speed-label 6471644a481cedbcd4cb8730068011673a57d77c (#20), merged locally (clean, page.js auto-merged), not pushed. Old site: origin/main 10c26002341991c79b750e7d795c89d6e814190d. Run 2026-11-11.

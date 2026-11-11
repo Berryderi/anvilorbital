@@ -1,0 +1,26 @@
+Negative test: a copy of the same build with five breaks (findings: link to /nope/ and /#no-such-id; about: a Google Fonts stylesheet; roadmap/index.html deleted; privacy: a 2000px div; 404.html: a thrown error). Every break shows as FAIL below, 18 FAIL in all (2 are the real planner <main> finding).
+
+== 1. Static link crawl
+FAIL 170 internal references across 9 pages and their CSS resolve: /findings/: /nope/ (no file); /findings/: /#no-such-id (no id "no-such-id" in index.html)
+FAIL no page loads a stylesheet, script, image or font from another host: /about/: https://fonts.googleapis.com/css2?family=Inter
+== 2. Old URLs, redirects, planner deep links
+FAIL old URL /roadmap/ answers 404
+FAIL /no-such/page/ shows 404.html styled (Archivo, system-ui, -apple-system, "Segoe UI", sans-serif / #ecbc5e), errors ["error: Uncaught Error: boom"]
+== 3. Every page at 1280 and 390, motion on, after a full scroll
+FAIL /404.html 1280: 0 JS errors ["error: Uncaught Error: boom"]
+FAIL /planner/: has a <main> landmark
+FAIL /privacy/ 1280: no horizontal overflow 2056/1280 ["DIV."]
+FAIL /planner/#starcloud: has a <main> landmark
+FAIL /404.html 390: 0 JS errors ["error: Uncaught Error: boom"]
+FAIL /privacy/ 390: no horizontal overflow 2016/390 ["HEADER.nav","NAV.","UL.nav-links","LI."]
+== 4. Reduced motion, at load, no scrolling
+FAIL /404.html 1280 reduced motion: 0 JS errors ["error: Uncaught Error: boom"]
+FAIL /privacy/ 1280 reduced motion: no horizontal overflow 2056/1280 ["DIV."]
+FAIL /404.html 390 reduced motion: 0 JS errors ["error: Uncaught Error: boom"]
+FAIL /privacy/ 390 reduced motion: no horizontal overflow 2016/390 ["HEADER.nav","NAV.","UL.nav-links","LI."]
+== 5. No-JS read-through
+FAIL /privacy/ 1280 no JS: no horizontal overflow 2056/1280 ["DIV."]
+FAIL /privacy/ 390 no JS: no horizontal overflow 2016/390 ["HEADER.nav","NAV.","UL.nav-links","LI."]
+FAIL every load made only local requests ["https://fonts.googleapis.com/css2?family=Inter"]
+FAIL no request to fonts.googleapis.com or fonts.gstatic.com
+18 FAIL
