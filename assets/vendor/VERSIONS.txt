@@ -41,3 +41,22 @@ e3a28eade21a900c7155a247757f4b2834c07bb7ef07ad7efa55cebaac1e8f5e  fonts/archivo/
 c3c8402eec0e31dc9a76851235b1c02a0bb821488b2db8e35bcc2ab60ca8fc2b  fonts/archivo/LICENSE  <- package/LICENSE
 f9c1655c2c9d1ed5bb8b301a57d1169a1123ffef1a588dc50a7a487810f7d732  fonts/martian-mono/martian-mono-latin-wdth-normal.woff2  <- package/files/martian-mono-latin-wdth-normal.woff2
 bd7d799f6a67b704f9546422ee83d69b4dc5e4ae289d5eabc22581251dd7150a  fonts/martian-mono/LICENSE  <- package/LICENSE
+
+Earth textures for the home scene (WQ-026), in assets/scene/. Made with Pillow 10.2.0: Lanczos resize, WebP method 6.
+NASA Images and Media Usage Guidelines (https://www.nasa.gov/nasa-brand-center/images-and-media/): texture maps are
+generally not subject to copyright in the United States; NASA is credited as the source, with no implied endorsement.
+Day: NASA Earth Observatory, Blue Marble: Next Generation, topography and bathymetry, November 2004
+  page https://science.nasa.gov/earth/earth-observatory/blue-marble-next-generation/base-topography-bathymetry/
+  file https://assets.science.nasa.gov/content/dam/science/esd/eo/images/bmng/bmng-topography-bathymetry/november/world.topo.bathy.200411.3x5400x2700.jpg
+  5400x2700 JPEG, 2,540,426 bytes, sha256 388422e3bfc62517af2a9d538989a2f859fc193e6f6cde72c3d230ef29c2e69f (downloaded 2026-11-10 and again 2026-11-11)
+  WebP quality 72: 2048x1024 and 4096x2048
+Night: NASA Earth Observatory, Earth at Night: Black Marble 2016 color map (image record 144898), 3 km version
+  file https://assets.science.nasa.gov/content/dam/science/esd/eo/images/imagerecords/144000/144898/BlackMarble_2016_3km.jpg
+  13500x6750 JPEG, 8,106,233 bytes, sha256 230aac448ae68c358be433dd518888cccb3a85ccf66f7b44326441c324ad6725 (downloaded 2026-11-11)
+  WebP quality 70: 2048x1024 and 4096x2048
+
+sha256 of each texture file:
+dd777f9e1f4701188ef8655bd5985207f2f56db383eba703901066146a2f2e6e  scene/earth-day-2k.webp
+d08f2c826aae899a63d8d5560fd7cb3480fb75ad1334fec66cdafa07c0c351ee  scene/earth-day-4k.webp
+ff9733bc79ef71b8892b64933695ca75316e1adbc80664d8af27699a9d51352e  scene/earth-night-2k.webp
+3cb4c6566f5f059fb1baac141c98efa6bbd423dbf828a66677b2d826e1b8fc34  scene/earth-night-4k.webp
