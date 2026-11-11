@@ -10,16 +10,13 @@
 <style>
 /* Layout: an orbital operations worksheet. Fleet inputs on the left, four answers and a decay chart on the right. */
 :root{
-  --bg:#eef1f4; --panel:#ffffff; --ink:#15212e; --muted:#566473; --line:#cdd5dd;
-  --accent:#0f5e8c; --burn:#c2410c; --burn-soft:#fbe6da; --good:#17693f; --good-soft:#dcf1e5; --warn:#8a5a00; --warn-soft:#f8ecc9; --bad:#a3261c; --bad-soft:#f8dfdc; --band:#c9dfec;
+  /* Space theme, dark only (WQ-023). Shared values match assets/site.css; burn, good and bad are the planner's own. */
+  --bg:#070b14; --panel:#0e1524; --ink:#e4e9f1; --muted:#9ba8ba; --line:#24314a;
+  --accent:#7cc8f2; --burn:#fb923c; --burn-soft:#3b2214; --good:#6fd6a0; --good-soft:#12301f; --warn:#f0c866; --warn-soft:#2b220c; --bad:#ff9d94; --bad-soft:#3a1a17; --band:#1f3d52;
+  --star:#dfe8ff; --edge:#617290;
   --display:"Barlow Condensed","Arial Narrow",sans-serif; --body:"IBM Plex Sans",system-ui,sans-serif; --mono:"IBM Plex Mono",ui-monospace,monospace;
+  color-scheme:dark;
 }
-@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
-  --bg:#0d151d; --panel:#16212c; --ink:#e7edf3; --muted:#9dabb9; --line:#2d3b49;
-  --accent:#6fbce6; --burn:#fb923c; --burn-soft:#3b2214; --good:#6fd6a0; --good-soft:#12301f; --warn:#f0c866; --warn-soft:#352a0d; --bad:#ff9d94; --bad-soft:#3a1a17; --band:#1f3d52; color-scheme:dark}}
-:root[data-theme="dark"]{
-  --bg:#0d151d; --panel:#16212c; --ink:#e7edf3; --muted:#9dabb9; --line:#2d3b49;
-  --accent:#6fbce6; --burn:#fb923c; --burn-soft:#3b2214; --good:#6fd6a0; --good-soft:#12301f; --warn:#f0c866; --warn-soft:#352a0d; --bad:#ff9d94; --bad-soft:#3a1a17; --band:#1f3d52; color-scheme:dark}
 *{box-sizing:border-box}
 body{background:var(--bg);color:var(--ink);font:15px/1.5 var(--body);padding-block:20px 32px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
 .page{max-width:1120px;margin:0 auto;display:grid;gap:18px}
@@ -34,7 +31,7 @@ h2{font:600 1.25rem/1.2 var(--display);margin:0 0 10px;letter-spacing:.02em}
 .fields{display:grid;grid-template-columns:1fr 1fr;gap:10px 12px}
 label{display:grid;gap:3px;font-size:.8rem;color:var(--muted);min-width:0}
 label.wide{grid-column:1/-1}
-input,select{width:100%;font:500 .95rem var(--mono);padding:7px 8px;background:var(--bg);color:var(--ink);border:1px solid var(--line);border-radius:3px}
+input,select{width:100%;font:500 .95rem var(--mono);padding:7px 8px;background:var(--bg);color:var(--ink);border:1px solid var(--edge);border-radius:3px}
 input:focus-visible,select:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
 .sep{grid-column:1/-1;font:600 .72rem var(--mono);text-transform:uppercase;letter-spacing:.08em;color:var(--muted);border-top:1px solid var(--line);padding-top:10px;margin-top:2px}
 .err{color:var(--bad);font-size:.85rem;margin:10px 0 0}
@@ -58,7 +55,7 @@ a{color:var(--accent)}
 </style>
 <div class="page">
   <a class="skip" href="#main">Skip to content</a>
-  <header class="site-head"><a class="brand" href="../"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 7h20c0 3.2-3.4 4.8-7 5v2.2l3.5 3.8H5.5L9 14.2V12C5.4 11.8 2 10.2 2 7z"/></svg>Anvil Orbital</a><nav class="site-nav" aria-label="Main"><a href="../idea/">The idea</a><a href="../planner/" aria-current="page">Planner</a><a href="../simulator/">Simulator</a><a href="../findings/">Findings</a><a href="../roadmap/">Roadmap</a><a href="../about/">About</a><a href="../contact/">Contact</a></nav></header>
+  <header class="site-head"><a class="brand" href="../"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 7h20c0 3.2-3.4 4.8-7 5v2.2l3.5 3.8H5.5L9 14.2V12C5.4 11.8 2 10.2 2 7z"/></svg>Anvil Orbital</a><nav class="site-nav" aria-label="Main"><a href="../simulator/">Simulator</a><a href="../planner/" aria-current="page">Planner</a><a href="../findings/">Findings</a><a href="../about/">About</a></nav></header>
   <header id="main">
     <h1>Fleet Retirement Planner</h1>
     <p class="lede">Enter a satellite fleet. See when its satellites fall on their own, what disposal costs, what burning up releases into the upper atmosphere, and when servicing beats burning up.</p>
@@ -70,7 +67,7 @@ a{color:var(--accent)}
       <div class="fields">
         <label class="wide">Fleet<select id="preset"></select></label>
         <div class="src" id="src" aria-live="polite"></div>
-        <p class="src">Which input is most wrong? <a href="../contact/">Tell us</a>.</p>
+        <p class="src">Which input is most wrong? <a href="../about/#contact">Tell us</a>.</p>
         <label>Satellites<input id="count" type="number" min="1" step="1"></label>
         <label>Mass each, kg<input id="mass" type="number" min="1"></label>
         <label>Area facing drag, m&sup2;<input id="area" type="number" min="0.01" step="any"></label>
