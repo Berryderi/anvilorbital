@@ -130,7 +130,9 @@ td.n, th.n { text-align: right; font-family: var(--font-mono); font-stretch: var
 
 /* ---------- Planner: home's mini planner grown into the full tool. No boxes: answers are big numbers on hairlines,
    inputs an open column, the chart and notes sit on rules. Markup and script in planner/index.html; answers unchanged. ---------- */
-.tool-planner > header#main { display: grid; gap: var(--space-5); justify-items: start; }
+/* The planner keeps its own flow inside <main>: opt out of the shared .tool > main grid and 38rem notes column. */
+.tool-planner > main { display: block; padding-bottom: 0; }
+.tool-planner > main > header.page-hero { display: grid; gap: var(--space-5); justify-items: start; }
 .tool-planner h1 { max-width: 20ch; }
 .flags { display: flex; flex-wrap: wrap; gap: var(--space-2); }
 .flag { display: inline-flex; align-items: center; padding: var(--space-1) var(--space-2); border: 1px solid currentColor; border-radius: var(--radius-1);
@@ -160,6 +162,7 @@ td.n, th.n { text-align: right; font-family: var(--font-mono); font-stretch: var
 .notes { columns: 2; column-gap: var(--space-7); margin-top: var(--space-8); font-size: var(--small-size); line-height: var(--small-lh); color: var(--ink-3); }
 .tool-planner section.notes { display: block; }
 .notes p { max-width: none; margin: 0 0 var(--space-4); break-inside: avoid; }
+.tool-planner main > section.notes > p { max-width: none; }
 .notes b { color: var(--ink-2); }
 @media (max-width: 899px) { .notes { columns: 1; margin-top: var(--space-7); } }
 .tool-planner .foot { margin-top: var(--space-8); }

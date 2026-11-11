@@ -18,10 +18,12 @@
   <a class="nav-brand" href="/" aria-label="Anvil Orbital, home"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 7h20c0 3.2-3.4 4.8-7 5v2.2l3.5 3.8H5.5L9 14.2V12C5.4 11.8 2 10.2 2 7z"/></svg><span>Anvil Orbital</span></a>
   <nav aria-label="Chapters"><ul class="nav-links"><li><a href="/#simulator">Simulator</a></li><li><a href="/#planner" aria-current="page">Planner</a></li><li><a href="/#findings">Findings</a></li><li><a href="/#about">About</a></li></ul></nav>
   </header>
-  <header id="main" class="page-hero">
+  <main id="main">
+  <header class="page-hero">
     <h1 data-reveal="lines">Fleet Retirement Planner</h1>
     <p data-reveal="lines" class="lede">Enter a satellite fleet. See when its satellites fall on their own, what disposal costs, what burning up releases into the upper atmosphere, and when servicing beats burning up.</p>
     <div class="flags"><span class="flag">Early demo, built 2026-11-02</span><span class="flag">Simple model, not checked by a spacecraft engineer</span><span class="flag">Presets use public figures where linked and our assumptions elsewhere; not company data</span></div>
+    <noscript><p>The planner needs JavaScript to work out its answers. The notes at the bottom of this page say how it works.</p></noscript>
   </header>
   <div class="grid">
     <form class="panel" id="form" autocomplete="off">
@@ -69,6 +71,7 @@
     <p><b>Real fleets:</b> each input links to its source; anything without one is our assumption. Satellite counts for flying fleets are satellites in orbit on the date shown; for filings, the number filed with the FCC, not approved. Drag area is rarely published, so we estimate it one way: a dead satellite tumbles, so its average area facing drag is its total surface area / 4, and a thin solar array counts as half its one-side area. Where an operator has published an area-to-mass figure, even for one satellite, we use that instead. The answers are model outputs, not a statement about any operator.</p>
     <p><b>Servicing:</b> it wins when its price is at or below the disposal it replaces plus the value recovered. Service prices and recovered value are your inputs. We found nobody offering this service for these fleets today, and no buyer for recovered parts.</p>
   </section>
+  </main>
   <footer class="foot"><p>Anvil Orbital. Estimates are unchecked models, not quotes or promises.</p><p><a href="../privacy/">Privacy</a> &middot; <a href="https://github.com/Berryderi/anvilorbital">Code</a></p></footer>
 </div>
 <script src="../assets/model.js"></script>
