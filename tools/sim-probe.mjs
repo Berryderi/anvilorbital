@@ -1,7 +1,7 @@
 // Simulator performance probe (WQ-018). No dependencies: Node 22+ and Google Chrome.
 // Usage: node tools/sim-probe.mjs <site root> [--width 1280] [--shots <dir>]
 // Serves the site on 127.0.0.1, opens /simulator/ in headless Chrome (SwiftShader WebGL) and measures:
-//   mode 1 playing at x100 (10 s), with a satellite selected, after a drag, paused, paused after a drag,
+//   mode 1 playing at x100 (10 s), with a satellite selected, after a drag, with Show all, paused, paused after a drag,
 //   playing off screen, playing in a hidden tab; mode 2 playing, after a drag, off screen, paused (5 s each).
 //   Per run: rAF callbacks per second, frames drawn per second, main-thread ms per drawn frame (time inside
 //   requestAnimationFrame callbacks that issued a WebGL draw), SGP4 propagate calls per second, JS errors.
@@ -15,7 +15,7 @@ import path from 'node:path';
 const args = process.argv.slice(2);
 const root = path.resolve(args[0] || '.');
 const opt = name => { const i = args.indexOf(name); return i > 0 ? args[i + 1] : null; };
-const width = Number(opt('--width') || 1280), height = 900;
+const width = Number(opt("--width") || 1280), height = 900, dpr = Number(opt("--dpr") || 1);
 const shots = opt('--shots');
 const CHROME = process.env.CHROME || 'google-chrome';
 const DEBUG_PORT = 9300 + Math.floor(Math.random() * 500);
@@ -89,10 +89,12 @@ async function evaluate(expr) {
 }
 const reset = () => evaluate('Object.assign(__probe,{prop:0,cbs:0,frames:0,drawMs:0,maxMs:0})');
 async function measure(name, seconds) {
-  await reset(); await sleep(seconds * 1000);
+  const taskS = async () => (await send('Performance.getMetrics', {}, sid)).metrics.find(m => m.name === 'TaskDuration').value;
+  await reset(); const t0 = await taskS(); await sleep(seconds * 1000); const t1 = await taskS();
   const p = await evaluate('({...__probe})');
   const row = { run: name, seconds, callbacksPerS: +(p.cbs / seconds).toFixed(1), fps: +(p.frames / seconds).toFixed(1), frames: p.frames,
     msPerFrame: p.frames ? +(p.drawMs / p.frames).toFixed(2) : 0, maxMs: +p.maxMs.toFixed(1),
+    taskMsPerFrame: p.frames ? +((t1 - t0) * 1000 / p.frames).toFixed(2) : 0,
     propagatePerS: Math.round(p.prop / seconds), errors: p.errs.length };
   console.log(JSON.stringify(row));
   return row;
@@ -115,8 +117,8 @@ try {
   await connect();
   const { targetId } = await send('Target.createTarget', { url: 'about:blank' });
   ({ sessionId: sid } = await send('Target.attachToTarget', { targetId, flatten: true }));
-  await send('Page.enable', {}, sid); await send('Runtime.enable', {}, sid);
-  await send('Emulation.setDeviceMetricsOverride', { width, height, deviceScaleFactor: 1, mobile: width < 600 }, sid);
+  await send('Page.enable', {}, sid); await send('Runtime.enable', {}, sid); await send('Performance.enable', {}, sid);
+  await send('Emulation.setDeviceMetricsOverride', { width, height, deviceScaleFactor: dpr, mobile: width < 600 }, sid);
   await send('Page.navigate', { url: `${base}/simulator/` }, sid);
   for (let i = 0; i < 100 && !(await evaluate("!!document.getElementById('legend-1') && /\\(\\d/.test(document.getElementById('legend-1').textContent)").catch(() => false)); i++) await sleep(200);
   await sleep(1000);
@@ -155,6 +157,9 @@ try {
   await click('next-sat'); await sleep(300);
   await measure('mode1-playing-selected', 5);
   await drag(); await measure('mode1-playing-after-drag', 5);
+  if (await evaluate("!!document.getElementById('show-all')")) {   // WQ-019 and later
+    await click('show-all'); await sleep(300); await measure('mode1-playing-show-all', 5); await click('show-all'); await sleep(300);
+  }
   await setPlaying('play-1', false); await settle();
   await measure('mode1-paused', 5);
   await drag(); await measure('mode1-paused-after-drag', 5);
