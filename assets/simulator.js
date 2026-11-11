@@ -101,7 +101,7 @@ if (gl) {
 
 // ---------- Earth, atmosphere, stars: home's shaders, no textures ----------
 // Earth is one flat colour (--sim-earth) lit by home's day/night shader: no texture download, about 200 KB less on a
-// cold visit (Andrei, WQ-028 option 2). The night side stays dark: a 1x1 black texture stands in for city lights.
+// cold visit (WQ-028 option 2). The night side stays dark: a 1x1 black texture stands in for city lights.
 function flatTexture(hex) {
   const c = new THREE.Color(hex), t = new THREE.DataTexture(new Uint8Array([c.r * 255, c.g * 255, c.b * 255, 255]), 1, 1);
   t.colorSpace = THREE.SRGBColorSpace; t.needsUpdate = true; return t;
