@@ -12,7 +12,11 @@ const SNAPSHOT_URL = '../assets/data/gp-2026-11-10.json';
 const UNIT_KM = 1000;                 // one scene unit is 1,000 km
 const R_EARTH_KM = 6371;
 const MIN_SHOWN_HEIGHT_KM = 100;      // below this a record has re-entered; don't draw it
-const PROPAGATE_BUDGET_MS = 6;        // SGP4 work per frame; slower devices refresh positions over several frames
+const POSITION_HZ = 3;                // while playing, each satellite's position is recomputed at most this often (brief: at most 5)
+const MAX_PROPAGATIONS_PER_S = 4500;  // SGP4 calls a second in all, well under the 8,000 budget so slower machines stay near 4 ms a frame; with "show all" each position updates less often
+const TEXT_HZ = 10;                   // mode 2 readouts and slider while playing; the scene itself moves every frame
+// Default view, about 1,500 points: every Nth record of these fleets in the snapshot. "Show all" draws every record.
+const THIN = { 'starlink': 6, 'oneweb': 2 };
 const HEIGHT_EXAGGERATION = 4;        // mode 2 only, stated on the page
 const MAX_SHOWN_ALT_KM = 1200;
 const MIN_ALT_KM = 300;
@@ -21,7 +25,6 @@ const MAX_FRAME_S = 0.1;              // a frame after a pause or a slow frame n
 const DOT_ORBITS_PER_S = 0.15;        // mode 2 dot speed, for the eye only
 const CLICK_SLOP_PX = 6;
 const FALL_TOLERANCE = 1e-9;
-const SHELL_OPACITY = 0.1;            // filed shells stay behind the real satellites
 const DAY_MS = 86400000;
 const FLEETS = {
   'starlink': { label: 'Starlink', token: '--series-1' },
@@ -29,7 +32,7 @@ const FLEETS = {
   'amazon-leo': { label: 'Amazon Leo', token: '--series-3' },
   'planet': { label: 'Planet', token: '--series-4' },
 };
-// Filed fleets: nothing launched, so drawn as shells at the filed heights.
+// Filed fleets: nothing launched, so drawn as rings at the filed heights.
 const FILED = [
   { label: 'Starcloud, filed at 600 to 850 km (drawn at 725 km), up to 88,000 satellites', km: 725, token: '--warn',
     src: 'https://api-prod.fcc.gov/icfs-attachment/exp/api/v1/5c6840321b3e365068b6a64ce54bcb49', srcName: 'FCC filing' },
@@ -42,6 +45,8 @@ const fmt = n => Math.round(n).toLocaleString('en-US');
 const yrs = y => y >= 100 ? Number(y.toPrecision(2)).toLocaleString('en-US') : y >= 10 ? y.toFixed(0) : y.toFixed(1);
 const token = name => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
 const color = name => new THREE.Color(token(name));
+// Text written every frame only touches the page when it changes, so an unchanged clock costs no layout.
+const setText = (el, s) => { if (el.textContent !== s) el.textContent = s; };
 // ECI (z north) to scene (y up), a proper rotation.
 const toScene = (p, out) => out.set(p.x / UNIT_KM, p.z / UNIT_KM, -p.y / UNIT_KM);
 
@@ -73,7 +78,7 @@ const sunLight = gl ? new THREE.DirectionalLight(0xffffff, 2.6) : null;
 const ambient = gl ? new THREE.AmbientLight(0xffffff, 0.45) : null;
 const earthMat = gl ? new THREE.MeshLambertMaterial() : null;
 if (gl) {
-  scene.add(sunLight, ambient, new THREE.Mesh(new THREE.SphereGeometry(earthRadius, 64, 32), earthMat));
+  scene.add(sunLight, ambient, new THREE.Mesh(new THREE.SphereGeometry(earthRadius, 32, 16), earthMat));
 }
 
 // Low-precision sun direction in ECI (Astronomical Almanac formula, about 0.01 degrees), for day and night.
@@ -92,7 +97,8 @@ function setSun(date) {
 
 // ---------- Mode 1: real fleets ----------
 const m1 = { group: gl ? new THREE.Group() : null, sats: [], recs: [], geom: null, points: null, sel: null, selIndex: -1,
-  t: Date.now(), playing: false, speed: 100, cursor: 0, loaded: false, loading: false, meta: null, failed: 0 };
+  t: Date.now(), playing: false, speed: 100, cursor: 0, credit: 0, count: 0, defaultCount: 0, showAll: false,
+  loaded: false, loading: false, meta: null, failed: 0 };
 if (gl) scene.add(m1.group);
 
 function circle(rKm, exaggerate = 1, segments = 128) {
@@ -111,10 +117,9 @@ function buildShells() {
   if (!gl) return;
   for (const f of FILED) {
     for (const km of [].concat(f.km)) {
-      const mesh = new THREE.Mesh(new THREE.SphereGeometry((R_EARTH_KM + km) / UNIT_KM, 24, 12),
-        new THREE.MeshBasicMaterial({ wireframe: true, transparent: true, opacity: SHELL_OPACITY, depthWrite: false }));
-      mesh.userData.token = f.token;
-      m1.group.add(mesh);
+      const ring = new THREE.LineLoop(circle(km), new THREE.LineBasicMaterial());
+      ring.userData.token = f.token;
+      m1.group.add(ring);
     }
   }
 }
@@ -122,7 +127,7 @@ function buildShells() {
 function legend1() {
   const ul = $('legend-1'); ul.replaceChildren();
   const counts = {};
-  for (const s of m1.sats) counts[s.GROUP] = (counts[s.GROUP] || 0) + 1;
+  for (let i = 0; i < m1.count; i++) counts[m1.sats[i].GROUP] = (counts[m1.sats[i].GROUP] || 0) + 1;
   for (const [id, f] of Object.entries(FLEETS)) {
     const li = document.createElement('li'); li.style.setProperty('--c', `var(${f.token})`);
     li.textContent = `${f.label}${counts[id] ? ` (${fmt(counts[id])})` : ''}`; ul.append(li);
@@ -142,10 +147,16 @@ function snapshotDate(meta) {
 function dataNote() {
   const p = $('data-note'); p.replaceChildren();
   if (!m1.meta) return;
-  const sl = m1.meta.groups.starlink;
+  // Per fleet, shown against the number CelesTrak listed on the snapshot date.
+  const shown = {};
+  for (let i = 0; i < m1.count; i++) shown[m1.sats[i].GROUP] = (shown[m1.sats[i].GROUP] || 0) + 1;
+  const thinned = Object.entries(FLEETS).map(([id, f]) => {
+    const real = m1.meta.groups[id] && m1.meta.groups[id].count_fetched, n = shown[id];
+    return n && real > n ? `1 in ${fmt(real / n)} ${f.label} shown (${fmt(n)} of ${fmt(real)})` : null;
+  }).filter(Boolean);
   const a = document.createElement('a'); a.href = m1.meta.policy; a.rel = 'noopener'; a.textContent = 'CelesTrak usage policy';
   p.append(`CelesTrak GP data, ${snapshotDate(m1.meta)}, propagated with SGP4; accuracy drifts by kilometres a day. `
-    + (sl && sl.every_nth > 1 ? `1 in ${sl.every_nth} Starlink shown (${fmt(sl.count_kept)} of ${fmt(sl.count_fetched)}). ` : '')
+    + (thinned.length ? `${thinned.join('; ')}. ` : '')
     + 'Loaded from this site; your browser makes no request to CelesTrak. ', a, '.');
 }
 
@@ -166,7 +177,15 @@ async function loadSnapshot() {
     return;
   }
   m1.meta = meta;
-  m1.sats = meta.sats.filter(s => FLEETS[s.GROUP]);
+  // The default subset goes first, so "show all" only extends the draw range.
+  const seen = {}, first = [], rest = [];
+  for (const s of meta.sats.filter(r => FLEETS[r.GROUP])) {
+    const k = seen[s.GROUP] = (seen[s.GROUP] || 0) + 1;
+    ((k - 1) % (THIN[s.GROUP] || 1) === 0 ? first : rest).push(s);
+  }
+  m1.sats = first.concat(rest);
+  m1.defaultCount = first.length;
+  m1.count = m1.showAll ? m1.sats.length : m1.defaultCount;
   m1.recs = m1.sats.map(s => { try { const r = json2satrec(s); return r.error ? null : r; } catch { return null; } });
   m1.heights = new Float32Array(m1.sats.length).fill(NaN);
   if (gl) {
@@ -177,6 +196,7 @@ async function loadSnapshot() {
     m1.geom.setAttribute('color', new THREE.BufferAttribute(colors, 3));
     m1.points = new THREE.Points(m1.geom, new THREE.PointsMaterial({ size: 2.5 * renderer.getPixelRatio(), sizeAttenuation: false, vertexColors: true }));
     m1.points.frustumCulled = false;
+    m1.geom.setDrawRange(0, m1.count);   // raycasting follows the draw range too
     m1.group.add(m1.points);
     const selGeom = new THREE.BufferGeometry(); selGeom.setAttribute('position', new THREE.BufferAttribute(new Float32Array(3), 3));
     m1.sel = new THREE.Points(selGeom, new THREE.PointsMaterial({ size: 11 * renderer.getPixelRatio(), sizeAttenuation: false, transparent: true, opacity: 0.85 }));
@@ -185,18 +205,35 @@ async function loadSnapshot() {
   propagateAll(new Date(m1.t));
   m1.loaded = true; m1.loading = false;
   $('status').textContent = '';
-  legend1(); dataNote(); fillFleetPick(); summarize(); requestRender();
+  showAllLabel(); legend1(); dataNote(); fillFleetPick(); summarize(); requestRender();
+}
+
+function showAllLabel() {
+  const b = $('show-all');
+  b.setAttribute('aria-pressed', String(m1.showAll));
+  b.textContent = m1.loaded ? `Show all ${fmt(m1.sats.length)}` : 'Show all';
+}
+
+function setShowAll(on) {
+  m1.showAll = on;
+  showAllLabel();
+  if (!m1.loaded) return;
+  m1.count = on ? m1.sats.length : m1.defaultCount;
+  m1.heights.fill(NaN, m1.count);
+  if (m1.geom) m1.geom.setDrawRange(0, m1.count);
+  if (m1.selIndex >= m1.count) { m1.selIndex = -1; if (m1.sel) m1.sel.visible = false; $('info').textContent = 'Click a satellite, or pick a fleet and press Next satellite.'; }
+  propagateAll(new Date(m1.t));
+  legend1(); dataNote(); summarize(); requestRender();
 }
 
 const tmp = new THREE.Vector3();
-// Propagate satellites from m1.cursor until the time budget runs out (or all, when budget is Infinity).
-function propagateSome(date, budgetMs) {
-  const n = m1.sats.length; if (!n) return;
-  const gmst = gstime(date), start = performance.now();
+// Propagate the next `count` shown satellites, round robin from m1.cursor.
+function propagateSome(date, count) {
+  const n = m1.count; count = Math.min(count, n); if (!count) return;
+  const gmst = gstime(date);
   const pos = m1.geom ? m1.geom.attributes.position.array : null;
-  let done = 0;
-  while (done < n && performance.now() - start < budgetMs) {
-    const i = m1.cursor; m1.cursor = (m1.cursor + 1) % n; done++;
+  for (let done = 0; done < count; done++) {
+    const i = m1.cursor; m1.cursor = (m1.cursor + 1) % n;
     let h = NaN, p = null;
     const rec = m1.recs[i];
     if (rec) {
@@ -209,7 +246,10 @@ function propagateSome(date, budgetMs) {
   }
   if (m1.geom) m1.geom.attributes.position.needsUpdate = true;
 }
-function propagateAll(date) { m1.cursor = 0; propagateSome(date, Infinity); m1.failed = m1.heights.filter(Number.isNaN).length; }
+function propagateAll(date) {
+  m1.cursor = 0; m1.credit = 0; propagateSome(date, m1.count);
+  m1.failed = m1.heights.subarray(0, m1.count).filter(Number.isNaN).length;
+}
 
 function median(arr) { if (!arr.length) return NaN; const s = [...arr].sort((a, b) => a - b); return s[Math.floor(s.length / 2)]; }
 
@@ -237,7 +277,7 @@ function showSatellite(i, text = true) {
 
 function nextSatellite() {
   if (!m1.loaded) return;
-  const fleet = $('fleet-pick').value, n = m1.sats.length;
+  const fleet = $('fleet-pick').value, n = m1.count;
   for (let k = 1; k <= n; k++) {
     const i = (m1.selIndex + k + n) % n;
     if (m1.sats[i].GROUP === fleet && !Number.isNaN(m1.heights[i])) { showSatellite(i); return; }
@@ -246,11 +286,11 @@ function nextSatellite() {
 
 function clock1() {
   const d = new Date(m1.t);
-  $('clock-1').textContent = `${d.toISOString().slice(0, 16).replace('T', ' ')} UTC, x${fmt(m1.speed)}${m1.playing ? '' : ', paused'}`;
+  setText($('clock-1'), `${d.toISOString().slice(0, 16).replace('T', ' ')} UTC, x${fmt(m1.speed)}${m1.playing ? '' : ', paused'}`);
 }
 
 // ---------- Mode 2: one dead satellite ----------
-const m2 = { group: gl ? new THREE.Group() : null, years: 0, playing: false, speed: 1, shape: null,
+const m2 = { group: gl ? new THREE.Group() : null, years: 0, playing: false, speed: 1, shape: null, textAt: -Infinity,
   L: null, angleA: 0, angleB: Math.PI, rings: {} };
 if (gl) {
   scene.add(m2.group); m2.group.visible = false;
@@ -329,13 +369,20 @@ function satLine(name, start, h, fallYears) {
     + (fallYears > MAX_CLOCK_YEARS ? ', past the end of this clock.' : '.');
 }
 
-function update2() {
+// While playing, the readouts and the slider are written at most TEXT_HZ times a second (the scene still moves every
+// frame); every other caller writes them at once.
+function update2(playingFrame = false) {
   const ha = heightAt(m2.L, m2.a, m2.years), hb = heightAt(m2.L, m2.b, m2.years);
-  $('sat-a').textContent = satLine('Satellite A', m2.a, ha, m2.L[m2.a]);
-  $('sat-b').textContent = satLine('Satellite B', m2.b, hb, m2.L[m2.b]);
-  $('clock-2').textContent = `${yrs(m2.years)} years after it died${m2.playing ? '' : ', paused'}`;
-  $('years').value = String(m2.years);
-  $('years').setAttribute('aria-valuetext', `${yrs(m2.years)} years`);
+  const now = performance.now();
+  if (!playingFrame || now - m2.textAt >= 1000 / TEXT_HZ) {
+    m2.textAt = now;
+    setText($('sat-a'), satLine('Satellite A', m2.a, ha, m2.L[m2.a]));
+    setText($('sat-b'), satLine('Satellite B', m2.b, hb, m2.L[m2.b]));
+    setText($('clock-2'), `${yrs(m2.years)} years after it died${m2.playing ? '' : ', paused'}`);
+    $('years').value = String(m2.years);
+    const vt = `${yrs(m2.years)} years`;
+    if ($('years').getAttribute('aria-valuetext') !== vt) $('years').setAttribute('aria-valuetext', vt);
+  }
   if (!gl) return;
   const pos = m2.dots.geometry.attributes.position.array, col = m2.dots.geometry.attributes.color.array;
   [[ha, m2.angleA, 'a', '--series-1', 0], [hb, m2.angleB, 'b', '--series-2', 1]].forEach(([h, ang, k, tok, j]) => {
@@ -357,12 +404,12 @@ function summarize() {
   if (mode === 1) {
     if (!m1.loaded) { out.textContent = m1.loading ? 'Loading the satellite snapshot.' : 'The satellite snapshot did not load.'; return; }
     const parts = Object.entries(FLEETS).map(([id, f]) => {
-      const hs = []; m1.sats.forEach((s, i) => { if (s.GROUP === id && !Number.isNaN(m1.heights[i])) hs.push(m1.heights[i]); });
+      const hs = []; for (let i = 0; i < m1.count; i++) if (m1.sats[i].GROUP === id && !Number.isNaN(m1.heights[i])) hs.push(m1.heights[i]);
       return `${f.label} ${fmt(hs.length)}, median height ${fmt(median(hs))} km`;
     });
     out.textContent = `Satellites from the CelesTrak snapshot of ${snapshotDate(m1.meta)}, placed with SGP4 for ${new Date(m1.t).toISOString().slice(0, 16).replace('T', ' ')} UTC: `
       + parts.join('; ') + `. ${fmt(m1.failed)} ${m1.failed === 1 ? "record has no position at that time and isn't" : "records have no position at that time and aren't"} drawn. `
-      + 'Shells show filed fleets with no satellites up yet: Starcloud at 600 to 850 km and SpaceX Starmind at about 325 and 475 km. '
+      + 'Rings mark filed fleets with no satellites up yet: Starcloud at 600 to 850 km and SpaceX Starmind at about 325 and 475 km. '
       + 'The lit half of Earth faces the sun at that time.';
   } else {
     const sunName = { 3: 'an active', 1: 'an average', 0.3: 'a quiet' }[m2.sun] || 'an average';
@@ -436,14 +483,17 @@ function frame(ts) {
   if (mode === 1 && m1.playing && m1.loaded) {
     m1.t += dt * 1000 * m1.speed;
     const d = new Date(m1.t);
-    propagateSome(d, PROPAGATE_BUDGET_MS); setSun(d); clock1();
+    // Spread the work: each frame recomputes its share of positions, so no frame does them all at once.
+    m1.credit = Math.min(m1.count, m1.credit + Math.min(m1.count * POSITION_HZ, MAX_PROPAGATIONS_PER_S) * dt);
+    const k = Math.floor(m1.credit); m1.credit -= k;
+    propagateSome(d, k); setSun(d); clock1();
     if (m1.selIndex >= 0) showSatellite(m1.selIndex, false);
     moving = true;
   }
   if (mode === 2 && m2.playing) {
     m2.years = Math.min(m2.maxYears, m2.years + dt * m2.speed);
     m2.angleA += dt * DOT_ORBITS_PER_S * Math.PI * 2; m2.angleB += dt * DOT_ORBITS_PER_S * Math.PI * 2 * 0.8;
-    update2();
+    update2(true);
     if (m2.years >= m2.maxYears) { m2.playing = false; setPlayLabels(); update2(); }
     moving = m2.playing;
   }
@@ -507,6 +557,10 @@ $('play-1').addEventListener('click', () => { m1.playing = !m1.playing; setPlayL
 $('now-1').addEventListener('click', () => { m1.t = Date.now(); if (m1.loaded) { propagateAll(new Date(m1.t)); summarize(); } setSun(new Date(m1.t)); clock1(); if (m1.selIndex >= 0) showSatellite(m1.selIndex); requestRender(); });
 $('speed-1').addEventListener('change', e => { m1.speed = Number(e.target.value); clock1(); });
 $('next-sat').addEventListener('click', nextSatellite);
+// Built here rather than in simulator/index.html, which the redesign (WQ-023) restyles in parallel.
+$('next-sat').after(Object.assign(document.createElement('button'), { className: 'ctl', type: 'button', id: 'show-all', textContent: 'Show all' }));
+$('show-all').setAttribute('aria-pressed', 'false');
+$('show-all').addEventListener('click', () => setShowAll(!m1.showAll));
 $('play-2').addEventListener('click', () => { if (!m2.playing && m2.years >= m2.maxYears) m2.years = 0; m2.playing = !m2.playing; setPlayLabels(); update2(); });
 $('reset-2').addEventListener('click', () => { m2.years = 0; update2(); });
 $('speed-2').addEventListener('change', e => { m2.speed = Number(e.target.value); });
