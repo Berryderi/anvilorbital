@@ -1,0 +1,1 @@
+Planner screenshots, JS on, are byte-identical before and after at 1280, 390, 390 reduced and #starcloud (cmp). Only the no-JS shots differ: the notice. check-planner on 44d4f07 is byte-identical to main 10c2600 (cmp).
