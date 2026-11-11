@@ -212,7 +212,7 @@ const PAGE = {
   phone: { cx: 0.9, cy: -1.12, r: 0.4 },
   // Light from the upper left and from behind Earth: a thin lit crescent on the limb, the rest of the disc in night, so
   // text that scrolls over the corner keeps its contrast.
-  sun: [-0.75, 0.6, -0.55],
+  sun: [-0.45, 0.4, -0.8],
   turnRad: 2.2,                                // which side of Earth faces the camera; for the look only
 };
 
