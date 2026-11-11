@@ -10,6 +10,7 @@
 //   scene.on('ready', fn)                     // fleet loaded: same object as scene.info
 //   scene.setPlannerPreset(name)              // rings at that planner preset's altitude, framed in the planner chapter
 //   scene.pause(), scene.resume()
+//   createScene(canvas, { mode: 'page' })     // tool pages: stars and Earth's limb, drawn once and on resize; other calls are no-ops
 //   scene.info                                // {snapshotUtc, timeScale, phone, reducedMotion, count, fleets: [{id, label, color, shown, listed}]}
 //
 // Main-thread budget: SGP4 runs in orbits.worker.js about once a second; between updates each point moves on the GPU
@@ -195,8 +196,116 @@ function ringGeometry(radius, segments = 160) {
   return new THREE.BufferGeometry().setFromPoints(pts);
 }
 
+// ---------- Page mode (WQ-030): the quiet background for every page other than home ----------
+// createScene(canvas, { mode: 'page' }): the same stars, plus the lit limb of Earth in the lower right corner. No fleet,
+// no worker, no snapshot, no picking, no animation: it draws once when the day texture arrives and again after a resize,
+// and draws nothing in between (0 frames idle). It starts when the browser is idle, after the page has painted, and
+// loads only files home also uses (three.js and the 2k day texture), so a visit from home costs about 13 KB new.
+// The page's own CSS (page.css, #space[data-scene-mode="page"]) shows static stars until then, and for good without
+// JS, without WebGL, or when the reader asked to save data.
+const PAGE = {
+  texture: '/assets/scene/earth-day-2k.webp',  // home's phone texture: cached after a home visit
+  idleTimeoutMs: 1500,                         // start at the latest this long after page.js asks, even if never idle
+  // Where Earth sits: its centre in viewport units (1 = the right or bottom edge), and its radius as a share of the
+  // viewport height. Only the upper left of the disc is on screen, so the limb arcs across the corner.
+  desktop: { cx: 0.98, cy: -1.12, r: 0.52 },
+  phone: { cx: 0.9, cy: -1.12, r: 0.4 },
+  // Light from the upper left and from behind Earth: a thin lit crescent on the limb, the rest of the disc in night, so
+  // text that scrolls over the corner keeps its contrast.
+  sun: [-0.75, 0.6, -0.55],
+  turnRad: 2.2,                                // which side of Earth faces the camera; for the look only
+};
+
+function wantsLessData() {
+  try { if (navigator.connection && navigator.connection.saveData) return true; } catch { /* no Network Information API */ }
+  return matchMedia('(prefers-reduced-data: reduce)').matches;
+}
+
+async function createPageScene(canvas) {
+  if (wantsLessData()) return null;
+  await new Promise(r => ('requestIdleCallback' in window ? requestIdleCallback(r, { timeout: PAGE.idleTimeoutMs }) : setTimeout(r, 200)));
+  const phone = matchMedia('(max-width: 720px), (pointer: coarse)').matches;
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  Object.assign(canvas.style, { position: 'fixed', inset: '0', width: '100vw', height: '100lvh', display: 'block', zIndex: '0', pointerEvents: 'none' });
+
+  const renderer = new THREE.WebGLRenderer({ canvas, antialias: !phone && devicePixelRatio <= 1, alpha: false });
+  const pr = Math.min(devicePixelRatio || 1, DPR_CAP);
+  renderer.setPixelRatio(pr);
+  renderer.setClearColor(new THREE.Color(token('--bg', '#070d14')), 1);
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(35, 1, 0.1, 800);
+
+  const rand = mulberry32(20261110);   // home's seed: the same sky
+  for (const s of Object.values(STARS)) {
+    const n = s.n[phone ? 1 : 0], pos = new Float32Array(n * 3), b = new Float32Array(n);
+    for (let i = 0; i < n; i++) {
+      const u = rand() * 2 - 1, th = rand() * Math.PI * 2, k = Math.sqrt(1 - u * u);
+      pos.set([k * Math.cos(th) * s.r, u * s.r, k * Math.sin(th) * s.r], i * 3);
+      b[i] = s.bright[0] + (s.bright[1] - s.bright[0]) * rand() ** 2;
+    }
+    const g = new THREE.BufferGeometry();
+    g.setAttribute('position', new THREE.BufferAttribute(pos, 3)); g.setAttribute('aB', new THREE.BufferAttribute(b, 1));
+    const pts = new THREE.Points(g, new THREE.ShaderMaterial({ vertexShader: STAR_VS, fragmentShader: STAR_FS, transparent: true, depthWrite: false,
+      uniforms: { uSize: { value: s.size * pr }, uColor: { value: new THREE.Color(token('--star', '#f1f6fc')) }, uFade: { value: 1 } } }));
+    pts.frustumCulled = false; scene.add(pts);
+  }
+
+  // Earth with home's shader. No night texture is loaded (a black one stands in): the visible limb is the day side.
+  const black = new THREE.DataTexture(new Uint8Array([0, 0, 0, 255]), 1, 1); black.needsUpdate = true;
+  const sun = new THREE.Vector3(...PAGE.sun).normalize();
+  const earthU = { uDay: { value: black }, uNight: { value: black }, uSun: { value: sun }, uAtmo: { value: new THREE.Color('#6fa8e8') }, uFade: { value: 1 } };
+  const earth = new THREE.Mesh(new THREE.SphereGeometry(EARTH_R, phone ? 64 : 96, phone ? 32 : 48),
+    new THREE.ShaderMaterial({ vertexShader: EARTH_VS, fragmentShader: EARTH_FS, uniforms: earthU }));
+  earth.rotation.y = PAGE.turnRad; earth.visible = false;
+  const haloR = EARTH_R * 1.045;
+  const halo = new THREE.Mesh(new THREE.SphereGeometry(haloR, 64, 32), new THREE.ShaderMaterial({ vertexShader: HALO_VS, fragmentShader: HALO_FS,
+    side: THREE.BackSide, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending,
+    uniforms: { uSun: earthU.uSun, uAtmo: earthU.uAtmo, uFade: { value: 1 }, uEdge: { value: Math.sqrt(1 - (EARTH_R / haloR) ** 2) } } }));
+  halo.visible = false;
+  scene.add(earth, halo);
+
+  // Camera at the origin looking down -z; Earth placed so its centre lands at (cx, cy) in viewport units.
+  function layout() {
+    const w = innerWidth, h = innerHeight;
+    if (!w || !h) return false;
+    renderer.setSize(w, h, false);
+    camera.aspect = w / h; camera.updateProjectionMatrix();
+    const p = phone ? PAGE.phone : PAGE.desktop, t = Math.tan(camera.fov * Math.PI / 360);
+    const d = EARTH_R / (p.r * t);           // distance at which the radius fills p.r of the half-height
+    earth.position.set(p.cx * d * t * camera.aspect, p.cy * d * t, -d);
+    halo.position.copy(earth.position);
+    return true;
+  }
+  let drawn = false;
+  function draw() {
+    if (!layout()) return;
+    renderer.render(scene, camera);
+    // First draw: fade the canvas in over the page's CSS stars (a cut under reduced motion). One extra callback, once.
+    if (!drawn) { drawn = true; requestAnimationFrame(() => { if (!reduce) canvas.style.transition = 'opacity var(--dur-section, 200ms) var(--ease-enter, ease-out)'; canvas.style.opacity = '1'; }); }
+  }
+  // Resizes come in bursts; draw once per animation frame at most, and only after a resize.
+  let resizeRaf = 0;
+  const onResize = () => { if (!resizeRaf) resizeRaf = requestAnimationFrame(() => { resizeRaf = 0; draw(); }); };
+  addEventListener('resize', onResize);
+
+  canvas.style.opacity = '0';
+  draw();   // stars at once
+  new THREE.TextureLoader().load(PAGE.texture, tex => {
+    tex.colorSpace = THREE.SRGBColorSpace; earthU.uDay.value = tex; earth.visible = halo.visible = true; draw();
+  }, undefined, e => console.error('[scene] page-mode Earth texture failed to load', e));
+
+  const listeners = {};
+  return {
+    mode: 'page',
+    setChapter() {}, setPointer() {}, setPlannerPreset() {}, pause() {}, resume() {},
+    on(evt, fn) { (listeners[evt] ||= []).push(fn); return this; },
+    info: { mode: 'page', timeScale: 0, phone, reducedMotion: reduce, count: 0, fleets: [], snapshotUtc: null },
+  };
+}
+
 export async function createScene(canvas, opts = {}) {
   if (!canvas || !hasWebGL()) return null;
+  if (opts.mode === 'page') return createPageScene(canvas);   // tool pages (WQ-030); home never passes a mode
   const phone = matchMedia('(max-width: 720px), (pointer: coarse)').matches;
   const reduceMQ = matchMedia('(prefers-reduced-motion: reduce)');
   let reduce = reduceMQ.matches;
