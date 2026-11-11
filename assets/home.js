@@ -102,12 +102,16 @@
         if (k < 1) { ctx.fillStyle = col.warn; ctx.globalAlpha = 1 - k; ctx.beginPath(); ctx.arc(last[0], last[1], 4 + 10 * k, 0, 2 * Math.PI); ctx.fill(); ctx.globalAlpha = 1; }
       }
       // Labels: shell heights and the sped-up clock.
-      ctx.font = `500 12px ${col.mono}`;   // read once, so no frame forces a style recalculation ctx.textBaseline = 'top';
-      // The low label sits bottom left and the high one top right, so the two never overlap.
-      const lowText = `${LOW_KM} km`, d = Math.SQRT1_2;
-      ctx.fillStyle = col['series-1']; ctx.fillText(lowText, cx - radius(LOW_KM) * d - ctx.measureText(lowText).width - 6, cy + radius(LOW_KM) * d + 2);
-      ctx.fillStyle = col['series-2']; ctx.fillText(`${HIGH_KM} km`, cx + radius(HIGH_KM) * d + 6, cy - radius(HIGH_KM) * d - 14);
+      ctx.font = `500 12px ${col.mono}`;   // col.mono is read once, so no frame forces a style recalculation
+      ctx.textBaseline = 'top';
+      // Shell heights as a key in the bottom left corner: the two shells are too close for a label beside each.
+      for (const [i, km, c] of [[0, LOW_KM, col['series-1']], [1, HIGH_KM, col['series-2']]]) {
+        const y = H - 40 + i * 20;
+        ctx.strokeStyle = c; ctx.lineWidth = 1; ctx.globalAlpha = 0.55; ctx.setLineDash([3, 5]); ctx.beginPath(); ctx.moveTo(8, y + 6); ctx.lineTo(28, y + 6); ctx.stroke(); ctx.setLineDash([]); ctx.globalAlpha = 1;
+        ctx.fillStyle = c; ctx.fillText(`${km} km`, 36, y);
+      }
       ctx.fillStyle = col.muted; ctx.fillText(`${t.toFixed(2)} years after both died (sped up)`, 8, 8);
+      ctx.textBaseline = 'alphabetic';
     }
 
     // Loop: runs only while the scene is on screen and the tab is visible, at most 30 times a second,
