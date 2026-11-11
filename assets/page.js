@@ -70,7 +70,9 @@
     if (!d) { pick.hidden = true; return; }
     pick.replaceChildren();
     const name = document.createElement('b'); name.textContent = d.name;
-    const meta = document.createElement('span'); meta.textContent = [d.operator, `${Math.round(d.heightKm).toLocaleString('en-US')} km`, `NORAD ${d.norad}`].filter(Boolean).join(' · ');
+    // heightKm is null for a moment until the scene's worker answers; the event then fires again with it.
+    const height = Number.isFinite(d.heightKm) ? `${Math.round(d.heightKm).toLocaleString('en-US')} km` : null;
+    const meta = document.createElement('span'); meta.textContent = [d.operator, height, `NORAD ${d.norad}`].filter(Boolean).join(' · ');
     pick.append(name, meta);
     pick.style.setProperty('--px', `${Math.min(d.x, innerWidth - 260)}px`); pick.style.setProperty('--py', `${Math.min(d.y, innerHeight - 80)}px`);
     pick.hidden = false;
