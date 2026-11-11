@@ -15,10 +15,17 @@
   <a class="skip" href="#main">Skip to content</a>
   <header class="site-head"><a class="brand" href="./"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 7h20c0 3.2-3.4 4.8-7 5v2.2l3.5 3.8H5.5L9 14.2V12C5.4 11.8 2 10.2 2 7z"/></svg>Anvil Orbital</a><nav class="site-nav" aria-label="Main"><a href="simulator/">Simulator</a><a href="planner/">Planner</a><a href="findings/">Findings</a><a href="about/">About</a></nav></header>
   <main id="main">
-    <section>
-      <h1>We want to turn retired satellites into data centers in orbit, and recycle the rest.</h1>
-      <p class="lede">With their owners' agreement, tugs would bring retired satellites to a station in low orbit. None of that hardware exists yet, so we started with software you can use today.</p>
-      <div class="actions"><a class="button" href="planner/">Try the Fleet Retirement Planner</a><a href="findings/">Read what we've found so far</a></div>
+    <section class="hero">
+      <div>
+        <h1>We want to turn retired satellites into data centers in orbit, and recycle the rest.</h1>
+        <p class="lede">With their owners' agreement, tugs would bring retired satellites to a station in low orbit. None of that hardware exists yet, so we started with software you can use today.</p>
+        <div class="actions"><a class="button" href="planner/">Try the Fleet Retirement Planner</a><a href="findings/">Read what we've found so far</a></div>
+      </div>
+      <figure class="scene" id="hero-scene" hidden>
+        <canvas id="hero-canvas" role="img" aria-label="Animation: Earth with two orbit shells."></canvas>
+        <figcaption><span id="hero-line"></span>
+          <span class="actions"><button class="ghost" type="button" id="hero-replay">Replay</button><a href="planner/">Try your fleet</a></span></figcaption>
+      </figure>
     </section>
     <figure class="shot">
       <a href="planner/"><img src="assets/planner.webp" width="1200" height="736" alt="The Fleet Retirement Planner with an example fleet of 1,000 satellites at 700 km. It shows 4.8 years to fall, $159k disposal cost each, 72 tonnes of aluminum oxide a year, and that burning up beats servicing at the price entered."></a>
@@ -93,3 +100,6 @@
   </main>
   <footer class="site-foot"><span>Anvil Orbital. Estimates are unchecked models, not quotes or promises.</span><span><a href="privacy/">Privacy</a> &middot; <a href="https://github.com/Berryderi/anvilorbital">Code</a></span></footer>
 </div>
+<script src="assets/model.js" defer></script>
+<script src="assets/presets.js" defer></script>
+<script src="assets/home.js" defer></script>

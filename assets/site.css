@@ -89,3 +89,29 @@ td.n,th.n{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
 .prose .table-wrap,.prose ul.plain{margin-bottom:12px}
 .prose .table-wrap.narrow{max-width:68ch}
 .prose p a,.prose li a{white-space:nowrap}
+
+/* Home hero (WQ-023 PR B): text beside a small orbit scene on wide screens, scene below on narrow ones. */
+.hero{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,420px);gap:32px 40px;align-items:center}
+@media (max-width:900px){.hero{grid-template-columns:minmax(0,1fr)}}
+.scene{margin:0;min-width:0}
+.scene canvas{display:block;width:100%;aspect-ratio:1/1;max-width:420px}
+.scene figcaption{display:grid;gap:12px;font-size:.875rem;color:var(--muted);max-width:420px}
+.scene .actions{margin-top:0}
+.ghost{font:500 .9375rem/1.2 var(--body);min-height:44px;padding:8px 16px;background:var(--panel);color:var(--ink);border:1px solid var(--edge);cursor:pointer}
+.ghost:hover{border-color:var(--accent)}
+.ghost:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+
+/* Roadmap track (WQ-023 PR B): six steps as tabs; the selected one shows its step below. Without JS the list shows in full. */
+.track{position:relative;display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:8px}
+.track::before{content:"";position:absolute;left:8px;right:8px;top:21px;height:1px;background:var(--line)}
+.track button{position:relative;display:grid;justify-items:start;align-content:start;gap:8px;min-height:44px;padding:16px 4px 12px 0;background:none;border:0;border-bottom:2px solid transparent;color:var(--muted);font:500 .875rem/1.25 var(--body);text-align:left;cursor:pointer}
+.track button:hover{color:var(--ink)}
+.track button[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--accent)}
+.track button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.track .dot{width:12px;height:12px;border-radius:50%;background:var(--bg);border:2px solid var(--edge)}
+.track .now .dot{background:var(--accent);border-color:var(--accent);box-shadow:0 0 0 4px var(--panel),0 0 12px var(--accent)}
+.track .n{font:500 .75rem/1 var(--mono);letter-spacing:.06em}
+.track-panels{border-top:0}
+.track-panels>li:focus-visible{outline:2px solid var(--accent);outline-offset:4px}
+@media (max-width:560px){.track{grid-template-columns:repeat(3,minmax(0,1fr))}.track::before{display:none}}
+.track-panels>[hidden]{display:none}
