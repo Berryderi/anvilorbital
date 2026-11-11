@@ -210,9 +210,14 @@ const PAGE = {
   // viewport height. Only the upper left of the disc is on screen, so the limb arcs across the corner.
   desktop: { cx: 0.98, cy: -1.12, r: 0.52 },
   phone: { cx: 0.9, cy: -1.12, r: 0.4 },
-  // Light from the upper left and from behind Earth: a thin lit crescent on the limb, the rest of the disc in night, so
-  // text that scrolls over the corner keeps its contrast.
-  sun: [-0.45, 0.4, -0.8],
+  // Light from just behind Earth, tilted toward the upper left of the screen: a thin lit crescent on the limb, the rest
+  // of the disc in night, so text that scrolls over the corner keeps its contrast. The angle is measured from the line
+  // camera to Earth, not fixed in the world: Earth sits far off-axis, so the part on screen is its upper left limb and a
+  // fixed world sun from the upper left lights all of it. Larger angle, thicker crescent.
+  sunFromBehindDeg: 30,
+  // How strongly Earth and its halo show over the page background (0 to 1). Page text scrolls over the corner, so the
+  // brightest Earth pixel must keep even caption text (--ink-3) at 4.5:1 or better; checked with the probe screenshots.
+  earthStrength: 0.2,
   turnRad: 2.2,                                // which side of Earth faces the camera; for the look only
 };
 
@@ -252,15 +257,16 @@ async function createPageScene(canvas) {
 
   // Earth with home's shader. No night texture is loaded (a black one stands in): the visible limb is the day side.
   const black = new THREE.DataTexture(new Uint8Array([0, 0, 0, 255]), 1, 1); black.needsUpdate = true;
-  const sun = new THREE.Vector3(...PAGE.sun).normalize();
-  const earthU = { uDay: { value: black }, uNight: { value: black }, uSun: { value: sun }, uAtmo: { value: new THREE.Color('#6fa8e8') }, uFade: { value: 1 } };
+  const sun = new THREE.Vector3();     // set in layout(), relative to where Earth sits on screen
+  const earthU = { uDay: { value: black }, uNight: { value: black }, uSun: { value: sun }, uAtmo: { value: new THREE.Color('#6fa8e8') }, uFade: { value: PAGE.earthStrength } };
+  // Blended at earthStrength (uFade is the shader's alpha), drawn first and writing depth, so stars behind it stay hidden.
   const earth = new THREE.Mesh(new THREE.SphereGeometry(EARTH_R, phone ? 64 : 96, phone ? 32 : 48),
-    new THREE.ShaderMaterial({ vertexShader: EARTH_VS, fragmentShader: EARTH_FS, uniforms: earthU }));
-  earth.rotation.y = PAGE.turnRad; earth.visible = false;
+    new THREE.ShaderMaterial({ vertexShader: EARTH_VS, fragmentShader: EARTH_FS, uniforms: earthU, transparent: true, depthWrite: true }));
+  earth.rotation.y = PAGE.turnRad; earth.visible = false; earth.renderOrder = -1;
   const haloR = EARTH_R * 1.045;
   const halo = new THREE.Mesh(new THREE.SphereGeometry(haloR, 64, 32), new THREE.ShaderMaterial({ vertexShader: HALO_VS, fragmentShader: HALO_FS,
     side: THREE.BackSide, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending,
-    uniforms: { uSun: earthU.uSun, uAtmo: earthU.uAtmo, uFade: { value: 1 }, uEdge: { value: Math.sqrt(1 - (EARTH_R / haloR) ** 2) } } }));
+    uniforms: { uSun: earthU.uSun, uAtmo: earthU.uAtmo, uFade: { value: PAGE.earthStrength }, uEdge: { value: Math.sqrt(1 - (EARTH_R / haloR) ** 2) } } }));
   halo.visible = false;
   scene.add(earth, halo);
 
@@ -274,6 +280,11 @@ async function createPageScene(canvas) {
     const d = EARTH_R / (p.r * t);           // distance at which the radius fills p.r of the half-height
     earth.position.set(p.cx * d * t * camera.aspect, p.cy * d * t, -d);
     halo.position.copy(earth.position);
+    // Sun: the camera-to-Earth direction turned sunFromBehindDeg toward the screen's upper left.
+    const back = earth.position.clone().normalize();
+    const side = new THREE.Vector3(-1, 1, 0).addScaledVector(back, -back.dot(new THREE.Vector3(-1, 1, 0))).normalize();
+    const a = PAGE.sunFromBehindDeg * Math.PI / 180;
+    sun.copy(back).multiplyScalar(Math.cos(a)).addScaledVector(side, Math.sin(a)).normalize();
     return true;
   }
   let drawn = false;
