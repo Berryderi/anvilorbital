@@ -12,8 +12,8 @@ const SNAPSHOT_URL = '../assets/data/gp-2026-11-10.json';
 const UNIT_KM = 1000;                 // one scene unit is 1,000 km
 const R_EARTH_KM = 6371;
 const MIN_SHOWN_HEIGHT_KM = 100;      // below this a record has re-entered; don't draw it
-const POSITION_HZ = 5;                // while playing, each satellite's position is recomputed at most this often
-const MAX_PROPAGATIONS_PER_S = 7500;  // SGP4 calls a second in all, under the 8,000 budget with room for timing jitter; with "show all" each position updates less often
+const POSITION_HZ = 3;                // while playing, each satellite's position is recomputed at most this often (brief: at most 5)
+const MAX_PROPAGATIONS_PER_S = 4500;  // SGP4 calls a second in all, well under the 8,000 budget so slower machines stay near 4 ms a frame; with "show all" each position updates less often
 const TEXT_HZ = 10;                   // mode 2 readouts and slider while playing; the scene itself moves every frame
 // Default view, about 1,500 points: every Nth record of these fleets in the snapshot. "Show all" draws every record.
 const THIN = { 'starlink': 6, 'oneweb': 2 };
