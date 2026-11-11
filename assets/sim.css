@@ -1,0 +1,261 @@
+/* Simulator console (WQ-028): a mission-control frame around one view. Home's tokens only; the layout copies
+   Founder B's mission-control presentation (step rail, top bar with a UTC clock, counter cards with corner
+   marks, mono labels), the colours and type stay the site's. Words on the console are labels; sentences live
+   in the "Text version and sources" block under it. */
+
+/* Names assets/simulator.js reads with getComputedStyle; they must resolve to hex. */
+:root {
+  --sim-station: #ecbc5e;   /* = --accent: the station and the tug, the one thing that is ours */
+  --sim-target: #98cceb;    /* = --orbit-high */
+  --sim-low: #fa934e;       /* = --orbit-low */
+  --sim-filed-1: #fa934e;   /* Starcloud filing ring (= --caution) */
+  --sim-filed-2: #9199a4;   /* Starmind filing ring (= --ink-3) */
+  --sim-five: #ecbc5e;      /* five-year line */
+  --sim-ghost: #5f6a77;     /* = --edge: where a ring started */
+  --sim-ink: #e9edf2;       /* = --ink: selection ring */
+  --mc-card: color-mix(in oklab, var(--surface-1) 80%, transparent);
+  --mc-rail: 6.5rem;
+  --mc-corner: 10px;
+}
+
+.sim-page main { padding-top: var(--nav-h); }
+html:not(.js) .mc { display: none; }
+
+/* ---------- Frame ---------- */
+.mc {
+  position: relative; display: grid; grid-template-columns: var(--mc-rail) minmax(0, 1fr); grid-template-rows: auto minmax(0, 1fr) auto;
+  grid-template-areas: "top top" "rail stage" "foot foot";
+  height: calc(100svh - var(--nav-h)); min-height: 36rem; border-block: 1px solid var(--line);
+}
+.mc-top { grid-area: top; display: flex; align-items: center; gap: var(--space-5); min-height: 52px; padding: 0 var(--gutter) 0 var(--space-5); border-bottom: 1px solid var(--line); }
+.mc-title { display: flex; align-items: baseline; gap: var(--space-3); font: 500 var(--small-size)/1 var(--font-sans); color: var(--ink); }
+.mc-num { font: 500 var(--data-size)/1 var(--font-mono); color: var(--accent); }
+.mc-tag { margin-right: auto; }
+.mc-tag .tag { display: none; }
+.mc[data-kind="real"] .mc-tag [data-for="real"], .mc[data-kind="model"] .mc-tag [data-for="model"], .mc[data-kind="concept"] .mc-tag [data-for="concept"] { display: inline-flex; }
+.mc-clock { color: var(--ink-3); white-space: nowrap; }
+.mc-play {
+  display: inline-flex; align-items: center; gap: var(--space-2); min-height: 36px; padding: 0 var(--space-4);
+  font: var(--label-wght) var(--label-size)/1 var(--font-sans); font-stretch: var(--label-wdth); letter-spacing: var(--label-track); text-transform: uppercase;
+  color: var(--on-accent); background: var(--accent); border: 1px solid var(--accent); border-radius: var(--radius-1); cursor: pointer;
+  transition: background-color var(--dur-micro) var(--ease-enter), transform var(--dur-micro) var(--ease-enter);
+}
+.mc-play:hover { background: var(--ink); border-color: var(--ink); }
+.mc-play:active { transform: translateY(1px); }
+.mc-play svg { width: 11px; height: 11px; fill: currentColor; }
+.mc-play .i-pause, .mc-play[aria-pressed="true"] .i-play { display: none; }
+.mc-play[aria-pressed="true"] .i-pause { display: inline; }
+
+/* ---------- Step rail ---------- */
+.mc-rail { grid-area: rail; display: flex; flex-direction: column; justify-content: space-between; border-right: 1px solid var(--line); min-height: 0; }
+.mc-rail ol { display: grid; margin: 0; padding: var(--space-3) 0; list-style: none; }
+.mc-rail li { max-width: none; }
+.mc-rail button {
+  position: relative; display: grid; justify-items: center; gap: var(--space-1); width: 100%; min-height: 64px; padding: var(--space-3) var(--space-1);
+  background: none; border: 0; color: var(--ink-3); cursor: pointer; text-align: center;
+  transition: color var(--dur-micro) var(--ease-enter), background-color var(--dur-micro) var(--ease-enter);
+}
+.mc-rail button::before { content: ""; position: absolute; left: 0; top: var(--space-3); bottom: var(--space-3); width: 2px; background: var(--accent);
+  transform: scaleY(0); transition: transform var(--dur-small) var(--ease-enter); }
+.mc-rail button:hover { color: var(--ink); background: var(--surface-1); }
+.mc-rail button:active .n { transform: translateY(1px); }
+.mc-rail button[aria-current] { color: var(--ink); }
+.mc-rail button[aria-current]::before { transform: scaleY(1); }
+.mc-rail button[aria-current] .n { color: var(--accent); }
+.mc-rail .n { font: 500 var(--data-size)/1 var(--font-mono); }
+.mc-rail .t { font: var(--label-wght) 0.625rem/1.25 var(--font-sans); font-stretch: 112%; letter-spacing: 0.1em; text-transform: uppercase; }
+.mc-keys { padding: var(--space-3); text-align: center; }
+kbd { padding: 0 var(--space-1); border: 1px solid var(--line); border-radius: var(--radius-1); color: var(--ink-2); }
+
+/* ---------- Stage and HUD ---------- */
+.mc-stage { grid-area: stage; position: relative; min-height: 0; overflow: hidden; background: var(--bg); }
+.mc-stage canvas { position: absolute; inset: 0; display: block; width: 100%; height: 100%; touch-action: none; }
+.mc-stage canvas:focus-visible { outline-offset: -4px; }
+.mc-status { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); color: var(--ink-3); pointer-events: none; }
+.mc-scale { position: absolute; left: 50%; top: var(--space-5); transform: translateX(-50%); pointer-events: none; white-space: nowrap; }
+
+.card {
+  position: relative; display: grid; gap: var(--space-2); align-content: start; padding: var(--space-4) var(--space-5);
+  background: var(--mc-card); border: 1px solid var(--line); border-radius: var(--radius-0);
+}
+/* Corner marks: two short strokes at top left and bottom right, the console's one ornament. */
+.card::before, .card::after { content: ""; position: absolute; width: var(--mc-corner); height: var(--mc-corner); pointer-events: none; border: 0 solid var(--ink-3); }
+.card::before { left: -1px; top: -1px; border-left-width: 1px; border-top-width: 1px; }
+.card::after { right: -1px; bottom: -1px; border-right-width: 1px; border-bottom-width: 1px; }
+.card p, .card dd { max-width: none; }
+.card .u { color: var(--ink-3); font-size: 0.75rem; }
+.counter .data-big { color: var(--ink); }
+
+.hud { position: absolute; display: grid; gap: var(--space-4); pointer-events: none; }
+.hud .card { pointer-events: auto; }
+.hud-1, .hud-2 { top: var(--space-5); right: var(--space-5); }
+/* Concept steps: a card under the play panel on the left, the counter top right, the result bottom right. */
+.hud-c { inset: var(--space-5) var(--space-5) var(--space-8); grid-template-columns: minmax(0, 18rem) minmax(0, 1fr) minmax(0, 19rem); grid-template-rows: auto minmax(0, 1fr) auto; gap: var(--space-4); }
+.hud-c .c-l { grid-column: 1; grid-row: 1 / 3; align-self: start; margin-top: 5rem; }
+.hud-c .c-tr { grid-column: 3; grid-row: 1; }
+.hud-c .c-br { grid-column: 3; grid-row: 3; }
+.facts { margin: 0; gap: var(--space-4); }
+.facts > div { display: grid; gap: var(--space-1); }
+.facts dd { margin: 0; color: var(--ink-2); }
+.facts .data-big { font-size: 1.5rem; color: var(--ink); }
+.cost .data-big { color: var(--ink); }
+.verdict { color: var(--caution); font-size: 0.8125rem; }
+.bar { height: 4px; background: var(--surface-2); }
+.bar i { display: block; height: 100%; background: var(--sim-station); transform-origin: 0 50%; transform: scaleX(var(--f, 0)); }
+.dv .bar.now i { background: var(--sim-low); --f: 1; }
+.dv .bar.wait i { background: var(--sim-target); --f: 0.06; }   /* 0.34 / 5.7 at the same scale; below 0.06 it would vanish */
+
+.keyline { left: var(--space-5); bottom: var(--space-5); display: flex; flex-wrap: wrap; gap: var(--space-2) var(--space-5); margin: 0; padding: 0; list-style: none; }
+.keyline li { display: inline-flex; align-items: center; gap: var(--space-2); font: 500 0.75rem/1 var(--font-mono); color: var(--ink-2); }
+.keyline li::before { content: ""; width: 14px; height: 2px; background: var(--c); }
+.keyline li.dash::before { background: repeating-linear-gradient(90deg, var(--c) 0 3px, transparent 3px 6px); }
+.keyline li.dot::before { width: 8px; height: 8px; border-radius: 50%; }
+
+.caption { position: absolute; left: 50%; bottom: var(--space-5); transform: translateX(-50%); color: var(--ink-2); pointer-events: none; white-space: nowrap;
+  transition: opacity var(--dur-small) var(--ease-enter); }
+.caption:empty { opacity: 0; }
+
+/* ---------- Panels: controls for steps 01 and 02, play and restart for 03 to 05 ---------- */
+.mc-panel {
+  grid-area: stage; align-self: start; justify-self: start; z-index: 1; display: grid; gap: var(--space-3);
+  width: min(19rem, 40%); margin: var(--space-5); padding: var(--space-4); background: var(--mc-card); border: 1px solid var(--line);
+  max-height: calc(100% - 2 * var(--space-5)); overflow: auto;
+}
+.mc-panel-concept { width: auto; }
+.mc-panel .row { display: flex; flex-wrap: wrap; align-items: end; gap: var(--space-2); }
+.mc-panel label { gap: var(--space-1); }
+.mc-panel label.inline { flex: 1 1 5.5rem; }
+.mc-panel select, .mc-panel input[type="number"] { min-height: 40px; width: 100%; }
+.mc-panel input[type="range"] { min-height: 32px; padding: 0; background: none; border: 0; accent-color: var(--accent); }
+.ctl {
+  min-height: 40px; padding: 0 var(--space-4); font: 600 0.75rem/1 var(--font-sans); font-stretch: 110%; letter-spacing: 0.04em; text-transform: uppercase;
+  color: var(--ink); background: var(--surface-2); border: 1px solid var(--edge); border-radius: var(--radius-1); cursor: pointer;
+  transition: border-color var(--dur-micro) var(--ease-enter), transform var(--dur-micro) var(--ease-enter);
+}
+.ctl:hover { border-color: var(--ink-3); }
+.ctl:active { transform: translateY(1px); }
+.ctl[aria-pressed="true"] { border-color: var(--accent); color: var(--accent); }
+.view .ctl { min-width: 40px; padding: 0; font-size: 1rem; }
+.readout { color: var(--ink-2); font-size: 0.75rem; }
+.readout.info { color: var(--ink); }
+.readout.sat { padding-left: var(--space-3); border-left: 2px solid var(--c); }
+.legend { display: grid; gap: var(--space-1); margin: 0; padding: 0; list-style: none; font: 500 0.75rem/1.4 var(--font-mono); color: var(--ink-2); }
+.legend li { display: flex; align-items: center; gap: var(--space-2); }
+.legend li::before { content: ""; flex: none; width: 8px; height: 8px; border-radius: 50%; background: var(--c); }
+.legend li.ring::before { background: none; border: 1px dashed var(--c); }
+
+.mc-foot { grid-area: foot; display: flex; flex-wrap: wrap; justify-content: space-between; gap: var(--space-2) var(--space-5); padding: var(--space-2) var(--gutter) var(--space-2) var(--space-5);
+  border-top: 1px solid var(--line); font-family: var(--font-mono); font-size: 0.6875rem; }
+.mc-foot, .mc-foot span { max-width: none; }
+
+/* ---------- Which parts show on which step ---------- */
+.mc[data-step="1"] [data-only]:not([data-only~="1"]), .mc[data-step="2"] [data-only]:not([data-only~="2"]),
+.mc[data-step="3"] [data-only]:not([data-only~="3"]), .mc[data-step="4"] [data-only]:not([data-only~="4"]),
+.mc[data-step="5"] [data-only]:not([data-only~="5"]) { display: none; }
+
+/* ---------- 04 Workcell drawing: landscape on wide screens, portrait on phones ---------- */
+.cell { position: absolute; inset: var(--space-6) var(--space-6) var(--space-8); margin: 0; display: grid; place-items: center; pointer-events: none; }
+.cell svg { width: 100%; height: 100%; max-width: 72rem; overflow: visible; }
+.cell .cell-p { display: none; }
+.cell .cell-defs { position: absolute; width: 0; height: 0; }
+.cell svg * { vector-effect: non-scaling-stroke; }
+.cell-frame path { fill: none; stroke: var(--ink-3); stroke-width: 1; }
+.cell-paths path { fill: none; stroke: var(--line); stroke-width: 1.5; stroke-dasharray: 4 5; }
+.cell-paths .br { stroke: var(--edge); }
+.cell-dock rect, .cell-dock path, .cell-insp rect, .cell-sort path, .cell-out rect, .cell-out circle, .cell-out path { fill: color-mix(in oklab, var(--surface-1) 70%, transparent); stroke: var(--edge); stroke-width: 1.5; }
+.cell-dock rect, .cell-dock path { stroke: var(--sim-station); }
+.cell-insp rect { stroke-dasharray: 5 5; }
+.arm path { fill: none; stroke: var(--ink-2); stroke-width: 3; stroke-linecap: round; }
+.arm circle { fill: var(--bg); stroke: var(--ink-2); stroke-width: 2; }
+.cell-l .arm-fore { transform-origin: 340px 66px; }
+.cell-p .arm-fore { transform-origin: 290px 260px; }
+.cell-l .out-node .pulse { transform-origin: 830px 96px; }
+.cell-p .out-node .pulse { transform-origin: 80px 690px; }
+.arm-fore, .out-node .pulse { transform-box: view-box; }
+.out-node circle { stroke: var(--ok); } .out-node .pulse { fill: none; opacity: 0; }
+.out-parts rect { stroke: var(--sim-target); }
+.out-scrap rect, .out-scrap path { stroke: var(--caution); }
+.cell-labels text { font: 600 13px var(--font-sans); font-stretch: 125%; letter-spacing: 0.14em; fill: var(--ink-3); text-anchor: middle; }
+.cell-l .l-node, .cell-l .l-parts, .cell-l .l-scrap, .cell-labels .l-start { text-anchor: start; }
+.cell-labels .l-end { text-anchor: end; } .cell-labels .l-mid { text-anchor: middle; }
+.cell-labels .l-node { fill: var(--ok); } .cell-labels .l-parts { fill: var(--sim-target); } .cell-labels .l-scrap { fill: var(--caution); }
+/* <use> clones match selectors on the original in .cell-defs, not on .item, so the glyph is styled there. */
+#sat rect { fill: var(--ink-2); stroke: var(--ink); stroke-width: 1.5; }
+#sat .panel { fill: color-mix(in oklab, var(--sim-target) 55%, var(--bg)); stroke: var(--sim-target); }
+.item { opacity: 0; }
+
+/* One item per outcome, 12 s per cycle, each a third out of phase. Keyframes move by transform only. */
+.mc.playing[data-step="4"] .item { animation: 12s linear infinite both; }
+.mc.playing[data-step="4"] .item-parts { animation-delay: -8s; }
+.mc.playing[data-step="4"] .item-scrap { animation-delay: -4s; }
+.mc.playing[data-step="4"] .cell-l .item-node { animation-name: l-node; }
+.mc.playing[data-step="4"] .cell-l .item-parts { animation-name: l-parts; }
+.mc.playing[data-step="4"] .cell-l .item-scrap { animation-name: l-scrap; }
+.mc.playing[data-step="4"] .cell-p .item-node { animation-name: p-node; }
+.mc.playing[data-step="4"] .cell-p .item-parts { animation-name: p-parts; }
+.mc.playing[data-step="4"] .cell-p .item-scrap { animation-name: p-scrap; }
+.mc.playing[data-step="4"] .arm-fore { animation: arm 4s var(--ease-move) infinite; }
+.mc.playing[data-step="4"] .out-node .pulse { animation: pulse 12s var(--ease-enter) infinite; }
+/* Landscape: dock 94,220 / inspect 360,220 / sort 540,220 / node 830,96 / parts 830,220 / scrap 832,344 */
+@keyframes l-node { 0% { opacity: 0; transform: translate(94px, 220px); } 3% { opacity: 1; } 10%, 20% { transform: translate(360px, 220px); } 26% { transform: translate(540px, 220px); }
+  31% { transform: translate(700px, 120px); } 34% { opacity: 1; transform: translate(830px, 96px) scale(0.6); } 37%, 100% { opacity: 0; transform: translate(830px, 96px) scale(0.6); } }
+@keyframes l-parts { 0% { opacity: 0; transform: translate(94px, 220px); } 3% { opacity: 1; } 10%, 20% { transform: translate(360px, 220px); } 26% { transform: translate(540px, 220px); }
+  34% { opacity: 1; transform: translate(830px, 220px) scale(0.6); } 37%, 100% { opacity: 0; transform: translate(830px, 220px) scale(0.6); } }
+@keyframes l-scrap { 0% { opacity: 0; transform: translate(94px, 220px); } 3% { opacity: 1; } 10%, 20% { transform: translate(360px, 220px); } 26% { transform: translate(540px, 220px); }
+  31% { transform: translate(700px, 320px); } 34% { opacity: 1; transform: translate(832px, 344px) scale(0.6); } 37%, 100% { opacity: 0; transform: translate(832px, 344px) scale(0.6); } }
+/* Portrait: dock 200,90 / inspect 200,275 / sort 200,460 / node 80,690 / parts 200,690 / scrap 320,690 */
+@keyframes p-node { 0% { opacity: 0; transform: translate(200px, 90px); } 3% { opacity: 1; } 10%, 20% { transform: translate(200px, 275px); } 26% { transform: translate(200px, 460px); }
+  31% { transform: translate(110px, 610px); } 34% { opacity: 1; transform: translate(80px, 690px) scale(0.6); } 37%, 100% { opacity: 0; transform: translate(80px, 690px) scale(0.6); } }
+@keyframes p-parts { 0% { opacity: 0; transform: translate(200px, 90px); } 3% { opacity: 1; } 10%, 20% { transform: translate(200px, 275px); } 26% { transform: translate(200px, 460px); }
+  34% { opacity: 1; transform: translate(200px, 690px) scale(0.6); } 37%, 100% { opacity: 0; transform: translate(200px, 690px) scale(0.6); } }
+@keyframes p-scrap { 0% { opacity: 0; transform: translate(200px, 90px); } 3% { opacity: 1; } 10%, 20% { transform: translate(200px, 275px); } 26% { transform: translate(200px, 460px); }
+  31% { transform: translate(290px, 610px); } 34% { opacity: 1; transform: translate(320px, 690px) scale(0.6); } 37%, 100% { opacity: 0; transform: translate(320px, 690px) scale(0.6); } }
+@keyframes arm { 0%, 30%, 100% { transform: rotate(0deg); } 12%, 22% { transform: rotate(32deg); } }
+@keyframes pulse { 0%, 33% { opacity: 0; transform: scale(1); } 34% { opacity: 0.9; transform: scale(1); } 45%, 100% { opacity: 0; transform: scale(1.5); } }
+/* Still frame (paused, or reduced motion): one item at each stage of the line. */
+.mc:not(.playing) .cell-l .item-node { opacity: 1; transform: translate(360px, 220px); }
+.mc:not(.playing) .cell-l .item-parts { opacity: 1; transform: translate(540px, 220px); }
+.mc:not(.playing) .cell-l .item-scrap { opacity: 1; transform: translate(832px, 344px) scale(0.6); }
+.mc:not(.playing) .cell-p .item-node { opacity: 1; transform: translate(200px, 275px); }
+.mc:not(.playing) .cell-p .item-parts { opacity: 1; transform: translate(200px, 460px); }
+.mc:not(.playing) .cell-p .item-scrap { opacity: 1; transform: translate(320px, 690px) scale(0.6); }
+
+/* ---------- Text version under the console ---------- */
+.notes { padding-block: var(--space-6) var(--space-7); }
+.notes summary { cursor: pointer; min-height: 44px; display: flex; align-items: center; }
+.notes summary:hover { color: var(--ink); }
+.notes-body { display: grid; gap: var(--space-4); padding-top: var(--space-4); }
+.note { padding-block: var(--space-5); color: var(--ink-2); }
+
+/* ---------- Narrow screens: rail across the top, the view, then the key, cards and controls in the flow ---------- */
+@media (max-width: 899px) {
+  :root { --mc-rail: 0; --view-h: min(56svh, 30rem); }
+  .mc { grid-template-columns: minmax(0, 1fr); grid-template-rows: none; grid-template-areas: "top" "rail" "stage" "panel" "foot"; height: auto; min-height: 0; }
+  .mc-top { flex-wrap: wrap; gap: var(--space-2) var(--space-4); padding: var(--space-2) var(--gutter); }
+  .mc-tag { order: 3; flex-basis: 100%; }
+  .mc-rail { border-right: 0; border-bottom: 1px solid var(--line); }
+  .mc-rail ol { grid-template-columns: repeat(5, minmax(0, 1fr)); padding: 0; }
+  .mc-rail button { min-height: 56px; padding: var(--space-2) 2px; }
+  .mc-rail button::before { left: var(--space-2); right: var(--space-2); top: auto; bottom: 0; width: auto; height: 2px; transform: scaleX(0); }
+  .mc-rail button[aria-current]::before { transform: scaleX(1); }
+  .mc-rail .t { font-size: 0.5625rem; letter-spacing: 0.06em; }
+  .mc-keys { display: none; }
+  .mc-stage { display: grid; grid-template-columns: minmax(0, 1fr); align-content: start; overflow: visible; }
+  .mc-stage canvas { position: relative; inset: auto; height: var(--view-h); grid-row: 1; grid-column: 1; }
+  .cell { position: relative; inset: auto; height: var(--view-h); grid-row: 1; grid-column: 1; padding: var(--space-3) var(--space-4); }
+  .cell { height: auto; min-height: var(--view-h); }
+  .cell .cell-l { display: none; } .cell .cell-p { display: block; width: min(100%, 22rem); height: auto; }
+  /* Over the view: counter top right, scale note top left, caption bottom left. */
+  .hud-1, .hud-2 { top: var(--space-3); right: var(--space-3); }
+  .counter { padding: var(--space-3) var(--space-4); gap: var(--space-1); }
+  .counter .data-big { font-size: 1.75rem; }
+  .mc-scale { left: var(--space-3); top: var(--space-3); transform: none; }
+  .caption { left: var(--space-3); top: calc(var(--view-h) - var(--space-6)); bottom: auto; transform: none; }
+  /* Below the view: the key, then the cards. */
+  .keyline { position: static; order: 1; padding: var(--space-3) var(--gutter) 0; }
+  .hud-c { position: static; order: 2; display: grid; grid-template-columns: minmax(0, 1fr); grid-template-rows: none; gap: var(--space-3); padding: var(--space-4) var(--gutter) 0; }
+  .hud-c .c-l, .hud-c .c-br { grid-column: auto; grid-row: auto; margin: 0; }
+  .hud-c .c-tr { position: absolute; top: var(--space-3); right: var(--space-3); }
+  .mc-panel { grid-area: panel; width: auto; margin: var(--space-4) var(--gutter) 0; max-height: none; }
+  .mc-foot { padding: var(--space-3) var(--gutter); margin-top: var(--space-4); }
+}

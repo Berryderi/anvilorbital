@@ -2,7 +2,9 @@
 // Usage: node tools/sim-probe.mjs <site root> [--width 1280] [--shots <dir>]
 // Serves the site on 127.0.0.1, opens /simulator/ in headless Chrome (SwiftShader WebGL) and measures:
 //   mode 1 playing at x100 (10 s), with a satellite selected, after a drag, with Show all, paused, paused after a drag,
-//   playing off screen, playing in a hidden tab; mode 2 playing, after a drag, off screen, paused (5 s each).
+//   playing off screen, playing in a hidden tab; mode 2 playing, after a drag, off screen, paused (5 s each);
+//   WQ-028: concept steps 03 tug, 04 workcell (CSS only: no canvas frames) and 05 wait vs burn playing, after a drag,
+//   off screen, hidden and paused, and the tour playing, hidden and stopped.
 //   Per run: rAF callbacks per second, frames drawn per second, main-thread ms per drawn frame (time inside
 //   requestAnimationFrame callbacks that issued a WebGL draw), SGP4 propagate calls per second, JS errors.
 // Nothing is changed on disk: the probe hooks are injected into the served copy of the page only.
@@ -102,10 +104,14 @@ async function measure(name, seconds) {
 async function shot(name) {
   if (!shots) return;
   await mkdir(shots, { recursive: true });
-  const r = await send('Page.captureScreenshot', { format: 'png', captureBeyondViewport: true }, sid);
+  // Viewport only: since WQ-028 the console is one screen tall, and a beyond-viewport capture of a page whose height follows
+  // the viewport left headless Chrome sending the page no more frames, which zeroed every later run.
+  const r = await send('Page.captureScreenshot', { format: 'png' }, sid);
   await writeFile(path.join(shots, `${name}-${width}.png`), Buffer.from(r.data, 'base64'));
 }
 const click = id => evaluate(`document.getElementById('${id}').click()`);
+// WQ-028: steps are chosen on the rail (the old mode-1 and mode-2 buttons are gone).
+const step = n => evaluate(`document.querySelector('#rail [data-step="${n}"]').click()`);
 const text = id => evaluate(`document.getElementById('${id}').textContent`);
 // Wait until no frame has run for 1.5 s (for example, OrbitControls damping after a drag), at most 20 s.
 async function settle() {
@@ -120,7 +126,7 @@ try {
   await send('Page.enable', {}, sid); await send('Runtime.enable', {}, sid); await send('Performance.enable', {}, sid);
   await send('Emulation.setDeviceMetricsOverride', { width, height, deviceScaleFactor: dpr, mobile: width < 600 }, sid);
   await send('Page.navigate', { url: `${base}/simulator/` }, sid);
-  for (let i = 0; i < 100 && !(await evaluate("!!document.getElementById('legend-1') && /\\(\\d/.test(document.getElementById('legend-1').textContent)").catch(() => false)); i++) await sleep(200);
+  for (let i = 0; i < 100 && !(await evaluate("!!document.getElementById('legend-1') && /\\d/.test(document.getElementById('legend-1').textContent)").catch(() => false)); i++) await sleep(200);
   await sleep(1000);
   console.log(JSON.stringify({ probe: 'sim-probe', root, width, chrome: (await send('Browser.getVersion')).product,
     startsPlaying: (await text('play-1')) === 'Pause', shownNote: await text('data-note') }));
@@ -168,13 +174,34 @@ try {
   await hide(true); await measure('mode1-playing-hidden', 5); await hide(false);
   await setPlaying('play-1', false); await sleep(300);
 
-  await click('mode-2'); await setPlaying('play-2', true); await sleep(500);
+  await step(2); await setPlaying('play-2', true); await sleep(500);
   await measure('mode2-playing', 5);
   await drag(); await measure('mode2-playing-after-drag', 5);
   await offScreen(true); await measure('mode2-playing-offscreen', 5); await offScreen(false);
   await setPlaying('play-2', false); await settle();
   await measure('mode2-paused', 5);
   await shot('mode2');
+
+  // Concept steps start playing on entry (still frames under reduced motion).
+  for (const n of [3, 5]) {
+    await step(n); await setPlaying('play-c', true); await sleep(500);
+    await measure(`step${n}-playing`, 5);
+    await drag(); await measure(`step${n}-playing-after-drag`, 5);
+    await offScreen(true); await measure(`step${n}-playing-offscreen`, 5); await offScreen(false);
+    await hide(true); await measure(`step${n}-playing-hidden`, 5); await hide(false);
+    await setPlaying('play-c', false); await settle();
+    await measure(`step${n}-paused`, 5);
+    await shot(`step${n}`);
+  }
+  await step(4); await setPlaying('play-c', true); await settle();
+  await measure('step4-playing', 5);   // the workcell is CSS on SVG: the canvas behind it draws once, then 0 frames
+  await shot('step4');
+  await setPlaying('play-c', false);
+  await step(1); await click('tour'); await sleep(500);
+  await measure('tour-playing', 10);
+  await hide(true); await measure('tour-hidden', 5); await hide(false);
+  await click('tour'); await setPlaying('play-1', false); await setPlaying('play-2', false); await setPlaying('play-c', false); await settle();
+  await measure('tour-stopped', 5);
   const errs = await evaluate('__probe.errs');
   console.log(JSON.stringify({ errors: errs }));
   process.exitCode = errs.length ? 1 : 0;
