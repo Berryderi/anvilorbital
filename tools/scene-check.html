@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Scene check</title>
+<!-- Developer page for the home scene (WQ-026 Track A), not linked from the site. It mounts assets/scene/scene.js the way the
+     home page will (canvas#space first in body, text above it), maps scroll to scene.setChapter(id, progress), and prints
+     the pick and retire events so the scene can be checked before the chapter HTML lands. -->
+<link rel="stylesheet" href="/assets/tokens.css">
+<link rel="stylesheet" href="/assets/base.css">
+<script type="importmap">{"imports":{"three":"/assets/vendor/three/three.module.js"}}</script>
+<style>
+body{margin:0;background:var(--bg);color:var(--ink-1,#e8eef5)}
+main{position:relative;z-index:1}
+section{min-height:120vh;padding:96px 24px;max-width:34rem}
+section:nth-child(even){margin-left:auto}
+h2{margin:0 0 8px}
+#out{position:fixed;z-index:2;left:12px;bottom:12px;max-width:calc(100vw - 24px);font:12px/1.5 ui-monospace,monospace;
+  background:color-mix(in oklch,var(--bg) 85%,transparent);padding:8px 10px;border:1px solid var(--edge,#334);white-space:pre-wrap}
+#label{position:fixed;z-index:2;pointer-events:none;font:12px/1.4 ui-monospace,monospace;background:var(--bg);padding:4px 6px;
+  border:1px solid var(--accent);transform:translate(12px,-50%);display:none}
+</style>
+</head>
+<body>
+<canvas id="space" aria-hidden="true"></canvas>
+<main>
+  <section data-chapter="hero"><h2>Hero</h2><p>Earth from far away, the real fleet as points. Move the pointer.</p></section>
+  <section data-chapter="retire"><h2>Retire</h2><p>Two identical dead satellites, 550 km and 800 km. Heights drawn 4 times taller, not to scale.</p></section>
+  <section data-chapter="simulator"><h2>Simulator</h2><p>The fleet and its shells.</p></section>
+  <section data-chapter="planner"><h2>Planner</h2><p>One preset's altitude as rings.</p></section>
+  <section data-chapter="findings"><h2>Findings</h2><p>Pulled back to the whole fleet.</p></section>
+  <section data-chapter="roadmap"><h2>Roadmap</h2><p>Quiet.</p></section>
+  <section data-chapter="about"><h2>About</h2><p>Earth turns slowly.</p></section>
+</main>
+<div id="label"></div>
+<pre id="out">loading…</pre>
+<script src="/assets/model.js"></script>
+<script src="/assets/presets.js"></script>
+<script type="module">
+import { createScene } from '/assets/scene/scene.js';
+const out = document.getElementById('out'), label = document.getElementById('label');
+const lines = {};
+const show = () => { out.textContent = Object.values(lines).join('\n'); };
+const scene = await createScene(document.getElementById('space'));
+window.__scene = scene;
+if (!scene) { lines.s = 'no WebGL: text only'; show(); }
+else {
+  scene.setPlannerPreset(Object.keys(PRESETS)[0]);
+  scene.on('ready', i => { lines.r = `fleet: ${i.count} points, snapshot ${i.snapshotUtc}, x${i.timeScale} time, ${i.phone ? 'phone' : 'desktop'}${i.reducedMotion ? ', reduced motion' : ''}`; show(); });
+  scene.on('pick', p => {
+    if (!p) { label.style.display = 'none'; return; }
+    label.style.display = 'block'; label.style.left = p.x + 'px'; label.style.top = p.y + 'px';
+    label.textContent = `${p.name} · ${p.operator} · ${p.heightKm == null ? '…' : Math.round(p.heightKm) + ' km'}`;
+  });
+  scene.on('retire', s => { lines.t = `retire: ${s.shape}; year ${s.years.toFixed(1)}; low ${s.lowKm == null ? 'burned up' : Math.round(s.lowKm) + ' km'} (falls in ${s.lowFallYears.toFixed(1)} y); high ${s.highKm == null ? 'burned up' : Math.round(s.highKm) + ' km'} (falls in ${s.highFallYears.toFixed(0)} y)`; show(); });
+  const secs = [...document.querySelectorAll('[data-chapter]')];
+  const onScroll = () => {
+    const mid = innerHeight / 2;
+    for (const s of secs) {
+      const r = s.getBoundingClientRect();
+      if (r.top <= mid && r.bottom > mid) {
+        const p = (mid - r.top) / r.height;
+        scene.setChapter(s.dataset.chapter, p);
+        lines.c = `chapter: ${s.dataset.chapter} ${p.toFixed(2)}`; show();
+        break;
+      }
+    }
+  };
+  addEventListener('scroll', onScroll, { passive: true }); onScroll();
+}
+</script>
+</body>
+</html>
