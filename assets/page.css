@@ -22,7 +22,8 @@
 /* Below the bar, a short fade so text slides under it instead of meeting a hard edge. */
 .nav::after { content: ""; position: absolute; inset: 100% 0 auto 0; height: var(--space-5); pointer-events: none;
   background: linear-gradient(to bottom, var(--scrim-nav), transparent); }
-.nav-brand { display: inline-flex; align-items: center; gap: var(--space-2); min-height: 44px; color: var(--ink); text-decoration: none;
+.nav-brand { display: inline-flex; align-items: center; gap: var(--space-2); min-height: 44px; min-width: 44px;   /* the mark alone on phones is still a 44px target */
+  color: var(--ink); text-decoration: none;
   font: var(--label-wght) 0.8125rem/1 var(--font-sans); font-stretch: var(--label-wdth); letter-spacing: var(--label-track); text-transform: uppercase; }
 .nav-brand svg { width: 22px; height: 22px; fill: currentColor; flex: none; }
 .nav nav { position: relative; }
