@@ -631,3 +631,6 @@ export async function createScene(canvas, opts = {}) {
   request();
   return api;
 }
+
+// Shared with the simulator page (WQ-028) so its Earth, stars and fleet colours match home. Read-only use; home is unchanged.
+export { EARTH_VS, EARTH_FS, HALO_VS, HALO_FS, STAR_VS, STAR_FS, FLEETS as FLEET_COLORS, mulberry32 };
