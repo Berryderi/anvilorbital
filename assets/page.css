@@ -35,6 +35,8 @@
 .nav-links a:hover { color: var(--ink); }
 .nav-links a:active { color: var(--accent); }
 .nav-links a[aria-current] { color: var(--ink); }
+/* Tool pages have no sliding marker: their own chapter's link carries a still one, the same 2px accent line. */
+.nav-links a[aria-current="page"] { background: linear-gradient(var(--accent), var(--accent)) no-repeat 50% calc(100% - var(--space-1)) / calc(100% - 2 * var(--space-3)) 2px; }
 .nav-marker {
   position: absolute; left: 0; bottom: var(--space-1); height: 2px; width: 100px; border-radius: var(--radius-0); background: var(--accent);
   /* Moves and stretches by transform only (no layout per frame): 100px scaled by --ms = link text width / 100. */
@@ -46,6 +48,7 @@
   .nav { gap: var(--space-3); }
   .nav-links { gap: 0; }
   .nav-links a { padding: 0 var(--space-1); letter-spacing: 0.04em; font-stretch: 100%; }
+  .nav-links a[aria-current="page"] { background-size: calc(100% - 2 * var(--space-1)) 2px; }
 }
 
 /* ---------- Chapters ---------- */
@@ -96,9 +99,9 @@
 .fall-line { color: var(--ink-2); max-width: 38rem; }
 
 /* ---------- Lists ---------- */
-.list { display: grid; gap: var(--space-3); margin: 0; padding: 0; list-style: none; }
-.list > li { position: relative; padding-left: var(--space-5); }
-.list > li::before { content: ""; position: absolute; left: 0; top: 0.8em; width: var(--space-3); height: 1px; background: var(--edge); }
+.list, ul.plain { display: grid; gap: var(--space-3); margin: 0; padding: 0; list-style: none; }
+.list > li, ul.plain > li { position: relative; padding-left: var(--space-5); }
+.list > li::before, ul.plain > li::before { content: ""; position: absolute; left: 0; top: 0.8em; width: var(--space-3); height: 1px; background: var(--edge); }
 
 /* ---------- The concept as a path, not a row of cards ---------- */
 .flow { position: relative; display: grid; gap: var(--space-5); margin: 0; padding: 0 0 0 var(--space-6); list-style: none; }
