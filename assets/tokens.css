@@ -1,0 +1,115 @@
+/* Anvil Orbital design system (WQ-026 remake). Every page and the scene read these names; no screen file
+   holds a raw colour, size or duration. Fonts are self-hosted (assets/vendor/fonts, see VERSIONS.txt), so a
+   page load makes no third-party request. Contrast of every text pair below was computed: lowest body pair
+   ink-3 on surface-2 is 5.78:1; control borders (edge) are at least 3.02:1 on every surface.
+
+   VOICE. Three rules:
+   1. Say what exists, then what doesn't. Models are labelled as models, filings as filings.
+   2. A number travels with its unit and its source, in the same sentence or the line under it.
+   3. Engineer to engineer: concrete nouns (shell, plane, km/s, kg), short declarative sentences.
+   Two banned constructions:
+   - The contrast pivot: "It's not just X, it's Y", "Not X. Y."
+   - Hype verbs and futures: transform, revolutionize, unlock, seamless, "the future of", "validated". */
+
+/* ---------- Type ----------
+   Archivo: a grotesque drawn for both headlines and text, with a width axis, so one 90 KB file gives tight
+   display lines and plain body copy and wide all-caps markings without a second sans.
+   Martian Mono: a monospace with its own width axis, for numbers, units and labels that must line up. */
+@font-face {
+  font-family: "Archivo"; font-style: normal; font-display: swap; font-weight: 100 900; font-stretch: 62% 125%;
+  src: url("vendor/fonts/archivo/archivo-latin-wdth-normal.woff2") format("woff2-variations");
+  unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;
+}
+@font-face {
+  font-family: "Martian Mono"; font-style: normal; font-display: swap; font-weight: 100 800; font-stretch: 75% 112.5%;
+  src: url("vendor/fonts/martian-mono/martian-mono-latin-wdth-normal.woff2") format("woff2-variations");
+  unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;
+}
+
+:root {
+  color-scheme: dark;
+
+  /* ---------- Palette ----------
+     Space is near-black with a cool cast (hue 255), never #000; every grey is that hue at a lower chroma.
+     One accent, the gold of satellite thermal foil, for the single primary action on a screen and the
+     active marker. Semantic colours are for meaning only. OKLCH source values in each comment. */
+  --bg:         #070d14;  /* oklch(0.155 0.018 255) page and space */
+  --surface-1:  #0f151e;  /* oklch(0.195 0.020 255) a raised band: the planner, a table */
+  --surface-2:  #171f28;  /* oklch(0.235 0.022 255) something inside surface-1: an input, a hovered row */
+  --line:       #2a323d;  /* oklch(0.315 0.022 255) hairlines and dividers (decorative) */
+  --edge:       #5f6a77;  /* oklch(0.520 0.025 255) borders a control needs to be seen (WCAG 1.4.11) */
+  --ink:        #e9edf2;  /* oklch(0.945 0.008 255) headings and body; not white, to soften halation on dark */
+  --ink-2:      #b7bec7;  /* oklch(0.800 0.015 255) secondary text, ledes */
+  --ink-3:      #9199a4;  /* oklch(0.680 0.018 255) captions, source lines, labels */
+  --accent:     #ecbc5e;  /* oklch(0.820 0.125 82)  thermal-foil gold */
+  --on-accent:  #1d1506;  /* oklch(0.200 0.030 82)  text on the accent */
+  --ok:         #72d699;  /* oklch(0.800 0.130 155) clears a limit */
+  --risk:       #fb817a;  /* oklch(0.740 0.150 25)  misses a limit, an error */
+  --caution:    #fa934e;  /* oklch(0.760 0.150 52)  depends, uncertain, modelled */
+  --orbit-low:  #fa934e;  /* the shell that burns (550 km in the story) */
+  --orbit-high: #98cceb;  /* oklch(0.820 0.070 235) the shell that stays (800 km) */
+  --star:       #f1f6fc;  /* oklch(0.970 0.010 255) */
+
+  /* ---------- Type scale ----------
+     Each step has its own line-height and tracking: display tight and negative, labels open and positive.
+     Body is 17 px rather than 16 because light-on-dark costs legibility at small sizes. */
+  --font-sans: "Archivo", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: "Martian Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+
+  --display-size: clamp(2.75rem, 1.55rem + 5vw, 5.5rem);   --display-lh: 0.98;  --display-track: -0.035em; --display-wght: 560; --display-wdth: 96%;
+  --h2-size:      clamp(2rem, 1.35rem + 2.6vw, 3.25rem);   --h2-lh: 1.04;       --h2-track: -0.025em;      --h2-wght: 560;      --h2-wdth: 98%;
+  --h3-size:      1.375rem;                                --h3-lh: 1.2;        --h3-track: -0.01em;       --h3-wght: 600;      --h3-wdth: 100%;
+  --lede-size:    clamp(1.125rem, 1.02rem + 0.45vw, 1.3125rem); --lede-lh: 1.5; --lede-track: -0.005em;
+  --body-size:    1.0625rem;                               --body-lh: 1.65;     --body-track: 0em;
+  --small-size:   0.875rem;                                --small-lh: 1.5;     --small-track: 0.005em;
+  /* Labels: Archivo wide, all caps, open tracking (navigation, chapter markers). */
+  --label-size:   0.75rem;                                 --label-lh: 1.3;     --label-track: 0.14em;     --label-wght: 600;   --label-wdth: 125%;
+  /* Data: Martian Mono, tabular figures, for numbers in running data (units, satellite labels, tags).
+     Big answers (data-big) use Archivo with tabular figures: mono is too wide at that size. */
+  --data-size:    0.875rem;                                --data-lh: 1.45;     --data-track: 0em;         --data-wdth: 87.5%;
+  --data-big:     clamp(1.75rem, 1.4rem + 1.4vw, 2.5rem);  --data-big-lh: 1.05; --data-big-track: -0.02em;
+  --measure: 62ch;          /* body line length */
+  --measure-wide: 76ch;     /* findings tables and notes, under the WCAG 80-character ceiling */
+
+  /* ---------- Spacing (4 px base). Each step has one job. ---------- */
+  --space-1: 0.25rem;  /*   4 px: icon or swatch to its text */
+  --space-2: 0.5rem;   /*   8 px: label to its value, inside a control */
+  --space-3: 0.75rem;  /*  12 px: lines in one group (caption under a figure, items in a key) */
+  --space-4: 1rem;     /*  16 px: control padding; the page gutter on phones */
+  --space-5: 1.5rem;   /*  24 px: between items of a list or a set of answers */
+  --space-6: 2.5rem;   /*  40 px: between groups inside a chapter; the page gutter on desktop */
+  --space-7: 4rem;     /*  64 px: a chapter's top and bottom on phones */
+  --space-8: 7rem;     /* 112 px: between chapters on desktop */
+  --space-9: 11rem;    /* 176 px: the long pauses where the scene carries the story (hero out, retire in) */
+  --gutter: clamp(var(--space-4), 4vw, var(--space-6));
+  --page-max: 78rem;
+
+  /* ---------- Radii and surfaces ----------
+     Three radii, each with a use. No drop shadows: depth comes from a surface one step lighter plus a
+     1 px line, and the scene behind. Focus is a 2 px accent ring, offset 3 px, on every control. */
+  --radius-0: 0;        /* bands, tables, the canvas: anything that spans */
+  --radius-1: 3px;      /* inputs, tags, buttons */
+  --radius-pill: 999px; /* the sliding nav marker and toggles */
+  --focus-ring: 2px solid var(--accent);
+  --focus-offset: 3px;
+
+  /* ---------- Motion ----------
+     Durations by size of change; easings by direction. Entering eases out (fast, then settles), leaving
+     eases in (gathers, then goes), moving between two places eases in-out, scroll-scrubbed motion is linear
+     because the reader's scroll is the easing. */
+  --dur-micro: 120ms;    /* hover, press, colour change */
+  --dur-small: 200ms;    /* a control changing state, a label appearing */
+  --dur-section: 360ms;  /* a chapter's text revealing, the nav marker sliding */
+  --dur-route: 460ms;    /* a view transition between pages */
+  --ease-enter: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-exit: cubic-bezier(0.7, 0, 0.84, 0);
+  --ease-move: cubic-bezier(0.65, 0, 0.35, 1);
+  --ease-scrub: linear;
+  --reveal-shift: 0.55em;  /* how far a revealed line travels */
+  --stagger: 70ms;         /* between lines of one reveal */
+}
+
+/* Reduced motion: replace movement with cross-fades, keep feedback. */
+@media (prefers-reduced-motion: reduce) {
+  :root { --reveal-shift: 0em; --stagger: 0ms; --dur-section: 200ms; --dur-route: 200ms; --ease-move: linear; }
+}
