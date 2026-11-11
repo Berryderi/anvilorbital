@@ -19,7 +19,10 @@
 }
 
 .sim-page main { padding-top: var(--nav-h); }
-html:not(.js) .mc { display: none; }
+/* Without JS: the title and the noscript line only, no dead controls and no loading text. */
+html:not(.js) .mc, html:not(.js) .notes { display: none; }
+.sim-title { padding-block: var(--space-7) 0; font-size: var(--h2-size); }
+.js .sim-title { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
 
 /* ---------- Frame ---------- */
 .mc {

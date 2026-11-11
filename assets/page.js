@@ -31,7 +31,7 @@
     let lastW = innerWidth, t = 0;
     addEventListener('resize', () => { if (innerWidth === lastW) return; lastW = innerWidth; clearTimeout(t); t = setTimeout(splitAll, 150); });
     // Blocks inside one chapter step in one after another.
-    document.querySelectorAll('.chapter').forEach(ch => ch.querySelectorAll('[data-reveal]:not([data-reveal="lines"])').forEach((el, i) => el.style.setProperty('--d', `${Math.min(i, 4) * 70}ms`)));
+    document.querySelectorAll('.chapter, .tool section').forEach(ch => ch.querySelectorAll('[data-reveal]:not([data-reveal="lines"])').forEach((el, i) => el.style.setProperty('--d', `${Math.min(i, 4) * 70}ms`)));
     const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('is-in'); io.unobserve(e.target); } }), { rootMargin: '0px 0px -12% 0px' });
     document.querySelectorAll('[data-reveal]').forEach(el => io.observe(el));
   }
@@ -59,10 +59,13 @@
     if (scene) scene.setChapter(current, progress);
   }
   const request = () => { if (!ticking) { ticking = true; requestAnimationFrame(update); } };
-  addEventListener('scroll', request, { passive: true });
-  addEventListener('resize', () => { current = null; request(); });
-  document.fonts && document.fonts.ready.then(() => { current = null; request(); });
-  update();
+  // Tool pages have no chapters: their nav keeps its own aria-current="page", so chapter tracking stays off there.
+  if (chapters.length) {
+    addEventListener('scroll', request, { passive: true });
+    addEventListener('resize', () => { current = null; request(); });
+    document.fonts && document.fonts.ready.then(() => { current = null; request(); });
+    update();
+  }
 
   // ---------- The scene (dev-1, assets/scene/scene.js), loaded only if present and WebGL works ----------
   const pick = $('pick');
@@ -80,15 +83,19 @@
   const canvas = $('space');
   if (canvas) {
     import('/assets/scene/scene.js')
-      .then(m => m.createScene(canvas))
+      // Tool pages ask for dev-1's quiet mode with <canvas id="space" data-scene-mode="page">; home passes no options.
+      .then(m => canvas.dataset.sceneMode ? m.createScene(canvas, { mode: canvas.dataset.sceneMode }) : m.createScene(canvas))
       .then(s => {
         if (!s) return;
         scene = s;
         html.classList.add('has-scene');
         document.querySelectorAll('[data-scene-only]').forEach(el => { el.hidden = false; });
         scene.on('pick', showPick);
+        // The hero fleet runs faster than real time; the brief wants every exaggerated speed labelled.
+        const labelSpeed = () => { const k = scene.info && scene.info.timeScale; if (k > 1) { $('time-scale-n').textContent = Math.round(k).toLocaleString('en-US'); $('time-scale').hidden = false; } };
+        labelSpeed(); scene.on('ready', labelSpeed);
         if (mini.name) scene.setPlannerPreset(mini.name);
-        current = null; update();
+        if (chapters.length) { current = null; update(); }
       })
       .catch(() => { /* no scene file yet, or no WebGL: the page stays text on space */ });
   }
