@@ -1,0 +1,22 @@
+/* "Wait vs burn" concept mode (WQ-021). Site tokens only; spacing in 4px steps; square corners like the rest of the site. */
+#panel-3{display:grid;gap:16px}
+.wb-stage{background:var(--panel);border:1px solid var(--line);aspect-ratio:16/10;max-height:72vh;min-width:0}
+@media (max-width:560px){.wb-stage{aspect-ratio:1/1}}
+.wb-stage canvas{display:block;width:100%;height:100%}
+.wb-steps{margin:0;padding:0 0 0 24px;display:grid;gap:8px;max-width:68ch;color:var(--muted)}
+.wb-steps li::marker{font:500 .875rem var(--mono)}
+.wb-steps li[aria-current]{color:var(--ink)}
+.wb-steps li[aria-current]::marker{color:var(--accent)}
+.wb-bars{display:grid;gap:12px;max-width:760px}
+.wb-bars .label{margin:0}
+.wb-bar{display:grid;grid-template-columns:136px minmax(0,1fr);gap:4px 16px;align-items:center}
+.wb-k{font-size:.875rem;color:var(--muted)}
+.wb-track{display:block;height:12px;background:var(--bg);border:1px solid var(--line)}
+/* The short bar keeps a visible minimum width; its number sits beside it (out/sim-numbers.md, "Bars"). */
+.wb-fill{display:block;height:100%;width:max(var(--w),8px);background:var(--edge);transition:background-color .15s}
+.wb-bar.on .wb-fill{background:var(--accent)}
+.wb-bar.on .wb-k{color:var(--ink)}
+.wb-v{grid-column:2;font:500 .875rem/1.4 var(--mono);color:var(--ink)}
+@media (max-width:560px){.wb-bar{grid-template-columns:minmax(0,1fr)}.wb-v{grid-column:1}}
+.wb-wall{border-left:4px solid var(--warn)}
+@media (prefers-reduced-motion: reduce){.wb-fill{transition:none}}

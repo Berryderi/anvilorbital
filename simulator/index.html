@@ -11,6 +11,7 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap">
 <link rel="stylesheet" href="../assets/site.css">
 <link rel="stylesheet" href="../assets/nav.css">
+<link rel="stylesheet" href="../assets/sim-waitburn.css">
 <script type="importmap">{"imports":{"three":"../assets/vendor/three/three.module.js"}}</script>
 <link rel="modulepreload" href="../assets/vendor/three/three.module.js">
 <link rel="modulepreload" href="../assets/vendor/three/three.core.js">
@@ -58,6 +59,7 @@ main{gap:32px}
       <div class="mode-switch" role="group" aria-label="Mode">
         <button class="ctl" type="button" id="mode-1" aria-pressed="true">Real fleets, real positions</button>
         <button class="ctl" type="button" id="mode-2" aria-pressed="false">When a satellite dies</button>
+        <button class="ctl" type="button" id="mode-3" aria-pressed="false" hidden>Wait vs burn (concept)</button>
       </div>
 
       <div class="stage" id="stage">
@@ -116,6 +118,8 @@ main{gap:32px}
         </ul>
         <p class="small">Uses the planner's own decay model (the same code file). Heights are drawn 4 times taller than real so the difference shows; orbit speed is not to scale. Above 1,000 km the model isn't reliable: its atmosphere table stops there.</p>
       </div>
+
+      <div id="panel-3" hidden></div>
     </section>
 
     <section aria-labelledby="summary-h">
@@ -129,3 +133,4 @@ main{gap:32px}
 <script src="../assets/model.js"></script>
 <script src="../assets/presets.js"></script>
 <script type="module" src="../assets/simulator.js"></script>
+<script type="module" src="../assets/sim-waitburn.js"></script>
