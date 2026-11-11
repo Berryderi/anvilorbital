@@ -1,6 +1,7 @@
 /* Element defaults for the remake, built only from tokens.css. Page layouts and chapters live elsewhere.
    Every control has hover (not opacity), focus-visible, active and disabled states. */
 *, *::before, *::after { box-sizing: border-box; }
+[hidden] { display: none !important; }   /* a component that sets display must still hide */
 html { -webkit-text-size-adjust: 100%; background: var(--bg); color: var(--ink); scroll-padding-top: var(--space-8); }
 @media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
 body {
