@@ -13,6 +13,7 @@
   --sim-five: #ecbc5e;      /* five-year line */
   --sim-ghost: #5f6a77;     /* = --edge: where a ring started */
   --sim-ink: #e9edf2;       /* = --ink: selection ring */
+  --sim-earth: #2f5a86;     /* Earth, one flat ocean colour (no textures, WQ-028 option 2) */
   --mc-card: color-mix(in oklab, var(--surface-1) 80%, transparent);
   --mc-rail: 6.5rem;
   --mc-corner: 10px;

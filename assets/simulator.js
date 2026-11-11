@@ -13,7 +13,6 @@ import { createTug, createWaitBurn, makeShell, markers, setMark } from './sim-co
 
 const $ = id => document.getElementById(id);
 const SNAPSHOT_URL = '/assets/data/gp-2026-11-10.json';
-const TEXTURES = { day: '/assets/scene/earth-day-2k.webp', night: '/assets/scene/earth-night-2k.webp' };  // home's phone textures, cached across pages
 const UNIT_KM = 1000;                 // one scene unit is 1,000 km
 const R_EARTH_KM = 6371;
 const MIN_SHOWN_HEIGHT_KM = 100;      // below this a record has re-entered; don't draw it
@@ -100,7 +99,13 @@ if (gl) {
   canvas.hidden = true; $('view-ctl').hidden = true; $('nogl').hidden = false;
 }
 
-// ---------- Earth, atmosphere, stars: home's shaders and textures ----------
+// ---------- Earth, atmosphere, stars: home's shaders, no textures ----------
+// Earth is one flat colour (--sim-earth) lit by home's day/night shader: no texture download, about 200 KB less on a
+// cold visit (Andrei, WQ-028 option 2). The night side stays dark: a 1x1 black texture stands in for city lights.
+function flatTexture(hex) {
+  const c = new THREE.Color(hex), t = new THREE.DataTexture(new Uint8Array([c.r * 255, c.g * 255, c.b * 255, 255]), 1, 1);
+  t.colorSpace = THREE.SRGBColorSpace; t.needsUpdate = true; return t;
+}
 const earthU = { uDay: { value: null }, uNight: { value: null }, uSun: { value: new THREE.Vector3(1, 0, 0) }, uAtmo: { value: new THREE.Color('#6fa8e8') }, uFade: { value: 1 } };
 const world = { earth: null, halo: null, stars: null };
 if (gl) {
@@ -127,11 +132,7 @@ if (gl) {
     pts.frustumCulled = false; world.stars.add(pts);
   }
   scene.add(world.stars, world.earth, world.halo);
-  const loader = new THREE.TextureLoader();
-  const load = url => new Promise((res, rej) => loader.load(url, t => { t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = 1; res(t); }, undefined, rej));
-  Promise.all([load(TEXTURES.day), load(TEXTURES.night)])
-    .then(([d, n]) => { earthU.uDay.value = d; earthU.uNight.value = n; requestRender(); })
-    .catch(e => console.error('[simulator] Earth textures failed to load', e));
+  earthU.uDay.value = flatTexture(token('--sim-earth')); earthU.uNight.value = flatTexture('#000000');
 }
 
 // Low-precision sun direction in ECI (Astronomical Almanac formula, about 0.01 degrees), for day and night.
