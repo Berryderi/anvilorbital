@@ -248,11 +248,11 @@ kbd { padding: 0 var(--space-1); border: 1px solid var(--line); border-radius: v
   .cell { position: relative; inset: auto; height: var(--view-h); grid-row: 1; grid-column: 1; padding: var(--space-3) var(--space-4); }
   .cell { height: auto; min-height: var(--view-h); }
   .cell .cell-l { display: none; } .cell .cell-p { display: block; width: min(100%, 22rem); height: auto; }
-  /* Over the view: counter top right, scale note top left, caption bottom left. */
+  /* Over the view: counter top right, caption bottom left, scale note bottom right. */
   .hud-1, .hud-2 { top: var(--space-3); right: var(--space-3); }
   .counter { padding: var(--space-3) var(--space-4); gap: var(--space-1); }
   .counter .data-big { font-size: 1.75rem; }
-  .mc-scale { left: var(--space-3); top: var(--space-3); transform: none; }
+  .mc-scale { left: auto; right: var(--space-3); top: calc(var(--view-h) - var(--space-6)); transform: none; }
   .caption { left: var(--space-3); top: calc(var(--view-h) - var(--space-6)); bottom: auto; transform: none; }
   /* Below the view: the key, then the cards. */
   .keyline { position: static; order: 1; padding: var(--space-3) var(--gutter) 0; }

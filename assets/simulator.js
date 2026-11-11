@@ -582,10 +582,12 @@ function applyHash() {
 
 // ---------- Tour: each step for TOUR_STEP_MS with its own animation running, then the next; wraps after 05 ----------
 const tour = { on: false, timer: 0 };
+// Under reduced motion the tour only changes step: every step stays a still frame until the reader presses Play.
 function startStepMotion() {
+  if (reduceMotion.matches) return;
   if (mode === 1 && !m1.playing) { m1.playing = true; setPlayLabels(); clock1(); }
   if (mode === 2) { m2.years = 0; m2.playing = true; setPlayLabels(); update2(); }
-  if (mode >= 3 && !reduceMotion.matches && !conc.playing) setConceptPlaying(true);
+  if (mode >= 3 && !conc.playing) setConceptPlaying(true);
   requestRender();
 }
 function armTour() {
