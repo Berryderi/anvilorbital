@@ -14,6 +14,7 @@
 <link rel="stylesheet" href="/assets/base.css">
 <link rel="stylesheet" href="/assets/page.css">
 <link rel="stylesheet" href="/assets/tools.css">
+<script>{const h=document.documentElement;h.classList.add("js");if(!matchMedia("(prefers-reduced-motion: reduce)").matches)h.classList.add("reveal-ready");}</script>
 <div class="page tool tool-privacy">
   <a class="skip" href="#main">Skip to content</a>
   <header class="nav">
@@ -21,12 +22,12 @@
   <nav aria-label="Chapters"><ul class="nav-links"><li><a href="/#simulator">Simulator</a></li><li><a href="/#planner">Planner</a></li><li><a href="/#findings">Findings</a></li><li><a href="/#about">About</a></li></ul></nav>
   </header>
   <main id="main">
-    <section>
-      <h1 class="short">Privacy</h1>
-      <p class="lede">This site has no accounts, forms, cookies or analytics of ours.</p>
+    <section class="page-hero">
+      <h1 data-reveal="lines" class="short">Privacy</h1>
+      <p data-reveal="lines" class="lede">This site has no accounts, forms, cookies or analytics of ours.</p>
     </section>
     <section>
-      <ul class="plain">
+      <ul data-reveal class="plain">
         <li><strong>The planner</strong> runs entirely in your browser. What you type isn't sent anywhere or saved.</li>
         <li><strong>Hosting:</strong> GitHub Pages hosts this site, and <a href="https://docs.github.com/en/pages/getting-started-with-github-pages/about-github-pages#data-collection">GitHub may log visitors' IP addresses</a>.</li>
         <li><strong>Fonts</strong> load from Google Fonts, so Google receives your IP address when a page loads.</li>
@@ -36,3 +37,4 @@
   </main>
   <footer class="foot"><p>Anvil Orbital. Estimates are unchecked models, not quotes or promises.</p><p><a href="../privacy/">Privacy</a> &middot; <a href="https://github.com/Berryderi/anvilorbital">Code</a></p></footer>
 </div>
+<script src="/assets/page.js" defer></script>

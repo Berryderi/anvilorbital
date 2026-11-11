@@ -14,6 +14,7 @@
 <link rel="stylesheet" href="/assets/base.css">
 <link rel="stylesheet" href="/assets/page.css">
 <link rel="stylesheet" href="/assets/tools.css">
+<script>{const h=document.documentElement;h.classList.add("js");if(!matchMedia("(prefers-reduced-motion: reduce)").matches)h.classList.add("reveal-ready");}</script>
 <div class="page tool tool-about">
   <a class="skip" href="#main">Skip to content</a>
   <header class="nav">
@@ -21,38 +22,38 @@
   <nav aria-label="Chapters"><ul class="nav-links"><li><a href="/#simulator">Simulator</a></li><li><a href="/#planner">Planner</a></li><li><a href="/#findings">Findings</a></li><li><a href="/#about" aria-current="page">About</a></li></ul></nav>
   </header>
   <main id="main">
-    <section>
-      <h1 class="short">Two founders, at the very start</h1>
-      <p class="lede">We're two high school students in Ontario. We started on this on November 2, 2026, and we work on it alongside school.</p>
+    <section class="page-hero">
+      <h1 data-reveal="lines" class="short">Two founders, at the very start</h1>
+      <p data-reveal="lines" class="lede">We're two high school students in Ontario. We started on this on November 2, 2026, and we work on it alongside school.</p>
     </section>
     <section aria-labelledby="split">
-      <h2 id="split">Who does what</h2>
-      <p>One of us builds the software. The other leads the non-technical side. We use AI coding and research tools, and we say where nobody has checked the results.</p>
+      <h2 data-reveal="lines" id="split">Who does what</h2>
+      <p data-reveal>One of us builds the software. The other leads the non-technical side. We use AI coding and research tools, and we say where nobody has checked the results.</p>
     </section>
     <section aria-labelledby="gaps">
-      <h2 id="gaps">What we don't have</h2>
-      <ul class="plain">
+      <h2 data-reveal="lines" id="gaps">What we don't have</h2>
+      <ul data-reveal class="plain">
         <li><strong>Spacecraft experience.</strong> Neither of us has built a spacecraft, a robot or space hardware. This is our first gap.</li>
         <li><strong>Customers.</strong> Nobody has used this and nobody has agreed to pay.</li>
         <li><strong>A company.</strong> None has been formed, and we've taken no investment. We're under 18, so an adult would need to sign any contract.</li>
       </ul>
     </section>
     <section aria-labelledby="want">
-      <h2 id="want">Who we'd like to hear from</h2>
-      <p>Spacecraft engineers who can tell us what's wrong with our models, and people designing or running satellite fleets who think about end of life. <a href="#contact">Get in touch</a>.</p>
+      <h2 data-reveal="lines" id="want">Who we'd like to hear from</h2>
+      <p data-reveal>Spacecraft engineers who can tell us what's wrong with our models, and people designing or running satellite fleets who think about end of life. <a href="#contact">Get in touch</a>.</p>
     </section>
     <div class="part" id="contact" aria-labelledby="contact-h" role="region">
       <section>
-        <span class="label">Reach us</span>
-        <h2 id="contact-h">Tell us where we're wrong</h2>
-        <p class="lede">We especially want to hear from spacecraft engineers and from people who design or run satellite fleets. A correction helps us more than encouragement does.</p>
-        <p>If we emailed you, just reply to that email, and we won't quote you without your permission.</p>
-        <div class="actions"><a class="btn btn-primary" href="https://github.com/Berryderi/anvilorbital/issues/new">Leave us a note on GitHub</a></div>
-        <p class="source">This needs a free GitHub account, and notes are public, so please don't include anything private.</p>
+        <span data-reveal class="label">Reach us</span>
+        <h2 data-reveal="lines" id="contact-h">Tell us where we're wrong</h2>
+        <p data-reveal="lines" class="lede">We especially want to hear from spacecraft engineers and from people who design or run satellite fleets. A correction helps us more than encouragement does.</p>
+        <p data-reveal>If we emailed you, just reply to that email, and we won't quote you without your permission.</p>
+        <div data-reveal class="actions"><a class="btn btn-primary" href="https://github.com/Berryderi/anvilorbital/issues/new">Leave us a note on GitHub</a></div>
+        <p data-reveal class="source">This needs a free GitHub account, and notes are public, so please don't include anything private.</p>
       </section>
       <section aria-labelledby="useful">
-        <h3 id="useful">What would help most</h3>
-        <ul class="plain">
+        <h3 data-reveal id="useful">What would help most</h3>
+        <ul data-reveal class="plain">
           <li>A number or assumption in the <a href="../planner/">planner</a> or <a href="../findings/">findings</a> that's wrong, and what it should be.</li>
           <li>How your team plans for satellites at end of life today.</li>
           <li>Why this wouldn't work, if you already know.</li>
@@ -62,3 +63,4 @@
   </main>
   <footer class="foot"><p>Anvil Orbital. Estimates are unchecked models, not quotes or promises.</p><p><a href="../privacy/">Privacy</a> &middot; <a href="https://github.com/Berryderi/anvilorbital">Code</a></p></footer>
 </div>
+<script src="/assets/page.js" defer></script>

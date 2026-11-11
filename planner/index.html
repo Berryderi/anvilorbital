@@ -11,20 +11,21 @@
 <link rel="stylesheet" href="/assets/base.css">
 <link rel="stylesheet" href="/assets/page.css">
 <link rel="stylesheet" href="/assets/tools.css">
+<script>{const h=document.documentElement;h.classList.add("js");if(!matchMedia("(prefers-reduced-motion: reduce)").matches)h.classList.add("reveal-ready");}</script>
 <div class="page tool tool-planner">
   <a class="skip" href="#main">Skip to content</a>
   <header class="nav">
   <a class="nav-brand" href="/" aria-label="Anvil Orbital, home"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 7h20c0 3.2-3.4 4.8-7 5v2.2l3.5 3.8H5.5L9 14.2V12C5.4 11.8 2 10.2 2 7z"/></svg><span>Anvil Orbital</span></a>
   <nav aria-label="Chapters"><ul class="nav-links"><li><a href="/#simulator">Simulator</a></li><li><a href="/#planner" aria-current="page">Planner</a></li><li><a href="/#findings">Findings</a></li><li><a href="/#about">About</a></li></ul></nav>
   </header>
-  <header id="main">
-    <h1>Fleet Retirement Planner</h1>
-    <p class="lede">Enter a satellite fleet. See when its satellites fall on their own, what disposal costs, what burning up releases into the upper atmosphere, and when servicing beats burning up.</p>
+  <header id="main" class="page-hero">
+    <h1 data-reveal="lines">Fleet Retirement Planner</h1>
+    <p data-reveal="lines" class="lede">Enter a satellite fleet. See when its satellites fall on their own, what disposal costs, what burning up releases into the upper atmosphere, and when servicing beats burning up.</p>
     <div class="flags"><span class="flag">Early demo, built 2026-11-02</span><span class="flag">Simple model, not checked by a spacecraft engineer</span><span class="flag">Presets use public figures where linked and our assumptions elsewhere; not company data</span></div>
   </header>
   <div class="grid">
     <form class="panel" id="form" autocomplete="off">
-      <h2>Your fleet</h2>
+      <h2 data-reveal="lines">Your fleet</h2>
       <div class="fields">
         <label class="wide">Fleet<select id="preset"></select></label>
         <div class="src" id="src" aria-live="polite"></div>
@@ -52,7 +53,7 @@
         <section class="panel"><p class="q">Does servicing beat burning up?</p><p class="big" id="a4"></p><p class="sub" id="a4s"></p><span class="pill" id="a4p"></span></section>
       </div>
       <section class="panel">
-        <h2>Years to fall, by starting altitude</h2>
+        <h2 data-reveal="lines">Years to fall, by starting altitude</h2>
         <svg id="chart" viewBox="0 0 640 250" role="img" aria-label="Years to fall on its own against altitude, for this fleet's satellite shape, with the 5-year limit marked"></svg>
         <p class="sub">Line: average density. Band: active sun to quiet sun. Dot: your fleet. Log scale.</p>
         <p class="sub"><a id="sim-link" href="../simulator/">See it in 3D</a>: this satellite falling from two heights.</p>
@@ -122,3 +123,4 @@ $("form").addEventListener("input",e=>{if(e.target.id!=="preset")run();});
 $("form").addEventListener("submit",e=>e.preventDefault());
 loadFromHash();
 </script>
+<script src="/assets/page.js" defer></script>
