@@ -48,7 +48,7 @@
     if (!a || !marker) { marker && marker.style.setProperty('--mo', 0); return; }
     // The marker spans the link's text: its box minus the link's own side padding, read from CSS.
     const box = navList.getBoundingClientRect(), r = a.getBoundingClientRect(), pad = parseFloat(getComputedStyle(a).paddingLeft) || 0;
-    marker.style.setProperty('--mx', `${r.left - box.left + pad}px`); marker.style.setProperty('--mw', `${Math.max(0, r.width - 2 * pad)}px`); marker.style.setProperty('--mo', 1);
+    marker.style.setProperty('--mx', `${r.left - box.left + pad}px`); marker.style.setProperty('--ms', Math.max(0, r.width - 2 * pad) / 100); marker.style.setProperty('--mo', 1);
   }
   function update() {
     ticking = false;

@@ -36,9 +36,10 @@
 .nav-links a:active { color: var(--accent); }
 .nav-links a[aria-current] { color: var(--ink); }
 .nav-marker {
-  position: absolute; left: 0; bottom: var(--space-1); height: 2px; width: var(--mw, 0px); border-radius: var(--radius-pill); background: var(--accent);
-  transform: translateX(var(--mx, 0px)); opacity: var(--mo, 0); pointer-events: none;
-  transition: transform var(--dur-section) var(--ease-move), width var(--dur-section) var(--ease-move), opacity var(--dur-small) var(--ease-enter);
+  position: absolute; left: 0; bottom: var(--space-1); height: 2px; width: 100px; border-radius: var(--radius-0); background: var(--accent);
+  /* Moves and stretches by transform only (no layout per frame): 100px scaled by --ms = link text width / 100. */
+  transform-origin: 0 50%; transform: translateX(var(--mx, 0px)) scaleX(var(--ms, 0)); opacity: var(--mo, 0); pointer-events: none;
+  transition: transform var(--dur-section) var(--ease-move), opacity var(--dur-small) var(--ease-enter);
 }
 @media (max-width: 560px) {
   .nav-brand span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
