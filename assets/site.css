@@ -1,19 +1,14 @@
-/* Same tokens and type pairing as the planner, so the whole site reads as one worksheet.
+/* Same tokens and type pairing as the planner, so the whole site reads as one mission log.
    Spacing is multiples of 4px. Square corners and hairline rules are the one deliberate style choice. */
 :root{
-  --bg:#eef1f4; --panel:#ffffff; --ink:#15212e; --muted:#566473; --line:#cdd5dd;
-  --accent:#0f5e8c; --on-accent:#ffffff; --warn:#8a5a00; --warn-soft:#f8ecc9;
-  --series-1:#0f5e8c; --series-2:#c2410c; --series-3:#2f7d4f; --series-4:#7a4cb0; --band:#c9dfec;
+  /* Space theme, dark only (WQ-023): near-black navy, layered panels a step lighter, one cyan accent that echoes the orbit shells. */
+  --bg:#070b14; --panel:#0e1524; --ink:#e4e9f1; --muted:#9ba8ba; --line:#24314a;
+  --accent:#7cc8f2; --on-accent:#06101c; --warn:#f0c866; --warn-soft:#2b220c;
+  --series-1:#2e90cc; --series-2:#dd7428; --series-3:#5cc58a; --series-4:#b48ae8; --band:#1f3d52;
+  --star:#dfe8ff; --edge:#617290;
   --display:"Barlow Condensed","Arial Narrow",sans-serif; --body:"IBM Plex Sans",system-ui,sans-serif; --mono:"IBM Plex Mono",ui-monospace,monospace;
+  color-scheme:dark;
 }
-@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
-  --bg:#0d151d; --panel:#16212c; --ink:#e7edf3; --muted:#9dabb9; --line:#2d3b49;
-  --accent:#6fbce6; --on-accent:#0d151d; --warn:#f0c866; --warn-soft:#352a0d;
-  --series-1:#2e90cc; --series-2:#dd7428; --series-3:#5cc58a; --series-4:#b48ae8; --band:#1f3d52; color-scheme:dark}}
-:root[data-theme="dark"]{
-  --bg:#0d151d; --panel:#16212c; --ink:#e7edf3; --muted:#9dabb9; --line:#2d3b49;
-  --accent:#6fbce6; --on-accent:#0d151d; --warn:#f0c866; --warn-soft:#352a0d;
-  --series-1:#2e90cc; --series-2:#dd7428; --series-3:#5cc58a; --series-4:#b48ae8; --band:#1f3d52; color-scheme:dark}
 *{box-sizing:border-box}
 html{-webkit-text-size-adjust:100%}
 body{margin:0;background:var(--bg);color:var(--ink);font:400 1.0625rem/1.55 var(--body);padding:16px max(16px,env(safe-area-inset-right,0px)) 40px max(16px,env(safe-area-inset-left,0px))}
@@ -23,7 +18,7 @@ main>*{min-width:0}
 h1{font:700 clamp(2.5rem,6.5vw,4.25rem)/1.02 var(--display);letter-spacing:-.005em;margin:0;max-width:18ch;text-wrap:balance}
 h1.short{font-size:clamp(2.25rem,5vw,3.25rem);max-width:24ch}
 h2{font:600 1.75rem/1.15 var(--display);letter-spacing:.005em;margin:0 0 12px;text-wrap:balance;max-width:34ch}
-h3{font:600 1.25rem/1.2 var(--display);letter-spacing:.01em;margin:0 0 4px}
+h3,h4{font:600 1.25rem/1.2 var(--display);letter-spacing:.01em;margin:0 0 4px}
 p{margin:0 0 12px;max-width:68ch}
 p:last-child{margin-bottom:0}
 a{color:var(--accent);text-underline-offset:2px}
@@ -59,6 +54,11 @@ ul.plain{margin:0;padding:0 0 0 20px;display:grid;gap:8px;max-width:68ch}
 .rows>*{display:grid;grid-template-columns:48px minmax(0,1fr);gap:0 16px;padding:24px 0;border-bottom:1px solid var(--line);min-width:0}
 .num{font:500 .875rem/1.8 var(--mono);color:var(--muted)}
 .rows h2,.rows h3{margin-bottom:8px}
+
+/* Pages merged into Home and About (WQ-023): each keeps its own heading, under a rule. */
+.part{display:grid;gap:40px;padding-top:56px;border-top:1px solid var(--line);scroll-margin-top:16px;min-width:0}
+.part>*{min-width:0}
+.part>section:first-child h2{font:700 clamp(2.25rem,5vw,3.25rem)/1.02 var(--display);letter-spacing:-.005em;max-width:24ch}
 .rows .tag{margin-bottom:8px}
 @media (max-width:560px){.rows>*{grid-template-columns:minmax(0,1fr)}}
 .source{font-size:.875rem;color:var(--muted);margin-top:8px}

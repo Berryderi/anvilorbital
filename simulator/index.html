@@ -18,7 +18,7 @@
 /* Simulator layout: the 3D stage, then its controls, readouts and a plain-text summary. Colours are site tokens only. */
 main{gap:32px}
 .mode-switch{display:flex;flex-wrap:wrap;gap:8px}
-.ctl,.sim select,.sim input{font:500 .9375rem/1.2 var(--body);min-height:44px;padding:8px 12px;background:var(--panel);color:var(--ink);border:1px solid var(--line);border-radius:0}
+.ctl,.sim select,.sim input{font:500 .9375rem/1.2 var(--body);min-height:44px;padding:8px 12px;background:var(--panel);color:var(--ink);border:1px solid var(--edge);border-radius:0}
 .ctl{cursor:pointer}
 .ctl[aria-pressed="true"]{background:var(--accent);color:var(--on-accent);border-color:var(--accent)}
 .ctl:focus-visible,.sim select:focus-visible,.sim input:focus-visible,.stage canvas:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
@@ -46,7 +46,7 @@ main{gap:32px}
 </style>
 <div class="page">
   <a class="skip" href="#main">Skip to content</a>
-  <header class="site-head"><a class="brand" href="../"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 7h20c0 3.2-3.4 4.8-7 5v2.2l3.5 3.8H5.5L9 14.2V12C5.4 11.8 2 10.2 2 7z"/></svg>Anvil Orbital</a><nav class="site-nav" aria-label="Main"><a href="../idea/">The idea</a><a href="../planner/">Planner</a><a href="../simulator/" aria-current="page">Simulator</a><a href="../findings/">Findings</a><a href="../roadmap/">Roadmap</a><a href="../about/">About</a><a href="../contact/">Contact</a></nav></header>
+  <header class="site-head"><a class="brand" href="../"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 7h20c0 3.2-3.4 4.8-7 5v2.2l3.5 3.8H5.5L9 14.2V12C5.4 11.8 2 10.2 2 7z"/></svg>Anvil Orbital</a><nav class="site-nav" aria-label="Main"><a href="../simulator/" aria-current="page">Simulator</a><a href="../planner/">Planner</a><a href="../findings/">Findings</a><a href="../about/">About</a></nav></header>
   <main id="main">
     <section>
       <h1 class="short">Orbit simulator</h1>
