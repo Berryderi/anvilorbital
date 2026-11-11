@@ -87,6 +87,9 @@
         html.classList.add('has-scene');
         document.querySelectorAll('[data-scene-only]').forEach(el => { el.hidden = false; });
         scene.on('pick', showPick);
+        // The hero fleet runs faster than real time; the brief wants every exaggerated speed labelled.
+        const labelSpeed = () => { const k = scene.info && scene.info.timeScale; if (k > 1) { $('time-scale-n').textContent = Math.round(k).toLocaleString('en-US'); $('time-scale').hidden = false; } };
+        labelSpeed(); scene.on('ready', labelSpeed);
         if (mini.name) scene.setPlannerPreset(mini.name);
         current = null; update();
       })
