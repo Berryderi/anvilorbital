@@ -150,6 +150,16 @@ const cand = await serve(candRoot), old = await serve(oldRoot);
 const port = 9300 + Math.floor(Math.random() * 500);
 const prof = await mkdtemp(path.join(process.env.TMPDIR || '/tmp', 'fc-'));
 const chrome = spawn(process.env.CHROME || 'google-chrome', ['--headless=new', `--remote-debugging-port=${port}`, `--user-data-dir=${prof}`, '--no-first-run', '--hide-scrollbars', '--window-size=1280,900', 'about:blank'], { stdio: process.env.PROBE_DEBUG ? 'inherit' : 'ignore' });
+// A stuck Chrome must not hang the run: on TERM/INT or after RUN_LIMIT_MS, write what we have and exit.
+const RUN_LIMIT_MS = Number(process.env.RUN_LIMIT_MS || 12 * 60 * 1000);
+const abort = async why => {
+  log(`FAIL run aborted: ${why}`); fails++;
+  try { await writeFile(path.join(outDir, 'report.txt'), lines.join('\n') + '\n'); } catch { /* best effort */ }
+  try { chrome.kill('SIGKILL'); } catch { /* already gone */ }
+  process.exit(124);
+};
+process.on('SIGTERM', () => abort('SIGTERM')); process.on('SIGINT', () => abort('SIGINT'));
+setTimeout(() => abort(`watchdog after ${RUN_LIMIT_MS} ms`), RUN_LIMIT_MS).unref();
 let ws;
 for (let i = 0; i < 50 && !ws; i++) { try { const t = await (await fetch(`http://127.0.0.1:${port}/json`)).json(); const pg = t.find(x => x.type === 'page'); if (pg) ws = pg.webSocketDebuggerUrl; } catch {} await sleep(200); }
 if (!ws) { console.log('FAIL chrome did not start (set PROBE_DEBUG=1; keep TMPDIR short)'); process.exit(1); }
@@ -157,7 +167,14 @@ const sock = new WebSocket(ws); await new Promise(r => sock.onopen = r);
 let msgId = 0; const pending = new Map(); const netUrls = [];
 let recordNet = true; // off while the old site loads: only candidate pages count for the local-requests checks
 sock.onmessage = m => { const d = JSON.parse(m.data); if (d.method === 'Network.requestWillBeSent' && recordNet) netUrls.push(d.params.request.url); if (d.id && pending.has(d.id)) { pending.get(d.id)(d); pending.delete(d.id); } };
-const cdp = (method, params = {}) => new Promise(r => { const i = ++msgId; pending.set(i, r); sock.send(JSON.stringify({ id: i, method, params })); });
+// Every call answers within CDP_TIMEOUT_MS, with an error result if Chrome never replies.
+const CDP_TIMEOUT_MS = 60000;
+const cdp = (method, params = {}) => new Promise(r => {
+  const i = ++msgId;
+  const t = setTimeout(() => { pending.delete(i); r({ error: { message: `no reply in ${CDP_TIMEOUT_MS} ms to ${method}` } }); }, CDP_TIMEOUT_MS);
+  pending.set(i, d => { clearTimeout(t); r(d); });
+  sock.send(JSON.stringify({ id: i, method, params }));
+});
 const ev = async expr => { const r = await cdp('Runtime.evaluate', { expression: expr, awaitPromise: true, returnByValue: true }); if (r.result?.exceptionDetails) return { probeError: r.result.exceptionDetails.exception?.description }; return r.result?.result?.value; };
 await cdp('Page.enable'); await cdp('Runtime.enable'); await cdp('Network.enable');
 
@@ -186,10 +203,34 @@ const STATE = `(()=>{const de=document.documentElement;
     infinite:document.getAnimations().filter(a=>a.playState==='running'&&a.effect&&a.effect.getTiming().iterations===Infinity).map(a=>a.animationName||a.constructor.name).slice(0,4),
     smooth:getComputedStyle(de).scrollBehavior,
     path:location.pathname+location.hash,title:document.title};})()`;
+// Full-page capture (captureBeyondViewport) hangs headless Chrome on a page whose height follows the viewport (an svh
+// console, WQ-028). Such a page is found by growing the viewport 100 px: if the page grows with it, it gets one
+// viewport shot per screen (name-p1.png, -p2 ...) instead of one full-page capture.
+const VIEWPORT_PROBE_PX = 100, MAX_PARTS = 12;
+async function followsViewport() {
+  const w = await ev('innerWidth'), vh = await ev('innerHeight'), h0 = await ev('document.documentElement.scrollHeight');
+  await cdp('Emulation.setDeviceMetricsOverride', { width: w, height: vh + VIEWPORT_PROBE_PX, deviceScaleFactor: 1, mobile: w < 600 }); await sleep(300);
+  const h1 = await ev('document.documentElement.scrollHeight');
+  await cdp('Emulation.setDeviceMetricsOverride', { width: w, height: vh, deviceScaleFactor: 1, mobile: w < 600 }); await sleep(300);
+  return h1 - h0 >= VIEWPORT_PROBE_PX / 2;
+}
 async function shot(name) {
-  const h = await ev('document.documentElement.scrollHeight'), w = await ev('innerWidth');
-  const r = await cdp('Page.captureScreenshot', { format: 'png', captureBeyondViewport: true, clip: { x: 0, y: 0, width: w, height: Math.min(h, MAX_SHOT_PX), scale: 1 } });
-  await writeFile(path.join(shotsDir, name + '.png'), Buffer.from(r.result.data, 'base64'));
+  const h = await ev('document.documentElement.scrollHeight'), w = await ev('innerWidth'), vh = await ev('innerHeight');
+  const save = async (file, r) => {
+    if (!r.result?.data) { check(false, `${file}: screenshot failed ${r.error?.message || ''}`); return; }
+    await writeFile(path.join(shotsDir, file), Buffer.from(r.result.data, 'base64'));
+  };
+  if (await followsViewport()) {
+    const parts = Math.min(MAX_PARTS, Math.ceil(h / vh));
+    for (let p = 0; p < parts; p++) {
+      await ev(`scrollTo({top:${p * vh},behavior:'instant'})`); await sleep(400);
+      await save(`${name}-p${p + 1}.png`, await cdp('Page.captureScreenshot', { format: 'png' }));
+    }
+    await ev(`scrollTo({top:0,behavior:'instant'})`);
+    info(`${name}: page height follows the viewport, so ${parts} viewport shots instead of one full-page capture`);
+    return;
+  }
+  await save(name + '.png', await cdp('Page.captureScreenshot', { format: 'png', captureBeyondViewport: true, clip: { x: 0, y: 0, width: w, height: Math.min(h, MAX_SHOT_PX), scale: 1 } }));
   if (h > MAX_SHOT_PX) info(`${name}.png cut at ${MAX_SHOT_PX}px of ${h}px`);
 }
 const nameOf = (url, w, tag = '') => ((url === '/' ? 'home' : url.replace(/^\/|\/$/g, '').replace(/[\/#.]+/g, '-')) + '-' + w + (tag ? '-' + tag : ''));
@@ -231,14 +272,21 @@ for (const pg of PAGES.filter(p => p.redirect)) for (const js of [true, false]) 
   check(s.errs.length === 0 && /Archivo/.test(styled) && !/\/ $/.test(styled), `/no-such/page/ shows 404.html styled (${styled}), errors ${JSON.stringify(s.errs.slice(0, 2))}`);
 }
 // Planner deep links: every link id the old planner knows must pick the same preset on the candidate.
+// The old site loads a render-blocking Google Fonts stylesheet before its scripts; when Google is slow, BY_LINK_ID does
+// not exist yet. Block Google Fonts for old-site loads only (candidate loads stay unblocked, so the font check below
+// still sees any such request), and wait for the ids instead of reading them once.
+const GOOGLE_FONTS = ['*://fonts.googleapis.com/*', '*://fonts.gstatic.com/*'];
+const OLD_IDS_WAIT_MS = 10000;
+const loadOld = async (url, opts) => { await cdp('Network.setBlockedURLs', { urls: GOOGLE_FONTS }); await load(url, opts); await cdp('Network.setBlockedURLs', { urls: [] }); };
 recordNet = false;
-await load(old.base + '/planner/', { width: 1280 });
-const oldIds = await ev(`typeof BY_LINK_ID==='object'?Object.keys(BY_LINK_ID):null`);
+await loadOld(old.base + '/planner/', { width: 1280 });
+let oldIds = null;
+for (const end = Date.now() + OLD_IDS_WAIT_MS; !oldIds && Date.now() < end; await sleep(250)) oldIds = await ev(`typeof BY_LINK_ID==='object'?Object.keys(BY_LINK_ID):null`);
 recordNet = true;
 check(Array.isArray(oldIds) && oldIds.length > 0, `old planner exposes its deep-link ids (${Array.isArray(oldIds) ? oldIds.length : 'none'})`);
 for (const idv of oldIds || []) {
   recordNet = false;
-  await load(old.base + '/planner/#' + idv, { width: 1280, wait: 900 });
+  await loadOld(old.base + '/planner/#' + idv, { width: 1280, wait: 900 });
   const want = await ev(`document.getElementById('preset').value`);
   recordNet = true;
   await load(cand.base + '/planner/#' + idv, { width: 1280, wait: 900 });

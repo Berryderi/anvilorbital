@@ -32,3 +32,8 @@ Not in the script: the real-browser scroll recording, made by hand for the final
 - Headless Chrome's WebGL is software, so scene smoothness is not measured here.
 - Full-page captures draw the fixed nav mid-image; that is a capture artifact.
 - An empty no-JS tool (form with blank answers) passes check 5; look at `*-390-nojs.png`.
+
+## Hang guards (2026-11-12)
+- Every CDP call answers within 60 s, with an error if Chrome never replies. The whole run aborts after 12 min (`RUN_LIMIT_MS`), or on TERM/INT, writes `report.txt` with a FAIL line and kills Chrome. Still run it in the background, under `timeout -k`, with a TMPDIR only you use.
+- A full-page capture (`captureBeyondViewport`) hung headless Chrome on the svh simulator page. Before each capture the page is checked by growing the viewport 100 px. If its height follows the viewport (most pages with a full-height hero do), it gets one viewport shot per screen, `<name>-p1.png`, `-p2` and so on (up to 12), and an INFO line. Otherwise it gets one full-page capture as before.
+- Old-site loads block fonts.googleapis.com and fonts.gstatic.com. The old planner's render-blocking Google Fonts stylesheet delayed its scripts, so `BY_LINK_ID` was sometimes missing (a false FAIL). The ids are now polled for up to 10 s. Candidate loads are never blocked, so check 6 still sees any Google Fonts request.

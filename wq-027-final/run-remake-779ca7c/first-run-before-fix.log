@@ -1,0 +1,250 @@
+INFO candidate pages: /404.html, /about/, /contact/ -> ../about/#contact, /findings/, /idea/ -> ../#idea, /, /planner/, /privacy/, /roadmap/ -> ../#roadmap, /simulator/
+== 1. Static link crawl
+OK   196 internal references across 10 pages and their CSS resolve
+OK   no page loads a stylesheet, script, image or font from another host
+INFO outbound link hosts (links only, not loads): api-prod.fcc.gov, arstechnica.com, astroscale.com, celestrak.org, cires.colorado.edu, docs.fcc.gov, docs.github.com, github.com, interestingengineering.com, orbitaldebris.jsc.nasa.gov, planet4589.org, research.google, space-safety.starlink.com, talksatellite.com, thenextweb.com, www.astroscale.com, www.axiomspace.com, www.clickorlando.com, www.ecfr.gov, www.esa.int, www.kallmorris.com, www.northropgrumman.com, www.spaceacademy.net.au, www.starcloud.com, www.starfishspace.com, www.unoosa.org
+== 2. Old URLs, redirects, planner deep links
+OK   old URL /404.html answers 200
+OK   old URL /about/ answers 200
+OK   old URL /about answers 301 -> /about/
+OK   old URL /contact/ answers 200
+OK   old URL /contact answers 301 -> /contact/
+OK   old URL /findings/ answers 200
+OK   old URL /findings answers 301 -> /findings/
+OK   old URL /idea/ answers 200
+OK   old URL /idea answers 301 -> /idea/
+OK   old URL / answers 200
+OK   old URL /planner/ answers 200
+OK   old URL /planner answers 301 -> /planner/
+OK   old URL /privacy/ answers 200
+OK   old URL /privacy answers 301 -> /privacy/
+OK   old URL /roadmap/ answers 200
+OK   old URL /roadmap answers 301 -> /roadmap/
+OK   old URL /simulator/ answers 200
+OK   old URL /simulator answers 301 -> /simulator/
+OK   redirect /contact/ JS on: lands on /about/#contact (want /about/#contact, id present: true)
+OK   redirect /contact/ JS on: 0 JS errors after landing 
+OK   redirect /contact/ JS off: lands on /about/#contact (want /about/#contact, id present: true)
+OK   redirect /idea/ JS on: lands on /#idea (want /#idea, id present: true)
+OK   redirect /idea/ JS on: 0 JS errors after landing 
+OK   redirect /idea/ JS off: lands on /#idea (want /#idea, id present: true)
+OK   redirect /roadmap/ JS on: lands on /#roadmap (want /#roadmap, id present: true)
+OK   redirect /roadmap/ JS on: 0 JS errors after landing 
+OK   redirect /roadmap/ JS off: lands on /#roadmap (want /#roadmap, id present: true)
+OK   /no-such/page/ shows 404.html styled (Archivo, system-ui, -apple-system, "Segoe UI", sans-serif / #ecbc5e), errors []
+FAIL old planner exposes its deep-link ids (none)
+OK   /planner/#starcloud selects Starcloud: Starcloud orbital data center (count and altitude from its FCC filing) / 7.0 years
+== 3. Every page at 1280 and 390, motion on, after a full scroll
+OK   /404.html 1280: 0 JS errors 
+OK   /404.html 1280: no horizontal overflow 1280/1280 
+OK   /404.html: has a <main> landmark
+OK   /404.html 1280: everything revealed after a full scroll (hidden 0, lines 0, faded [])
+INFO 404-html-1280: page height follows the viewport, so 1 viewport shots instead of one full-page capture
+OK   /about/ 1280: 0 JS errors 
+OK   /about/ 1280: no horizontal overflow 1280/1280 
+OK   /about/: has a <main> landmark
+OK   /about/ 1280: everything revealed after a full scroll (hidden 0, lines 0, faded [])
+INFO about-1280: page height follows the viewport, so 3 viewport shots instead of one full-page capture
+OK   /findings/ 1280: 0 JS errors 
+OK   /findings/ 1280: no horizontal overflow 1280/1280 
+OK   /findings/: has a <main> landmark
+OK   /findings/ 1280: everything revealed after a full scroll (hidden 0, lines 0, faded [])
+INFO findings-1280: page height follows the viewport, so 8 viewport shots instead of one full-page capture
+OK   / 1280: 0 JS errors 
+OK   / 1280: no horizontal overflow 1280/1280 
+OK   /: has a <main> landmark
+OK   / 1280: everything revealed after a full scroll (hidden 0, lines 0, faded [])
+INFO home-1280: page height follows the viewport, so 10 viewport shots instead of one full-page capture
+OK   /planner/ 1280: 0 JS errors 
+OK   /planner/ 1280: no horizontal overflow 1280/1280 
+OK   /planner/: has a <main> landmark
+OK   /planner/ 1280: everything revealed after a full scroll (hidden 0, lines 0, faded [])
+INFO planner-1280: page height follows the viewport, so 3 viewport shots instead of one full-page capture
+OK   /privacy/ 1280: 0 JS errors 
+OK   /privacy/ 1280: no horizontal overflow 1280/1280 
+OK   /privacy/: has a <main> landmark
+OK   /privacy/ 1280: everything revealed after a full scroll (hidden 0, lines 0, faded [])
+INFO privacy-1280: page height follows the viewport, so 2 viewport shots instead of one full-page capture
+OK   /simulator/ 1280: 0 JS errors 
+OK   /simulator/ 1280: no horizontal overflow 1280/1280 
+OK   /simulator/: has a <main> landmark
+OK   /simulator/ 1280: everything revealed after a full scroll (hidden 0, lines 0, faded [])
+INFO simulator-1280: page height follows the viewport, so 2 viewport shots instead of one full-page capture
+OK   /planner/#starcloud 1280: 0 JS errors 
+OK   /planner/#starcloud 1280: no horizontal overflow 1280/1280 
+OK   /planner/#starcloud: has a <main> landmark
+OK   /planner/#starcloud 1280: everything revealed after a full scroll (hidden 0, lines 0, faded [])
+INFO planner-starcloud-1280: page height follows the viewport, so 3 viewport shots instead of one full-page capture
+OK   /about/#contact 1280: 0 JS errors 
+OK   /about/#contact 1280: no horizontal overflow 1280/1280 
+OK   /about/#contact: has a <main> landmark
+OK   /about/#contact 1280: everything revealed after a full scroll (hidden 0, lines 0, faded [])
+INFO about-contact-1280: page height follows the viewport, so 3 viewport shots instead of one full-page capture
+OK   /404.html 390: 0 JS errors 
+OK   /404.html 390: no horizontal overflow 390/390 
+OK   /404.html 390: everything revealed after a full scroll (hidden 0, lines 0, faded [])
+INFO 404-html-390: page height follows the viewport, so 1 viewport shots instead of one full-page capture
+OK   /about/ 390: 0 JS errors 
+OK   /about/ 390: no horizontal overflow 390/390 
+OK   /about/ 390: everything revealed after a full scroll (hidden 0, lines 0, faded [])
+OK   /findings/ 390: 0 JS errors 
+OK   /findings/ 390: no horizontal overflow 390/390 
+OK   /findings/ 390: everything revealed after a full scroll (hidden 0, lines 0, faded [])
+OK   / 390: 0 JS errors 
+OK   / 390: no horizontal overflow 390/390 
+OK   / 390: everything revealed after a full scroll (hidden 0, lines 0, faded [])
+INFO home-390: page height follows the viewport, so 12 viewport shots instead of one full-page capture
+OK   /planner/ 390: 0 JS errors 
+OK   /planner/ 390: no horizontal overflow 390/390 
+OK   /planner/ 390: everything revealed after a full scroll (hidden 0, lines 0, faded [])
+OK   /privacy/ 390: 0 JS errors 
+OK   /privacy/ 390: no horizontal overflow 390/390 
+OK   /privacy/ 390: everything revealed after a full scroll (hidden 0, lines 0, faded [])
+OK   /simulator/ 390: 0 JS errors 
+OK   /simulator/ 390: no horizontal overflow 390/390 
+OK   /simulator/ 390: everything revealed after a full scroll (hidden 0, lines 0, faded [])
+OK   /planner/#starcloud 390: 0 JS errors 
+OK   /planner/#starcloud 390: no horizontal overflow 390/390 
+OK   /planner/#starcloud 390: everything revealed after a full scroll (hidden 0, lines 0, faded [])
+OK   /about/#contact 390: 0 JS errors 
+OK   /about/#contact 390: no horizontal overflow 390/390 
+OK   /about/#contact 390: everything revealed after a full scroll (hidden 0, lines 0, faded [])
+== 4. Reduced motion, at load, no scrolling
+OK   /404.html 1280 reduced motion: 0 JS errors 
+OK   /404.html 1280 reduced motion: no horizontal overflow 1280/1280 
+OK   /404.html 1280 reduced motion: everything visible without scrolling (hidden 0, lines 0, faded [])
+OK   /404.html 1280 reduced motion: no running infinite animations []
+OK   /404.html 1280 reduced motion: scroll-behavior auto
+OK   /about/ 1280 reduced motion: 0 JS errors 
+OK   /about/ 1280 reduced motion: no horizontal overflow 1280/1280 
+OK   /about/ 1280 reduced motion: everything visible without scrolling (hidden 0, lines 0, faded [])
+OK   /about/ 1280 reduced motion: no running infinite animations []
+OK   /about/ 1280 reduced motion: scroll-behavior auto
+OK   /findings/ 1280 reduced motion: 0 JS errors 
+OK   /findings/ 1280 reduced motion: no horizontal overflow 1280/1280 
+OK   /findings/ 1280 reduced motion: everything visible without scrolling (hidden 0, lines 0, faded [])
+OK   /findings/ 1280 reduced motion: no running infinite animations []
+OK   /findings/ 1280 reduced motion: scroll-behavior auto
+OK   / 1280 reduced motion: 0 JS errors 
+OK   / 1280 reduced motion: no horizontal overflow 1280/1280 
+OK   / 1280 reduced motion: everything visible without scrolling (hidden 0, lines 0, faded [])
+OK   / 1280 reduced motion: no running infinite animations []
+OK   / 1280 reduced motion: scroll-behavior auto
+OK   /planner/ 1280 reduced motion: 0 JS errors 
+OK   /planner/ 1280 reduced motion: no horizontal overflow 1280/1280 
+OK   /planner/ 1280 reduced motion: everything visible without scrolling (hidden 0, lines 0, faded [])
+OK   /planner/ 1280 reduced motion: no running infinite animations []
+OK   /planner/ 1280 reduced motion: scroll-behavior auto
+OK   /privacy/ 1280 reduced motion: 0 JS errors 
+OK   /privacy/ 1280 reduced motion: no horizontal overflow 1280/1280 
+OK   /privacy/ 1280 reduced motion: everything visible without scrolling (hidden 0, lines 0, faded [])
+OK   /privacy/ 1280 reduced motion: no running infinite animations []
+OK   /privacy/ 1280 reduced motion: scroll-behavior auto
+OK   /simulator/ 1280 reduced motion: 0 JS errors 
+OK   /simulator/ 1280 reduced motion: no horizontal overflow 1280/1280 
+OK   /simulator/ 1280 reduced motion: everything visible without scrolling (hidden 0, lines 0, faded [])
+OK   /simulator/ 1280 reduced motion: no running infinite animations []
+OK   /simulator/ 1280 reduced motion: scroll-behavior auto
+OK   /planner/#starcloud 1280 reduced motion: 0 JS errors 
+OK   /planner/#starcloud 1280 reduced motion: no horizontal overflow 1280/1280 
+OK   /planner/#starcloud 1280 reduced motion: everything visible without scrolling (hidden 0, lines 0, faded [])
+OK   /planner/#starcloud 1280 reduced motion: no running infinite animations []
+OK   /planner/#starcloud 1280 reduced motion: scroll-behavior auto
+OK   /about/#contact 1280 reduced motion: 0 JS errors 
+OK   /about/#contact 1280 reduced motion: no horizontal overflow 1280/1280 
+OK   /about/#contact 1280 reduced motion: everything visible without scrolling (hidden 0, lines 0, faded [])
+OK   /about/#contact 1280 reduced motion: no running infinite animations []
+OK   /about/#contact 1280 reduced motion: scroll-behavior auto
+OK   /404.html 390 reduced motion: 0 JS errors 
+OK   /404.html 390 reduced motion: no horizontal overflow 390/390 
+OK   /404.html 390 reduced motion: everything visible without scrolling (hidden 0, lines 0, faded [])
+OK   /404.html 390 reduced motion: no running infinite animations []
+OK   /404.html 390 reduced motion: scroll-behavior auto
+INFO 404-html-390-reduced: page height follows the viewport, so 1 viewport shots instead of one full-page capture
+OK   /about/ 390 reduced motion: 0 JS errors 
+OK   /about/ 390 reduced motion: no horizontal overflow 390/390 
+OK   /about/ 390 reduced motion: everything visible without scrolling (hidden 0, lines 0, faded [])
+OK   /about/ 390 reduced motion: no running infinite animations []
+OK   /about/ 390 reduced motion: scroll-behavior auto
+OK   /findings/ 390 reduced motion: 0 JS errors 
+OK   /findings/ 390 reduced motion: no horizontal overflow 390/390 
+OK   /findings/ 390 reduced motion: everything visible without scrolling (hidden 0, lines 0, faded [])
+OK   /findings/ 390 reduced motion: no running infinite animations []
+OK   /findings/ 390 reduced motion: scroll-behavior auto
+OK   / 390 reduced motion: 0 JS errors 
+OK   / 390 reduced motion: no horizontal overflow 390/390 
+OK   / 390 reduced motion: everything visible without scrolling (hidden 0, lines 0, faded [])
+OK   / 390 reduced motion: no running infinite animations []
+OK   / 390 reduced motion: scroll-behavior auto
+INFO home-390-reduced: page height follows the viewport, so 12 viewport shots instead of one full-page capture
+OK   /planner/ 390 reduced motion: 0 JS errors 
+OK   /planner/ 390 reduced motion: no horizontal overflow 390/390 
+OK   /planner/ 390 reduced motion: everything visible without scrolling (hidden 0, lines 0, faded [])
+OK   /planner/ 390 reduced motion: no running infinite animations []
+OK   /planner/ 390 reduced motion: scroll-behavior auto
+OK   /privacy/ 390 reduced motion: 0 JS errors 
+OK   /privacy/ 390 reduced motion: no horizontal overflow 390/390 
+OK   /privacy/ 390 reduced motion: everything visible without scrolling (hidden 0, lines 0, faded [])
+OK   /privacy/ 390 reduced motion: no running infinite animations []
+OK   /privacy/ 390 reduced motion: scroll-behavior auto
+OK   /simulator/ 390 reduced motion: 0 JS errors 
+OK   /simulator/ 390 reduced motion: no horizontal overflow 390/390 
+OK   /simulator/ 390 reduced motion: everything visible without scrolling (hidden 0, lines 0, faded [])
+OK   /simulator/ 390 reduced motion: no running infinite animations []
+OK   /simulator/ 390 reduced motion: scroll-behavior auto
+OK   /planner/#starcloud 390 reduced motion: 0 JS errors 
+OK   /planner/#starcloud 390 reduced motion: no horizontal overflow 390/390 
+OK   /planner/#starcloud 390 reduced motion: everything visible without scrolling (hidden 0, lines 0, faded [])
+OK   /planner/#starcloud 390 reduced motion: no running infinite animations []
+OK   /planner/#starcloud 390 reduced motion: scroll-behavior auto
+OK   /about/#contact 390 reduced motion: 0 JS errors 
+OK   /about/#contact 390 reduced motion: no horizontal overflow 390/390 
+OK   /about/#contact 390 reduced motion: everything visible without scrolling (hidden 0, lines 0, faded [])
+OK   /about/#contact 390 reduced motion: no running infinite animations []
+OK   /about/#contact 390 reduced motion: scroll-behavior auto
+== 5. No-JS read-through
+OK   /404.html 1280 no JS: no horizontal overflow 1280/1280 
+OK   /404.html 1280 no JS: 2 text blocks readable (hidden 0, lines 0, faded [])
+OK   /about/ 1280 no JS: no horizontal overflow 1280/1280 
+OK   /about/ 1280 no JS: 18 text blocks readable (hidden 0, lines 0, faded [])
+OK   /findings/ 1280 no JS: no horizontal overflow 1280/1280 
+OK   /findings/ 1280 no JS: 115 text blocks readable (hidden 0, lines 0, faded [])
+OK   / 1280 no JS: no horizontal overflow 1280/1280 
+OK   / 1280 no JS: 97 text blocks readable (hidden 0, lines 0, faded [])
+OK   /planner/ 1280 no JS: no horizontal overflow 1280/1280 
+OK   /planner/ 1280 no JS: 31 text blocks readable (hidden 0, lines 0, faded [])
+OK   /privacy/ 1280 no JS: no horizontal overflow 1280/1280 
+OK   /privacy/ 1280 no JS: 5 text blocks readable (hidden 0, lines 0, faded [])
+OK   /simulator/ 1280 no JS: no horizontal overflow 1280/1280 
+OK   /simulator/ 1280 no JS: 2 text blocks readable (hidden 0, lines 0, faded [])
+INFO /simulator/ 1280 no JS: text blocks with display:none, judge by eye: ["P: 01 Fleets","P: Real dataModelConcept, not built","P: --:--:-- UTC","LI: 01Fleets","LI: 02Decay"]
+OK   /planner/#starcloud 1280 no JS: no horizontal overflow 1280/1280 
+OK   /planner/#starcloud 1280 no JS: 31 text blocks readable (hidden 0, lines 0, faded [])
+OK   /about/#contact 1280 no JS: no horizontal overflow 1280/1280 
+OK   /about/#contact 1280 no JS: 18 text blocks readable (hidden 0, lines 0, faded [])
+OK   /404.html 390 no JS: no horizontal overflow 390/390 
+OK   /404.html 390 no JS: 2 text blocks readable (hidden 0, lines 0, faded [])
+INFO 404-html-390-nojs: page height follows the viewport, so 1 viewport shots instead of one full-page capture
+OK   /about/ 390 no JS: no horizontal overflow 390/390 
+OK   /about/ 390 no JS: 18 text blocks readable (hidden 0, lines 0, faded [])
+OK   /findings/ 390 no JS: no horizontal overflow 390/390 
+OK   /findings/ 390 no JS: 115 text blocks readable (hidden 0, lines 0, faded [])
+OK   / 390 no JS: no horizontal overflow 390/390 
+OK   / 390 no JS: 97 text blocks readable (hidden 0, lines 0, faded [])
+INFO home-390-nojs: page height follows the viewport, so 12 viewport shots instead of one full-page capture
+OK   /planner/ 390 no JS: no horizontal overflow 390/390 
+OK   /planner/ 390 no JS: 31 text blocks readable (hidden 0, lines 0, faded [])
+OK   /privacy/ 390 no JS: no horizontal overflow 390/390 
+OK   /privacy/ 390 no JS: 5 text blocks readable (hidden 0, lines 0, faded [])
+OK   /simulator/ 390 no JS: no horizontal overflow 390/390 
+OK   /simulator/ 390 no JS: 2 text blocks readable (hidden 0, lines 0, faded [])
+INFO /simulator/ 390 no JS: text blocks with display:none, judge by eye: ["P: 01 Fleets","P: Real dataModelConcept, not built","P: --:--:-- UTC","LI: 01Fleets","LI: 02Decay"]
+INFO simulator-390-nojs: page height follows the viewport, so 1 viewport shots instead of one full-page capture
+OK   /planner/#starcloud 390 no JS: no horizontal overflow 390/390 
+OK   /planner/#starcloud 390 no JS: 31 text blocks readable (hidden 0, lines 0, faded [])
+OK   /about/#contact 390 no JS: no horizontal overflow 390/390 
+OK   /about/#contact 390 no JS: 18 text blocks readable (hidden 0, lines 0, faded [])
+OK   every load made only local requests []
+OK   no request to fonts.googleapis.com or fonts.gstatic.com
+OK   error harness injected into every HTML response []
+1 FAIL
