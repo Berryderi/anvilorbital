@@ -102,8 +102,10 @@ if (gl) {
 // ---------- Earth, atmosphere, stars: home's shaders, no textures ----------
 // Earth is one flat colour (--sim-earth) lit by home's day/night shader: no texture download, about 200 KB less on a
 // cold visit (WQ-028 option 2). The night side stays dark: a 1x1 black texture stands in for city lights.
+// THREE.Color holds linear values; the texture is tagged sRGB, so it gets the token's sRGB bytes (WQ-033).
 function flatTexture(hex) {
-  const c = new THREE.Color(hex), t = new THREE.DataTexture(new Uint8Array([c.r * 255, c.g * 255, c.b * 255, 255]), 1, 1);
+  const c = new THREE.Color(hex).getRGB({ r: 0, g: 0, b: 0 }, THREE.SRGBColorSpace);
+  const t = new THREE.DataTexture(new Uint8Array([c.r, c.g, c.b].map(v => Math.round(v * 255)).concat(255)), 1, 1);
   t.colorSpace = THREE.SRGBColorSpace; t.needsUpdate = true; return t;
 }
 const earthU = { uDay: { value: null }, uNight: { value: null }, uSun: { value: new THREE.Vector3(1, 0, 0) }, uAtmo: { value: new THREE.Color('#6fa8e8') }, uFade: { value: 1 } };
