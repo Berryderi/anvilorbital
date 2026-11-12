@@ -271,7 +271,7 @@ async function createPageScene(canvas) {
     pts.frustumCulled = false; scene.add(pts);
   }
 
-  // Earth with home's shader. No night texture is loaded (a black one stands in): the visible limb is the day side.
+  // Earth with a page copy of home's shader (PAGE_EARTH_FS). No night texture is loaded (a black one stands in).
   const black = new THREE.DataTexture(new Uint8Array([0, 0, 0, 255]), 1, 1); black.needsUpdate = true;
   const sun = new THREE.Vector3();     // set in layout(), relative to where Earth sits on screen
   // Opaque, so the shader's cap is the luminance on screen; it writes depth, so stars behind Earth stay hidden.
