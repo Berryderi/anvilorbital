@@ -81,7 +81,19 @@
     pick.hidden = false;
   }
   const canvas = $('space');
-  if (canvas) {
+  // Tool pages (WQ-030) ask for the quiet page mode with <canvas id="space" data-scene-mode="page">. They fetch three.js
+  // only after the page has loaded and the browser is idle, and not at all when the reader asked to save data, so the
+  // static CSS stars (page.css) stay. Home starts its scene at once, as before.
+  const PAGE_SCENE_IDLE_TIMEOUT_MS = 1500;   // start at the latest this long after load, even if the browser is never idle
+  const wantsLessData = () => {
+    try { if (navigator.connection && navigator.connection.saveData) return true; } catch { /* no Network Information API */ }
+    return matchMedia('(prefers-reduced-data: reduce)').matches;
+  };
+  const whenQuiet = () => new Promise(r => {
+    const idle = () => ('requestIdleCallback' in window ? requestIdleCallback(r, { timeout: PAGE_SCENE_IDLE_TIMEOUT_MS }) : setTimeout(r, 200));
+    if (document.readyState === 'complete') idle(); else addEventListener('load', idle, { once: true });
+  });
+  const startScene = () => {
     import('/assets/scene/scene.js')
       // Tool pages ask for dev-1's quiet mode with <canvas id="space" data-scene-mode="page">; home passes no options.
       .then(m => canvas.dataset.sceneMode ? m.createScene(canvas, { mode: canvas.dataset.sceneMode }) : m.createScene(canvas))
@@ -98,7 +110,9 @@
         if (chapters.length) { current = null; update(); }
       })
       .catch(() => { /* no scene file yet, or no WebGL: the page stays text on space */ });
-  }
+  };
+  if (canvas && canvas.dataset.sceneMode === 'page') { if (!wantsLessData()) whenQuiet().then(startScene); }
+  else if (canvas) startScene();
 
   // ---------- 550 vs 800 km: the same two satellites the scene shows, numbers from the planner model ----------
   const fall = $('fall-line');

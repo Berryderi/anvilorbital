@@ -215,9 +215,12 @@ const PAGE = {
   // camera to Earth, not fixed in the world: Earth sits far off-axis, so the part on screen is its upper left limb and a
   // fixed world sun from the upper left lights all of it. Larger angle, thicker crescent.
   sunFromBehindDeg: 30,
-  // How strongly Earth and its halo show over the page background (0 to 1). Page text scrolls over the corner, so the
-  // brightest Earth pixel must keep even caption text (--ink-3) at 4.5:1 or better; checked with the probe screenshots.
-  earthStrength: 0.2,
+  // Page text scrolls over the corner, so no Earth or halo pixel may be brighter than relative luminance 0.0311: the
+  // most a background can be for caption text (--ink-3 #9199a4) to keep 4.5:1. The shaders cap every pixel below that
+  // (0.026 leaves room for 8-bit rounding and the halo at the edge); earthGain then sets how much of the lit crescent's texture shows under it.
+  maxLuminance: 0.026,
+  earthGain: 0.06,      // share of home's Earth brightness, added on top of the page background colour
+  haloMaxLuminance: 0.011, // the halo adds onto the background, so its own cap is lower; checked with the probe
   turnRad: 2.2,                                // which side of Earth faces the camera; for the look only
 };
 
@@ -225,6 +228,19 @@ function wantsLessData() {
   try { if (navigator.connection && navigator.connection.saveData) return true; } catch { /* no Network Information API */ }
   return matchMedia('(prefers-reduced-data: reduce)').matches;
 }
+
+// Page-mode copies of home's Earth and halo shaders, with only their last line changed: the colour is scaled, put on the
+// page background, and capped at a maximum luminance. Home's shaders are not touched. If home's last line ever changes,
+// the copy would silently be home's look, so a missing line is an error and the page keeps its CSS stars.
+const LUMA = 'vec3(0.2126, 0.7152, 0.0722)';   // WCAG relative luminance weights, applied to linear colour
+function pageShader(src, line, replacement) {
+  if (!src.includes(line)) { const e = new Error(`[scene] page mode: shader line not found: ${line}`); console.error(e.message); throw e; }
+  return 'uniform float uGain; uniform float uMaxL; uniform vec3 uBase;\n' + src.replace(line, replacement);
+}
+const PAGE_EARTH_FS = () => pageShader(EARTH_FS, 'gl_FragColor = vec4(col, uFade);',
+  `col = uBase + col * uGain; col *= min(1.0, uMaxL / max(dot(col, ${LUMA}), 1e-6)); gl_FragColor = vec4(col, 1.0);`);
+const PAGE_HALO_FS = () => pageShader(HALO_FS, 'gl_FragColor = vec4(uAtmo * g * s * 0.75 * uFade, 1.0);',
+  `vec3 h = uAtmo * g * s * 0.75; h *= min(1.0, uMaxL / max(dot(h, ${LUMA}), 1e-6)); gl_FragColor = vec4(h, 1.0);`);
 
 async function createPageScene(canvas) {
   if (wantsLessData()) return null;
@@ -258,15 +274,18 @@ async function createPageScene(canvas) {
   // Earth with home's shader. No night texture is loaded (a black one stands in): the visible limb is the day side.
   const black = new THREE.DataTexture(new Uint8Array([0, 0, 0, 255]), 1, 1); black.needsUpdate = true;
   const sun = new THREE.Vector3();     // set in layout(), relative to where Earth sits on screen
-  const earthU = { uDay: { value: black }, uNight: { value: black }, uSun: { value: sun }, uAtmo: { value: new THREE.Color('#6fa8e8') }, uFade: { value: PAGE.earthStrength } };
-  // Blended at earthStrength (uFade is the shader's alpha), drawn first and writing depth, so stars behind it stay hidden.
+  // Opaque, so the shader's cap is the luminance on screen; it writes depth, so stars behind Earth stay hidden.
+  const bgLinear = new THREE.Color(token('--bg', '#070d14'));   // THREE.Color holds linear values
+  const earthU = { uDay: { value: black }, uNight: { value: black }, uSun: { value: sun }, uAtmo: { value: new THREE.Color('#6fa8e8') }, uFade: { value: 1 },
+    uGain: { value: PAGE.earthGain }, uMaxL: { value: PAGE.maxLuminance }, uBase: { value: new THREE.Vector3(bgLinear.r, bgLinear.g, bgLinear.b) } };
   const earth = new THREE.Mesh(new THREE.SphereGeometry(EARTH_R, phone ? 64 : 96, phone ? 32 : 48),
-    new THREE.ShaderMaterial({ vertexShader: EARTH_VS, fragmentShader: EARTH_FS, uniforms: earthU, transparent: true, depthWrite: true }));
+    new THREE.ShaderMaterial({ vertexShader: EARTH_VS, fragmentShader: PAGE_EARTH_FS(), uniforms: earthU }));
   earth.rotation.y = PAGE.turnRad; earth.visible = false; earth.renderOrder = -1;
   const haloR = EARTH_R * 1.045;
-  const halo = new THREE.Mesh(new THREE.SphereGeometry(haloR, 64, 32), new THREE.ShaderMaterial({ vertexShader: HALO_VS, fragmentShader: HALO_FS,
+  const halo = new THREE.Mesh(new THREE.SphereGeometry(haloR, 64, 32), new THREE.ShaderMaterial({ vertexShader: HALO_VS, fragmentShader: PAGE_HALO_FS(),
     side: THREE.BackSide, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending,
-    uniforms: { uSun: earthU.uSun, uAtmo: earthU.uAtmo, uFade: { value: PAGE.earthStrength }, uEdge: { value: Math.sqrt(1 - (EARTH_R / haloR) ** 2) } } }));
+    uniforms: { uSun: earthU.uSun, uAtmo: earthU.uAtmo, uFade: { value: 1 }, uEdge: { value: Math.sqrt(1 - (EARTH_R / haloR) ** 2) },
+      uGain: { value: 1 }, uMaxL: { value: PAGE.haloMaxLuminance }, uBase: { value: new THREE.Vector3() } } }));
   halo.visible = false;
   scene.add(earth, halo);
 
