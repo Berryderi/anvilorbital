@@ -1,0 +1,65 @@
+== home scene-probe /home/berryderi/projects/anvilorbital-worktrees/dev-2-page-scene 1280
+{"run":"hero-picked","seconds":5,"callbacksPerS":2,"fps":2,"frames":10,"msPerFrame":2.7,"maxMs":12.7,"taskMsPerFrame":97.64,"mainThreadPropagatePerS":0,"errors":0}
+{"run":"retire-mid","seconds":3,"callbacksPerS":1.7,"fps":1.7,"frames":5,"msPerFrame":0.84,"maxMs":1,"taskMsPerFrame":2.26,"mainThreadPropagatePerS":0,"errors":0}
+{"run":"simulator-mid","seconds":3,"callbacksPerS":2,"fps":2,"frames":6,"msPerFrame":0.83,"maxMs":1.2,"taskMsPerFrame":1.77,"mainThreadPropagatePerS":0,"errors":0}
+{"run":"planner-mid","seconds":3,"callbacksPerS":1,"fps":1,"frames":3,"msPerFrame":0.47,"maxMs":0.6,"taskMsPerFrame":1.64,"mainThreadPropagatePerS":0,"errors":0}
+{"run":"findings-mid","seconds":3,"callbacksPerS":1,"fps":1,"frames":3,"msPerFrame":0.47,"maxMs":0.5,"taskMsPerFrame":6.5,"mainThreadPropagatePerS":0,"errors":0}
+{"run":"roadmap-mid","seconds":3,"callbacksPerS":1,"fps":1,"frames":3,"msPerFrame":0.53,"maxMs":0.7,"taskMsPerFrame":2.77,"mainThreadPropagatePerS":0,"errors":0}
+{"run":"about-mid","seconds":3,"callbacksPerS":1.7,"fps":1.7,"frames":5,"msPerFrame":0.46,"maxMs":0.5,"taskMsPerFrame":3.68,"mainThreadPropagatePerS":0,"errors":0}
+{"run":"retire-scrub","seconds":6,"callbacksPerS":2.3,"fps":1.2,"frames":7,"msPerFrame":0.51,"maxMs":0.6,"taskMsPerFrame":19.1,"mainThreadPropagatePerS":0,"errors":0}
+{"retireScrub":[{"p":0.21,"year":0.02,"lowKm":548,"highKm":800},{"p":0.4,"year":0.02,"lowKm":548,"highKm":800},{"p":0.6,"year":0.09,"lowKm":541,"highKm":800},{"p":0.79,"year":0.51,"lowKm":475,"highKm":798},{"p":0.98,"year":0.63,"lowKm":424,"highKm":798}],"scrubFps":1.2}
+{"visibility":"hidden"}
+{"run":"hero-hidden","seconds":5,"callbacksPerS":0,"fps":0,"frames":0,"msPerFrame":0,"maxMs":0,"taskMsPerFrame":0,"mainThreadPropagatePerS":0,"errors":0}
+{"run":"hero-visible-again","seconds":3,"callbacksPerS":2,"fps":2,"frames":6,"msPerFrame":0.65,"maxMs":0.9,"taskMsPerFrame":7.35,"mainThreadPropagatePerS":0,"errors":0}
+{"run":"hero-paused","seconds":3,"callbacksPerS":0,"fps":0,"frames":0,"msPerFrame":0,"maxMs":0,"taskMsPerFrame":0,"mainThreadPropagatePerS":0,"errors":0}
+{"servedBytes":4765670,"largest":[["/assets/data/gp-2026-11-10.json",1629248],["/assets/vendor/three/three.core.js",1458113],["/assets/vendor/three/three.module.js",662772],["/assets/scene/earth-day-4k.webp",481588],["/assets/scene/earth-night-4k.webp",174142],["/assets/vendor/fonts/archivo/archivo-latin-wdth-normal.woff2",90104],["/assets/scene/scene.js",50399],["/assets/vendor/fonts/martian-mono/martian-mono-latin-wdth-normal.woff2",38492]],"errors":[]}
+exit 0
+== home scene-probe /home/berryderi/projects/anvilorbital-worktrees/dev-2-page-scene 390
+{"run":"hero-picked","seconds":5,"callbacksPerS":12.6,"fps":12.6,"frames":63,"msPerFrame":1.14,"maxMs":4.8,"taskMsPerFrame":3.66,"mainThreadPropagatePerS":0,"errors":0}
+{"run":"retire-mid","seconds":3,"callbacksPerS":16.7,"fps":16.7,"frames":50,"msPerFrame":0.65,"maxMs":3.5,"taskMsPerFrame":1.37,"mainThreadPropagatePerS":0,"errors":0}
+{"run":"simulator-mid","seconds":3,"callbacksPerS":13,"fps":13,"frames":39,"msPerFrame":0.32,"maxMs":0.7,"taskMsPerFrame":1.03,"mainThreadPropagatePerS":0,"errors":0}
+{"run":"planner-mid","seconds":3,"callbacksPerS":8,"fps":8,"frames":24,"msPerFrame":0.34,"maxMs":0.5,"taskMsPerFrame":1.02,"mainThreadPropagatePerS":0,"errors":0}
+{"run":"findings-mid","seconds":3,"callbacksPerS":11.3,"fps":11.3,"frames":34,"msPerFrame":0.34,"maxMs":0.5,"taskMsPerFrame":1.35,"mainThreadPropagatePerS":0,"errors":0}
+{"run":"roadmap-mid","seconds":3,"callbacksPerS":12.3,"fps":12.3,"frames":37,"msPerFrame":0.32,"maxMs":0.9,"taskMsPerFrame":0.97,"mainThreadPropagatePerS":0,"errors":0}
+{"run":"about-mid","seconds":3,"callbacksPerS":13.7,"fps":13.7,"frames":41,"msPerFrame":0.3,"maxMs":0.5,"taskMsPerFrame":0.97,"mainThreadPropagatePerS":0,"errors":0}
+{"run":"retire-scrub","seconds":6,"callbacksPerS":15,"fps":9.3,"frames":56,"msPerFrame":0.57,"maxMs":4.8,"taskMsPerFrame":4.3,"mainThreadPropagatePerS":0,"errors":0}
+{"retireScrub":[{"p":0.21,"year":0.09,"lowKm":541,"highKm":800},{"p":0.4,"year":0.29,"lowKm":518,"highKm":799},{"p":0.6,"year":0.49,"lowKm":482,"highKm":798},{"p":0.79,"year":0.66,"lowKm":405,"highKm":798},{"p":0.98,"year":0.71,"lowKm":null,"highKm":798}],"scrubFps":9.3}
+{"visibility":"hidden"}
+{"run":"hero-hidden","seconds":5,"callbacksPerS":0,"fps":0,"frames":0,"msPerFrame":0,"maxMs":0,"taskMsPerFrame":0,"mainThreadPropagatePerS":0,"errors":0}
+{"run":"hero-visible-again","seconds":3,"callbacksPerS":13.3,"fps":13.3,"frames":40,"msPerFrame":0.4,"maxMs":4.5,"taskMsPerFrame":1.03,"mainThreadPropagatePerS":0,"errors":0}
+{"run":"hero-paused","seconds":3,"callbacksPerS":0,"fps":0,"frames":0,"msPerFrame":0,"maxMs":0,"taskMsPerFrame":0,"mainThreadPropagatePerS":0,"errors":0}
+{"servedBytes":4311796,"largest":[["/assets/data/gp-2026-11-10.json",1629248],["/assets/vendor/three/three.core.js",1458113],["/assets/vendor/three/three.module.js",662772],["/assets/scene/earth-day-2k.webp",152882],["/assets/vendor/fonts/archivo/archivo-latin-wdth-normal.woff2",90104],["/assets/scene/scene.js",50399],["/assets/scene/earth-night-2k.webp",48974],["/assets/vendor/fonts/martian-mono/martian-mono-latin-wdth-normal.woff2",38492]],"errors":[]}
+exit 0
+== home scene-probe /tmp/claude-1000/-home-berryderi-projects-anvilorbital-team-worktrees-dev-2/96ae1cb6-7eae-40f1-967d-eb71685b9160/scratchpad/remake-wt 1280
+{"run":"hero-picked","seconds":5,"callbacksPerS":2.6,"fps":2.6,"frames":13,"msPerFrame":2.66,"maxMs":7.9,"taskMsPerFrame":56.08,"mainThreadPropagatePerS":0,"errors":0}
+{"run":"retire-mid","seconds":3,"callbacksPerS":1.3,"fps":1.3,"frames":4,"msPerFrame":0.93,"maxMs":1.1,"taskMsPerFrame":4.83,"mainThreadPropagatePerS":0,"errors":0}
+{"run":"simulator-mid","seconds":3,"callbacksPerS":1.3,"fps":1.3,"frames":4,"msPerFrame":0.5,"maxMs":0.6,"taskMsPerFrame":1.31,"mainThreadPropagatePerS":0,"errors":0}
+{"run":"planner-mid","seconds":3,"callbacksPerS":1,"fps":1,"frames":3,"msPerFrame":0.63,"maxMs":0.7,"taskMsPerFrame":4.39,"mainThreadPropagatePerS":0,"errors":0}
+{"run":"findings-mid","seconds":3,"callbacksPerS":1.3,"fps":1.3,"frames":4,"msPerFrame":0.48,"maxMs":0.7,"taskMsPerFrame":2.83,"mainThreadPropagatePerS":0,"errors":0}
+{"run":"roadmap-mid","seconds":3,"callbacksPerS":1.3,"fps":1.3,"frames":4,"msPerFrame":0.45,"maxMs":0.7,"taskMsPerFrame":3.96,"mainThreadPropagatePerS":0,"errors":0}
+{"run":"about-mid","seconds":3,"callbacksPerS":1,"fps":1,"frames":3,"msPerFrame":0.8,"maxMs":1.7,"taskMsPerFrame":3.13,"mainThreadPropagatePerS":0,"errors":0}
+{"run":"retire-scrub","seconds":6,"callbacksPerS":2.3,"fps":1.2,"frames":7,"msPerFrame":1.33,"maxMs":3,"taskMsPerFrame":17.44,"mainThreadPropagatePerS":0,"errors":0}
+{"retireScrub":[{"p":0.4,"year":0.19,"lowKm":531,"highKm":799},{"p":0.6,"year":0.19,"lowKm":531,"highKm":799},{"p":0.79,"year":0.51,"lowKm":475,"highKm":798},{"p":0.98,"year":0.66,"lowKm":405,"highKm":798}],"scrubFps":1.2}
+{"visibility":"hidden"}
+{"run":"hero-hidden","seconds":5,"callbacksPerS":0,"fps":0,"frames":0,"msPerFrame":0,"maxMs":0,"taskMsPerFrame":0,"mainThreadPropagatePerS":0,"errors":0}
+{"run":"hero-visible-again","seconds":3,"callbacksPerS":1.3,"fps":1.3,"frames":4,"msPerFrame":0.67,"maxMs":1,"taskMsPerFrame":9.43,"mainThreadPropagatePerS":0,"errors":0}
+{"run":"hero-paused","seconds":3,"callbacksPerS":0,"fps":0,"frames":0,"msPerFrame":0,"maxMs":0,"taskMsPerFrame":0,"mainThreadPropagatePerS":0,"errors":0}
+{"servedBytes":4748351,"largest":[["/assets/data/gp-2026-11-10.json",1629248],["/assets/vendor/three/three.core.js",1458113],["/assets/vendor/three/three.module.js",662772],["/assets/scene/earth-day-4k.webp",481588],["/assets/scene/earth-night-4k.webp",174142],["/assets/vendor/fonts/archivo/archivo-latin-wdth-normal.woff2",90104],["/assets/scene/scene.js",40275],["/assets/vendor/fonts/martian-mono/martian-mono-latin-wdth-normal.woff2",38492]],"errors":[]}
+exit 0
+== home scene-probe /tmp/claude-1000/-home-berryderi-projects-anvilorbital-team-worktrees-dev-2/96ae1cb6-7eae-40f1-967d-eb71685b9160/scratchpad/remake-wt 390
+{"run":"hero-picked","seconds":5,"callbacksPerS":9.6,"fps":9.6,"frames":48,"msPerFrame":0.94,"maxMs":5.6,"taskMsPerFrame":2.48,"mainThreadPropagatePerS":0,"errors":0}
+{"run":"retire-mid","seconds":3,"callbacksPerS":13,"fps":13,"frames":39,"msPerFrame":0.51,"maxMs":1.5,"taskMsPerFrame":1.65,"mainThreadPropagatePerS":0,"errors":0}
+{"run":"simulator-mid","seconds":3,"callbacksPerS":14.7,"fps":14.7,"frames":44,"msPerFrame":0.89,"maxMs":16.3,"taskMsPerFrame":1.87,"mainThreadPropagatePerS":0,"errors":0}
+{"run":"planner-mid","seconds":3,"callbacksPerS":7,"fps":7,"frames":21,"msPerFrame":0.36,"maxMs":0.5,"taskMsPerFrame":1.12,"mainThreadPropagatePerS":0,"errors":0}
+{"run":"findings-mid","seconds":3,"callbacksPerS":10,"fps":10,"frames":30,"msPerFrame":0.31,"maxMs":0.5,"taskMsPerFrame":1.02,"mainThreadPropagatePerS":0,"errors":0}
+{"run":"roadmap-mid","seconds":3,"callbacksPerS":17.3,"fps":17.3,"frames":52,"msPerFrame":0.49,"maxMs":2.6,"taskMsPerFrame":1.21,"mainThreadPropagatePerS":0,"errors":0}
+{"run":"about-mid","seconds":3,"callbacksPerS":9.7,"fps":9.7,"frames":29,"msPerFrame":0.36,"maxMs":1.6,"taskMsPerFrame":1.16,"mainThreadPropagatePerS":0,"errors":0}
+{"run":"retire-scrub","seconds":6,"callbacksPerS":8.8,"fps":4.7,"frames":28,"msPerFrame":0.88,"maxMs":4.6,"taskMsPerFrame":8.27,"mainThreadPropagatePerS":0,"errors":0}
+{"retireScrub":[{"p":0.02,"year":0,"lowKm":550,"highKm":800},{"p":0.21,"year":0.07,"lowKm":544,"highKm":800},{"p":0.4,"year":0.24,"lowKm":525,"highKm":799},{"p":0.6,"year":0.41,"lowKm":498,"highKm":799},{"p":0.79,"year":0.63,"lowKm":424,"highKm":798},{"p":0.98,"year":0.71,"lowKm":null,"highKm":798}],"scrubFps":4.7}
+{"visibility":"hidden"}
+{"run":"hero-hidden","seconds":5,"callbacksPerS":0,"fps":0,"frames":0,"msPerFrame":0,"maxMs":0,"taskMsPerFrame":0,"mainThreadPropagatePerS":0,"errors":0}
+{"run":"hero-visible-again","seconds":3,"callbacksPerS":8,"fps":8,"frames":24,"msPerFrame":0.38,"maxMs":1.5,"taskMsPerFrame":0.95,"mainThreadPropagatePerS":0,"errors":0}
+{"run":"hero-paused","seconds":3,"callbacksPerS":0,"fps":0,"frames":0,"msPerFrame":0,"maxMs":0,"taskMsPerFrame":0,"mainThreadPropagatePerS":0,"errors":0}
+{"servedBytes":4294477,"largest":[["/assets/data/gp-2026-11-10.json",1629248],["/assets/vendor/three/three.core.js",1458113],["/assets/vendor/three/three.module.js",662772],["/assets/scene/earth-day-2k.webp",152882],["/assets/vendor/fonts/archivo/archivo-latin-wdth-normal.woff2",90104],["/assets/scene/earth-night-2k.webp",48974],["/assets/scene/scene.js",40275],["/assets/vendor/fonts/martian-mono/martian-mono-latin-wdth-normal.woff2",38492]],"errors":[]}
+exit 0
+CP-DONE

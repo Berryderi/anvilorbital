@@ -1,0 +1,61 @@
+== --width 1280 --pages /planner/,/findings/,/about/,/privacy/,/404.html
+OK   {"page":"/planner/","width":1280,"idleCallbacks3s":0,"idleDraws3s":0,"totalDraws":8,"errors":[],"hasScene":true,"canvasOpacity":"1","sceneMode":"page","drawsOnResize":10,"idleCallbacksAfterResize2s":0,"overflow":false,"bgImage":"svg"data:image/svg+xml,<svg x","nonLocal":0,"requests":["/assets/scene/scene.js","/assets/vendor/three/three.module.js","/assets/vendor/three/three.core.js","/assets/scene/earth-day-2k.webp"]}
+OK   {"page":"/findings/","width":1280,"idleCallbacks3s":0,"idleDraws3s":0,"totalDraws":8,"errors":[],"hasScene":true,"canvasOpacity":"1","sceneMode":"page","drawsOnResize":10,"idleCallbacksAfterResize2s":0,"overflow":false,"bgImage":"svg"data:image/svg+xml,<svg x","nonLocal":0,"requests":["/assets/scene/scene.js","/assets/vendor/three/three.module.js","/assets/vendor/three/three.core.js","/assets/scene/earth-day-2k.webp"]}
+OK   {"page":"/about/","width":1280,"idleCallbacks3s":0,"idleDraws3s":0,"totalDraws":8,"errors":[],"hasScene":true,"canvasOpacity":"1","sceneMode":"page","drawsOnResize":10,"idleCallbacksAfterResize2s":0,"overflow":false,"bgImage":"svg"data:image/svg+xml,<svg x","nonLocal":0,"requests":["/assets/scene/scene.js","/assets/vendor/three/three.module.js","/assets/vendor/three/three.core.js","/assets/scene/earth-day-2k.webp"]}
+OK   {"page":"/privacy/","width":1280,"idleCallbacks3s":0,"idleDraws3s":0,"totalDraws":8,"errors":[],"hasScene":true,"canvasOpacity":"1","sceneMode":"page","drawsOnResize":10,"idleCallbacksAfterResize2s":0,"overflow":false,"bgImage":"svg"data:image/svg+xml,<svg x","nonLocal":0,"requests":["/assets/scene/scene.js","/assets/vendor/three/three.module.js","/assets/vendor/three/three.core.js","/assets/scene/earth-day-2k.webp"]}
+OK   {"page":"/404.html","width":1280,"idleCallbacks3s":0,"idleDraws3s":0,"totalDraws":8,"errors":[],"hasScene":true,"canvasOpacity":"1","sceneMode":"page","drawsOnResize":10,"idleCallbacksAfterResize2s":0,"overflow":false,"bgImage":"svg"data:image/svg+xml,<svg x","nonLocal":0,"requests":["/assets/scene/scene.js","/assets/vendor/three/three.module.js","/assets/vendor/three/three.core.js","/assets/scene/earth-day-2k.webp"]}
+ALL OK
+exit 0
+== --width 390 --pages /planner/,/findings/,/about/,/privacy/,/404.html
+OK   {"page":"/planner/","width":390,"idleCallbacks3s":0,"idleDraws3s":0,"totalDraws":8,"errors":[],"hasScene":true,"canvasOpacity":"1","sceneMode":"page","drawsOnResize":10,"idleCallbacksAfterResize2s":0,"overflow":false,"bgImage":"svg"data:image/svg+xml,<svg x","nonLocal":0,"requests":["/assets/scene/scene.js","/assets/vendor/three/three.module.js","/assets/vendor/three/three.core.js","/assets/scene/earth-day-2k.webp"]}
+OK   {"page":"/findings/","width":390,"idleCallbacks3s":0,"idleDraws3s":0,"totalDraws":8,"errors":[],"hasScene":true,"canvasOpacity":"1","sceneMode":"page","drawsOnResize":10,"idleCallbacksAfterResize2s":0,"overflow":false,"bgImage":"svg"data:image/svg+xml,<svg x","nonLocal":0,"requests":["/assets/scene/scene.js","/assets/vendor/three/three.module.js","/assets/vendor/three/three.core.js","/assets/scene/earth-day-2k.webp"]}
+OK   {"page":"/about/","width":390,"idleCallbacks3s":0,"idleDraws3s":0,"totalDraws":8,"errors":[],"hasScene":true,"canvasOpacity":"1","sceneMode":"page","drawsOnResize":10,"idleCallbacksAfterResize2s":0,"overflow":false,"bgImage":"svg"data:image/svg+xml,<svg x","nonLocal":0,"requests":["/assets/scene/scene.js","/assets/vendor/three/three.module.js","/assets/vendor/three/three.core.js","/assets/scene/earth-day-2k.webp"]}
+OK   {"page":"/privacy/","width":390,"idleCallbacks3s":0,"idleDraws3s":0,"totalDraws":8,"errors":[],"hasScene":true,"canvasOpacity":"1","sceneMode":"page","drawsOnResize":10,"idleCallbacksAfterResize2s":0,"overflow":false,"bgImage":"svg"data:image/svg+xml,<svg x","nonLocal":0,"requests":["/assets/scene/scene.js","/assets/vendor/three/three.module.js","/assets/vendor/three/three.core.js","/assets/scene/earth-day-2k.webp"]}
+OK   {"page":"/404.html","width":390,"idleCallbacks3s":0,"idleDraws3s":0,"totalDraws":8,"errors":[],"hasScene":true,"canvasOpacity":"1","sceneMode":"page","drawsOnResize":10,"idleCallbacksAfterResize2s":0,"overflow":false,"bgImage":"svg"data:image/svg+xml,<svg x","nonLocal":0,"requests":["/assets/scene/scene.js","/assets/vendor/three/three.module.js","/assets/vendor/three/three.core.js","/assets/scene/earth-day-2k.webp"]}
+ALL OK
+exit 0
+== --width 390 --reduced --pages /planner/,/findings/,/about/,/privacy/,/404.html
+OK   {"page":"/planner/","width":390,"idleCallbacks3s":0,"idleDraws3s":0,"totalDraws":8,"errors":[],"hasScene":true,"canvasOpacity":"1","sceneMode":"page","drawsOnResize":10,"idleCallbacksAfterResize2s":0,"overflow":false,"bgImage":"svg"data:image/svg+xml,<svg x","nonLocal":0,"requests":["/assets/scene/scene.js","/assets/vendor/three/three.module.js","/assets/vendor/three/three.core.js","/assets/scene/earth-day-2k.webp"]}
+OK   {"page":"/findings/","width":390,"idleCallbacks3s":0,"idleDraws3s":0,"totalDraws":8,"errors":[],"hasScene":true,"canvasOpacity":"1","sceneMode":"page","drawsOnResize":10,"idleCallbacksAfterResize2s":0,"overflow":false,"bgImage":"svg"data:image/svg+xml,<svg x","nonLocal":0,"requests":["/assets/scene/scene.js","/assets/vendor/three/three.module.js","/assets/vendor/three/three.core.js","/assets/scene/earth-day-2k.webp"]}
+OK   {"page":"/about/","width":390,"idleCallbacks3s":0,"idleDraws3s":0,"totalDraws":8,"errors":[],"hasScene":true,"canvasOpacity":"1","sceneMode":"page","drawsOnResize":10,"idleCallbacksAfterResize2s":0,"overflow":false,"bgImage":"svg"data:image/svg+xml,<svg x","nonLocal":0,"requests":["/assets/scene/scene.js","/assets/vendor/three/three.module.js","/assets/vendor/three/three.core.js","/assets/scene/earth-day-2k.webp"]}
+OK   {"page":"/privacy/","width":390,"idleCallbacks3s":0,"idleDraws3s":0,"totalDraws":8,"errors":[],"hasScene":true,"canvasOpacity":"1","sceneMode":"page","drawsOnResize":10,"idleCallbacksAfterResize2s":0,"overflow":false,"bgImage":"svg"data:image/svg+xml,<svg x","nonLocal":0,"requests":["/assets/scene/scene.js","/assets/vendor/three/three.module.js","/assets/vendor/three/three.core.js","/assets/scene/earth-day-2k.webp"]}
+OK   {"page":"/404.html","width":390,"idleCallbacks3s":0,"idleDraws3s":0,"totalDraws":8,"errors":[],"hasScene":true,"canvasOpacity":"1","sceneMode":"page","drawsOnResize":10,"idleCallbacksAfterResize2s":0,"overflow":false,"bgImage":"svg"data:image/svg+xml,<svg x","nonLocal":0,"requests":["/assets/scene/scene.js","/assets/vendor/three/three.module.js","/assets/vendor/three/three.core.js","/assets/scene/earth-day-2k.webp"]}
+ALL OK
+exit 0
+== --width 1280 --nojs --pages /planner/,/findings/,/about/,/privacy/,/404.html
+OK   {"page":"/planner/","width":1280,"overflow":false,"bgImage":"svg"data:image/svg+xml,<svg x","nonLocal":0,"requests":[]}
+OK   {"page":"/findings/","width":1280,"overflow":false,"bgImage":"svg"data:image/svg+xml,<svg x","nonLocal":0,"requests":[]}
+OK   {"page":"/about/","width":1280,"overflow":false,"bgImage":"svg"data:image/svg+xml,<svg x","nonLocal":0,"requests":[]}
+OK   {"page":"/privacy/","width":1280,"overflow":false,"bgImage":"svg"data:image/svg+xml,<svg x","nonLocal":0,"requests":[]}
+OK   {"page":"/404.html","width":1280,"overflow":false,"bgImage":"svg"data:image/svg+xml,<svg x","nonLocal":0,"requests":[]}
+ALL OK
+exit 0
+== --width 390 --nojs --pages /planner/,/findings/,/about/,/privacy/,/404.html
+OK   {"page":"/planner/","width":390,"overflow":false,"bgImage":"svg"data:image/svg+xml,<svg x","nonLocal":0,"requests":[]}
+OK   {"page":"/findings/","width":390,"overflow":false,"bgImage":"svg"data:image/svg+xml,<svg x","nonLocal":0,"requests":[]}
+OK   {"page":"/about/","width":390,"overflow":false,"bgImage":"svg"data:image/svg+xml,<svg x","nonLocal":0,"requests":[]}
+OK   {"page":"/privacy/","width":390,"overflow":false,"bgImage":"svg"data:image/svg+xml,<svg x","nonLocal":0,"requests":[]}
+OK   {"page":"/404.html","width":390,"overflow":false,"bgImage":"svg"data:image/svg+xml,<svg x","nonLocal":0,"requests":[]}
+ALL OK
+exit 0
+== --width 390 --savedata --pages /planner/,/findings/
+OK   {"page":"/planner/","width":390,"idleCallbacks3s":0,"idleDraws3s":0,"totalDraws":0,"errors":[],"hasScene":false,"canvasOpacity":"1","sceneMode":"page","drawsOnResize":0,"idleCallbacksAfterResize2s":0,"overflow":false,"bgImage":"svg"data:image/svg+xml,<svg x","nonLocal":0,"requests":[]}
+OK   {"page":"/findings/","width":390,"idleCallbacks3s":0,"idleDraws3s":0,"totalDraws":0,"errors":[],"hasScene":false,"canvasOpacity":"1","sceneMode":"page","drawsOnResize":0,"idleCallbacksAfterResize2s":0,"overflow":false,"bgImage":"svg"data:image/svg+xml,<svg x","nonLocal":0,"requests":[]}
+ALL OK
+exit 0
+== --width 1280 --savedata --pages /planner/,/findings/
+OK   {"page":"/planner/","width":1280,"idleCallbacks3s":0,"idleDraws3s":0,"totalDraws":0,"errors":[],"hasScene":false,"canvasOpacity":"1","sceneMode":"page","drawsOnResize":0,"idleCallbacksAfterResize2s":0,"overflow":false,"bgImage":"svg"data:image/svg+xml,<svg x","nonLocal":0,"requests":[]}
+OK   {"page":"/findings/","width":1280,"idleCallbacks3s":0,"idleDraws3s":0,"totalDraws":0,"errors":[],"hasScene":false,"canvasOpacity":"1","sceneMode":"page","drawsOnResize":0,"idleCallbacksAfterResize2s":0,"overflow":false,"bgImage":"svg"data:image/svg+xml,<svg x","nonLocal":0,"requests":[]}
+ALL OK
+exit 0
+== --width 1280 --nostars --hidetext --pages /planner/,/findings/
+OK   {"page":"/planner/","width":1280,"idleCallbacks3s":0,"idleDraws3s":0,"totalDraws":8,"errors":[],"hasScene":true,"canvasOpacity":"1","sceneMode":"page","drawsOnResize":10,"idleCallbacksAfterResize2s":0,"overflow":false,"bgImage":"svg"data:image/svg+xml,<svg x","nonLocal":0,"requests":["/assets/scene/scene.js","/assets/vendor/three/three.module.js","/assets/vendor/three/three.core.js","/assets/scene/earth-day-2k.webp"],"lum":{"p50":0.0038,"p99":0.0212,"p999":0.0213,"max":0.0295,"over0311":0,"n":233280}}
+OK   {"page":"/findings/","width":1280,"idleCallbacks3s":0,"idleDraws3s":0,"totalDraws":8,"errors":[],"hasScene":true,"canvasOpacity":"1","sceneMode":"page","drawsOnResize":10,"idleCallbacksAfterResize2s":0,"overflow":false,"bgImage":"svg"data:image/svg+xml,<svg x","nonLocal":0,"requests":["/assets/scene/scene.js","/assets/vendor/three/three.module.js","/assets/vendor/three/three.core.js","/assets/scene/earth-day-2k.webp"],"lum":{"p50":0.0038,"p99":0.0212,"p999":0.0213,"max":0.0295,"over0311":0,"n":233280}}
+ALL OK
+exit 0
+== --width 390 --nostars --hidetext --pages /planner/,/findings/
+OK   {"page":"/planner/","width":390,"idleCallbacks3s":0,"idleDraws3s":0,"totalDraws":8,"errors":[],"hasScene":true,"canvasOpacity":"1","sceneMode":"page","drawsOnResize":10,"idleCallbacksAfterResize2s":0,"overflow":false,"bgImage":"svg"data:image/svg+xml,<svg x","nonLocal":0,"requests":["/assets/scene/scene.js","/assets/vendor/three/three.module.js","/assets/vendor/three/three.core.js","/assets/scene/earth-day-2k.webp"],"lum":{"p50":0.0038,"p99":0.0212,"p999":0.0231,"max":0.0263,"over0311":0,"n":66880}}
+OK   {"page":"/findings/","width":390,"idleCallbacks3s":0,"idleDraws3s":0,"totalDraws":8,"errors":[],"hasScene":true,"canvasOpacity":"1","sceneMode":"page","drawsOnResize":10,"idleCallbacksAfterResize2s":0,"overflow":false,"bgImage":"svg"data:image/svg+xml,<svg x","nonLocal":0,"requests":["/assets/scene/scene.js","/assets/vendor/three/three.module.js","/assets/vendor/three/three.core.js","/assets/scene/earth-day-2k.webp"],"lum":{"p50":0.0038,"p99":0.0212,"p999":0.0231,"max":0.0263,"over0311":0,"n":66880}}
+ALL OK
+exit 0
+MATRIX-DONE
