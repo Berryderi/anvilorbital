@@ -1,0 +1,26 @@
+{"step":1,"width":390,"text":"In the snapshot","where":"p.label","token":"--ink-3","color":"rgb(145, 153, 164)","card":true,"box":[103,236,271,251],"min":5.83,"at":[105,242,24,30,38],"frame":3}
+{"step":1,"width":390,"text":"12,378","where":"p#count-1.data-big","token":"--ink","color":"rgb(233, 237, 242)","card":true,"box":[103,254,186,286],"min":10.45,"at":[174,285,47,53,66],"frame":0}
+{"step":1,"width":390,"text":"satellites · CelesTrak 2026-11-10","where":"p#snap-date.data.u","token":"--ink-3","color":"rgb(145, 153, 164)","card":true,"box":[103,290,361,305],"min":4.05,"at":[119,299,52,56,70],"frame":0}
+{"step":2,"width":390,"text":"Not to scale","where":"p#scale-note.mc-scale.label","token":"--ink-3","color":"rgb(145, 153, 164)","card":false,"box":[243,651,378,666],"min":4.23,"at":[259,658,48,54,63],"frame":3}
+{"step":2,"width":390,"text":"Years after it died","where":"p.label","token":"--ink-3","color":"rgb(145, 153, 164)","card":true,"box":[162,236,361,251],"min":5.97,"at":[174,236,26,27,32],"frame":0}
+{"step":2,"width":390,"text":"0.0","where":"p#clock-2.data-big","token":"--ink","color":"rgb(233, 237, 242)","card":true,"box":[162,254,200,286],"min":15.73,"at":[162,254,14,20,28],"frame":3}
+{"step":3,"width":390,"text":"Not to scale","where":"p#scale-note.mc-scale.label","token":"--ink-3","color":"rgb(145, 153, 164)","card":false,"box":[243,651,378,666],"min":5.02,"at":[312,657,37,42,49],"frame":3}
+{"step":3,"width":390,"text":"Day","where":"p.label","token":"--ink-3","color":"rgb(145, 153, 164)","card":true,"box":[158,242,199,257],"min":6.43,"at":[158,242,13,20,28],"frame":0}
+{"step":3,"width":390,"text":"sped up","where":"span.tag","token":"--ink-2","color":"rgb(183, 190, 199)","card":true,"box":[207,241,274,256],"min":9.88,"at":[207,241,13,20,28],"frame":0}
+{"step":3,"width":390,"text":"3","where":"p#tug-day.data-big","token":"--ink","color":"rgb(233, 237, 242)","card":true,"box":[158,263,174,295],"min":14.71,"at":[166,268,23,27,32],"frame":0}
+{"step":3,"width":390,"text":"of about 50 per round trip","where":"p.data.u","token":"--ink-3","color":"rgb(145, 153, 164)","card":true,"box":[158,298,361,313],"min":6.02,"at":[303,301,23,27,31],"frame":3}
+{"step":3,"width":390,"text":"Transfer","where":"p#caption.caption.label","token":"--ink-2","color":"rgb(183, 190, 199)","card":false,"box":[12,651,110,666],"min":10.41,"at":[12,651,7,13,20],"frame":1}
+{"step":3,"width":390,"text":"14","where":"p#tug-day.data-big","token":"--ink","color":"rgb(233, 237, 242)","card":true,"box":[158,263,188,295],"min":14.71,"at":[166,268,23,27,32],"frame":1}
+{"step":3,"width":390,"text":"25","where":"p#tug-day.data-big","token":"--ink","color":"rgb(233, 237, 242)","card":true,"box":[158,263,188,295],"min":14.71,"at":[166,268,23,27,32],"frame":2}
+{"step":3,"width":390,"text":"Capture","where":"p#caption.caption.label","token":"--ink-2","color":"rgb(183, 190, 199)","card":false,"box":[12,651,99,666],"min":10.41,"at":[12,651,7,13,20],"frame":2}
+{"step":3,"width":390,"text":"35","where":"p#tug-day.data-big","token":"--ink","color":"rgb(233, 237, 242)","card":true,"box":[158,263,188,295],"min":14.71,"at":[166,268,23,27,32],"frame":3}
+{"step":3,"width":390,"text":"Tow","where":"p#caption.caption.label","token":"--ink-2","color":"rgb(183, 190, 199)","card":false,"box":[12,651,53,666],"min":10.41,"at":[12,651,7,13,20],"frame":3}
+{"step":4,"width":390,"text":"DOCK","where":"text.l-start","token":"--ink-3","color":"rgb(145, 153, 164)","card":false,"box":[256,258,307,271],"min":6.78,"at":[256,258,7,13,20],"frame":3}
+{"step":4,"width":390,"text":"INSPECT","where":"text.l-end","token":"--ink-3","color":"rgb(145, 153, 164)","card":false,"box":[49,459,125,472],"min":6.78,"at":[49,459,7,13,20],"frame":3}
+{"step":4,"width":390,"text":"SORT","where":"text.l-start","token":"--ink-3","color":"rgb(145, 153, 164)","card":false,"box":[243,622,291,635],"min":4.9,"at":[283,631,38,44,51],"frame":3}
+{"step":5,"width":390,"text":"Not to scale","where":"p#scale-note.mc-scale.label","token":"--ink-3","color":"rgb(145, 153, 164)","card":false,"box":[243,651,378,666],"min":6.78,"at":[243,651,7,13,20],"frame":3}
+{"step":5,"width":390,"text":"Node gap","where":"p.label","token":"--ink-3","color":"rgb(145, 153, 164)","card":true,"box":[264,236,361,251],"min":6.43,"at":[264,236,13,20,28],"frame":0}
+{"step":5,"width":390,"text":"45°","where":"p.data-big","token":"--ink","color":"rgb(233, 237, 242)","card":true,"box":[264,254,306,286],"min":8.54,"at":[264,263,55,68,75],"frame":3}
+{"step":5,"width":390,"text":"Drift","where":"p#caption.caption.label","token":"--ink-2","color":"rgb(183, 190, 199)","card":false,"box":[12,651,67,666],"min":10.41,"at":[12,651,7,13,20],"frame":2}
+{"step":5,"width":390,"text":"Aligned","where":"p#caption.caption.label","token":"--ink-2","color":"rgb(183, 190, 199)","card":false,"box":[12,651,93,666],"min":10.41,"at":[12,651,7,13,20],"frame":3}
+{"summary":true,"width":390,"reduced":false,"frames":4,"target":4.5,"byToken":{"--ink-3":{"runs":12,"below":2,"lowest":4.05},"--ink":{"runs":7,"below":0,"lowest":8.54},"--ink-2":{"runs":6,"below":0,"lowest":9.88}},"runsBelowTarget":2,"errors":[]}
