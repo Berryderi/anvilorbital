@@ -14,7 +14,7 @@
   --sim-ghost: #5f6a77;     /* = --edge: where a ring started */
   --sim-ink: #e9edf2;       /* = --ink: selection ring */
   --sim-earth: #2f5a86;     /* Earth, one flat ocean colour (no textures, WQ-028 option 2) */
-  --mc-card: color-mix(in oklab, var(--surface-1) 80%, transparent);
+  --mc-card: color-mix(in oklab, var(--surface-1) 90%, transparent); /* 90%: ink-3 on a card stays >= 4.5:1 even over a white glint (WQ-035) */
   --mc-rail: 6.5rem;
   --mc-corner: 10px;
 }
@@ -76,7 +76,7 @@ kbd { padding: 0 var(--space-1); border: 1px solid var(--line); border-radius: v
 .mc-stage canvas { position: absolute; inset: 0; display: block; width: 100%; height: 100%; touch-action: none; }
 .mc-stage canvas:focus-visible { outline-offset: -4px; }
 .mc-status { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); color: var(--ink-3); pointer-events: none; }
-.mc-scale { position: absolute; left: 50%; top: var(--space-5); transform: translateX(-50%); pointer-events: none; white-space: nowrap; }
+.mc-scale { position: absolute; left: 50%; top: var(--space-5); transform: translateX(-50%); pointer-events: none; white-space: nowrap; color: var(--ink-2); } /* ink-2: no card under it (WQ-035) */
 
 .card {
   position: relative; display: grid; gap: var(--space-2); align-content: start; padding: var(--space-4) var(--space-5);
