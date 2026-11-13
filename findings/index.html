@@ -8,29 +8,38 @@
 <meta property="og:description" content="What our desk research and simple models say so far about retiring satellites, including the parts that argue against our own idea.">
 <meta property="og:type" content="website">
 <link rel="icon" href="../assets/mark.svg" type="image/svg+xml">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap">
-<link rel="stylesheet" href="../assets/site.css">
-<link rel="stylesheet" href="../assets/nav.css">
-<div class="page">
+<meta name="color-scheme" content="dark">
+<link rel="preload" href="/assets/vendor/fonts/archivo/archivo-latin-wdth-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/assets/tokens.css">
+<link rel="stylesheet" href="/assets/base.css">
+<link rel="stylesheet" href="/assets/page.css">
+<link rel="stylesheet" href="/assets/tools.css">
+<script type="importmap">{"imports":{"three":"/assets/vendor/three/three.module.js"}}</script>
+<script>{const h=document.documentElement;h.classList.add("js");if(!matchMedia("(prefers-reduced-motion: reduce)").matches)h.classList.add("reveal-ready");}</script>
+<canvas id="space" data-scene-mode="page" aria-hidden="true"></canvas>
+<div class="page tool tool-findings">
   <a class="skip" href="#main">Skip to content</a>
-  <header class="site-head"><a class="brand" href="../"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 7h20c0 3.2-3.4 4.8-7 5v2.2l3.5 3.8H5.5L9 14.2V12C5.4 11.8 2 10.2 2 7z"/></svg>Anvil Orbital</a><nav class="site-nav" aria-label="Main"><a href="../simulator/">Simulator</a><a href="../planner/">Planner</a><a href="../findings/" aria-current="page">Findings</a><a href="../about/">About</a></nav></header>
+  <header class="nav">
+  <a class="nav-brand" href="/" aria-label="Anvil Orbital, home"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 7h20c0 3.2-3.4 4.8-7 5v2.2l3.5 3.8H5.5L9 14.2V12C5.4 11.8 2 10.2 2 7z"/></svg><span>Anvil Orbital</span></a>
+  <nav aria-label="Chapters"><ul class="nav-links"><li><a href="/#simulator">Simulator</a></li><li><a href="/#planner">Planner</a></li><li><a href="/#findings" aria-current="page">Findings</a></li><li><a href="/#about">About</a></li></ul></nav>
+  </header>
   <main id="main">
-    <section>
-      <h1 class="short">What we've found so far</h1>
-      <p class="lede">Desk research and simple models from November 2026. Some of it argues against our own idea, and we'd rather show that than hide it.</p>
+    <section class="page-hero">
+      <h1 data-reveal="lines" class="short">What we've found so far</h1>
+      <p data-reveal="lines" class="lede">Desk research and simple models from November 2026. Some of it argues against our own idea, and we'd rather show that than hide it.</p>
     </section>
-    <section class="note" aria-label="How far to trust this">
-      <p><strong>How far to trust this:</strong> no spacecraft engineer or lawyer has checked it, and every cost is an unchecked assumption. We've had one informal industry call and no customer interviews. We used AI tools for the research and the models. This isn't engineering, legal or investment advice. <a href="../about/#contact">Tell us if you find a mistake</a>.</p>
+    <section data-reveal class="note" aria-label="How far to trust this">
+      <p data-reveal><strong>How far to trust this:</strong> no spacecraft engineer or lawyer has checked it, and every cost is an unchecked assumption. We've had one informal industry call and no customer interviews. We used AI tools for the research and the models. This isn't engineering, legal or investment advice. <a href="../about/#contact">Tell us if you find a mistake</a>.</p>
     </section>
     <article class="prose" id="fleet-retirement" aria-labelledby="fleet-retirement-title">
       <section>
-        <h2 id="fleet-retirement-title">What happens when orbital data center fleets retire</h2>
-        <p>Orbital data center companies plan fleets of thousands of solar-powered computing satellites. Less is written about how they end: <strong>when one of these satellites stops working, what happens to it, and does anyone need help with that?</strong> We don't know yet.</p>
-        <p>One verdict we already have: collecting dead satellites for their hardware doesn't pay. In our model it costs about $18.6M per satellite, or about $3M with every input in its favour [our model]. Assuming a third of a 700 kg satellite is reusable, its parts are worth $46k-$116k at launch prices of $200-500/kg: a Google projection for the mid-2030s [<a href="https://research.google/blog/exploring-a-space-based-scalable-ai-infrastructure-system-design/">odc-13</a>] and Starcloud's CEO's stated cost threshold [<a href="https://thenextweb.com/news/starcloud-170m-series">odc-08</a>]. That is why we are asking about retirement instead.</p>
+        <h2 data-reveal="lines" id="fleet-retirement-title">What happens when orbital data center fleets retire</h2>
+        <p data-reveal>Orbital data center companies plan fleets of thousands of solar-powered computing satellites. Less is written about how they end: <strong>when one of these satellites stops working, what happens to it, and does anyone need help with that?</strong> We don't know yet.</p>
+        <p data-reveal>One verdict we already have: collecting dead satellites for their hardware doesn't pay. In our model it costs about $18.6M per satellite, or about $3M with every input in its favour [our model]. Assuming a third of a 700 kg satellite is reusable, its parts are worth $46k-$116k at launch prices of $200-500/kg: a Google projection for the mid-2030s [<a href="https://research.google/blog/exploring-a-space-based-scalable-ai-infrastructure-system-design/">odc-13</a>] and Starcloud's CEO's stated cost threshold [<a href="https://thenextweb.com/news/starcloud-170m-series">odc-08</a>]. That is why we are asking about retirement instead.</p>
       </section>
       <section>
-        <h3>What builders have said in public</h3>
-        <ul class="plain">
+        <h3 data-reveal>What builders have said in public</h3>
+        <ul data-reveal class="plain">
           <li>Starcloud's 2024 white paper says that at end of life a data center "may be salvaged to recover significant value of the hardware and raw materials, or all of the modules undocked and demised in the upper atmosphere by design" [<a href="https://www.starcloud.com/wp">odc-04</a>].</li>
           <li>Reading a SpaceX filing for up to a million data center satellites, and assuming five-year chip lives, Ars Technica worked out that about 200,000 could retire each year, with about 40,000 deorbited and "some or all" of the rest moved to a distant disposal orbit (the reporter's reading) [<a href="https://arstechnica.com/science/2026/08/spacexs-orbital-data-centers-would-create-a-new-category-of-e-waste/">odc-38</a>].</li>
           <li>Axiom Space says its free-flying nodes can be upgraded "via replacement of modules" [<a href="https://www.axiomspace.com/orbital-data-center">odc-28</a>].</li>
@@ -38,31 +47,31 @@
         </ul>
       </section>
       <section>
-        <h3>Altitude decides whether there is a problem at all</h3>
-        <p>New low-orbit satellites under US Federal Communications Commission (FCC) rules must come down within five years of the end of their mission [<a href="https://docs.fcc.gov/public/attachments/FCC-22-74A1.pdf">who-pays-01</a>, <a href="https://www.ecfr.gov/on/2026-10-01/title-47/chapter-I/subchapter-B/part-25/subpart-D/section-25.283">who-pays-02</a>]. Operators must show each satellite has at least a 90% chance of disposing of itself [<a href="https://www.ecfr.gov/on/2026-10-01/title-47/chapter-I/subchapter-B/part-25/subpart-B/subject-group-ECFRe2bd70fc6b2eea0/section-25.114">who-pays-03</a>].</p>
-        <p>Our model gives these times for a large satellite with big solar arrays, tumbling, at average solar activity:</p>
-        <div class="table-wrap narrow"><table>
+        <h3 data-reveal>Altitude decides whether there is a problem at all</h3>
+        <p data-reveal>New low-orbit satellites under US Federal Communications Commission (FCC) rules must come down within five years of the end of their mission [<a href="https://docs.fcc.gov/public/attachments/FCC-22-74A1.pdf">who-pays-01</a>, <a href="https://www.ecfr.gov/on/2026-10-01/title-47/chapter-I/subchapter-B/part-25/subpart-D/section-25.283">who-pays-02</a>]. Operators must show each satellite has at least a 90% chance of disposing of itself [<a href="https://www.ecfr.gov/on/2026-10-01/title-47/chapter-I/subchapter-B/part-25/subpart-B/subject-group-ECFRe2bd70fc6b2eea0/section-25.114">who-pays-03</a>].</p>
+        <p data-reveal>Our model gives these times for a large satellite with big solar arrays, tumbling, at average solar activity:</p>
+        <div data-reveal class="table-wrap narrow"><table>
           <thead><tr><th scope="col">Starting height</th><th scope="col" class="n">600 km</th><th scope="col" class="n">700 km</th><th scope="col" class="n">800 km</th></tr></thead>
           <tbody><tr><th scope="row">Years to fall (model)</th><td class="n">about 1</td><td class="n">about 5</td><td class="n">about 17</td></tr></tbody>
         </table></div>
-        <p>The model runs 1.8 to 4.3 times shorter than one published rough guide, so trust the split, not the years [<a href="https://www.spaceacademy.net.au/watch/debris/orblife.htm">decay-02</a>; our model]. NASA says debris below 600 km "normally falls back to Earth within several years", while at 800 km decay "often takes centuries" [<a href="https://orbitaldebris.jsc.nasa.gov/faq/">debris-45</a>]. Starcloud's FCC filing gives 600-850 km [<a href="https://api-prod.fcc.gov/icfs-attachment/exp/api/v1/5c6840321b3e365068b6a64ce54bcb49">writeup-03</a>].</p>
+        <p data-reveal>The model runs 1.8 to 4.3 times shorter than one published rough guide, so trust the split, not the years [<a href="https://www.spaceacademy.net.au/watch/debris/orblife.htm">decay-02</a>; our model]. NASA says debris below 600 km "normally falls back to Earth within several years", while at 800 km decay "often takes centuries" [<a href="https://orbitaldebris.jsc.nasa.gov/faq/">debris-45</a>]. Starcloud's FCC filing gives 600-850 km [<a href="https://api-prod.fcc.gov/icfs-attachment/exp/api/v1/5c6840321b3e365068b6a64ce54bcb49">writeup-03</a>].</p>
       </section>
       <section>
-        <h3>A working satellite retires itself, cheaply</h3>
-        <p>In our model, lowering a working 3-tonne satellite from 700 km to 300 km takes about 46 kg of propellant: about $159,000 if launch costs $500/kg and propellant $3,000/kg. That excludes design and operations; cost inputs are our assumptions [<a href="../planner/">our planner</a>]. For a working satellite, burning up is the cheap default that any outside service must beat.</p>
-        <p>The hard case is a satellite that fails before it can lower itself. Of 8,336 second-generation Starlink satellites launched, the independent tracker Jonathan McDowell lists 16 that re-entered after failing and 3 failed and decaying, as of 2026-11-09: at least 0.2% so far (our arithmetic). That leaves out 67 it marks as malfunctioning before reaching their working orbit and lowered early, and the fleet is young next to its "5+ years" design life [<a href="https://planet4589.org/space/con/star/stats.html">writeup-01</a>, <a href="https://space-safety.starlink.com/docs/space-safety-articles/constellation_altitudes/">writeup-02</a>]. SpaceX is moving its fleet below 500 km, which it says cuts a dead satellite's fall time at solar minimum from "4+ years to a few months" [<a href="https://space-safety.starlink.com/docs/space-safety-articles/constellation_altitudes/">writeup-02</a>]. At 750 km and above, the same failure would stay up for years to decades (our model). A data center satellite's failure rate is unknown.</p>
+        <h3 data-reveal>A working satellite retires itself, cheaply</h3>
+        <p data-reveal>In our model, lowering a working 3-tonne satellite from 700 km to 300 km takes about 46 kg of propellant: about $159,000 if launch costs $500/kg and propellant $3,000/kg. That excludes design and operations; cost inputs are our assumptions [<a href="../planner/">our planner</a>]. For a working satellite, burning up is the cheap default that any outside service must beat.</p>
+        <p data-reveal>The hard case is a satellite that fails before it can lower itself. Of 8,336 second-generation Starlink satellites launched, the independent tracker Jonathan McDowell lists 16 that re-entered after failing and 3 failed and decaying, as of 2026-11-09: at least 0.2% so far (our arithmetic). That leaves out 67 it marks as malfunctioning before reaching their working orbit and lowered early, and the fleet is young next to its "5+ years" design life [<a href="https://planet4589.org/space/con/star/stats.html">writeup-01</a>, <a href="https://space-safety.starlink.com/docs/space-safety-articles/constellation_altitudes/">writeup-02</a>]. SpaceX is moving its fleet below 500 km, which it says cuts a dead satellite's fall time at solar minimum from "4+ years to a few months" [<a href="https://space-safety.starlink.com/docs/space-safety-articles/constellation_altitudes/">writeup-02</a>]. At 750 km and above, the same failure would stay up for years to decades (our model). A data center satellite's failure rate is unknown.</p>
       </section>
       <section>
-        <h3>Burning up raises its own questions</h3>
-        <p>A modelling study estimates a 250 kg satellite makes about 30 kg of aluminum oxide when it burns up [<a href="https://talksatellite.com/Geophysical%20Research%20Letters%20-%202024%20-%20Ferreira%20-%20Potential%20Ozone%20Depletion%20From%20Satellite%20Demise%20During%20Atmospheric%20Reentry.pdf">planner-01</a>]. For an example fleet of 1,000 three-tonne satellites on five-year lives, our model gives about 72 tonnes a year. That is mass, not harm; the atmospheric effect is uncertain.</p>
+        <h3 data-reveal>Burning up raises its own questions</h3>
+        <p data-reveal>A modelling study estimates a 250 kg satellite makes about 30 kg of aluminum oxide when it burns up [<a href="https://talksatellite.com/Geophysical%20Research%20Letters%20-%202024%20-%20Ferreira%20-%20Potential%20Ozone%20Depletion%20From%20Satellite%20Demise%20During%20Atmospheric%20Reentry.pdf">planner-01</a>]. For an example fleet of 1,000 three-tonne satellites on five-year lives, our model gives about 72 tonnes a year. That is mass, not harm; the atmospheric effect is uncertain.</p>
       </section>
       <section>
-        <h3>A dead satellite still has an owner</h3>
-        <p>The Outer Space Treaty says ownership of a space object "is not affected" by its being in space [<a href="https://www.unoosa.org/pdf/publications/STSPACE11E.pdf">law-03</a>]. So any outside help needs the owner's agreement, most cleanly before launch (our inference).</p>
+        <h3 data-reveal>A dead satellite still has an owner</h3>
+        <p data-reveal>The Outer Space Treaty says ownership of a space object "is not affected" by its being in space [<a href="https://www.unoosa.org/pdf/publications/STSPACE11E.pdf">law-03</a>]. So any outside help needs the owner's agreement, most cleanly before launch (our inference).</p>
       </section>
       <section>
-        <h3>What we don't know</h3>
-        <ul class="plain">
+        <h3 data-reveal>What we don't know</h3>
+        <ul data-reveal class="plain">
           <li>Real masses and areas of data center satellites. Starcloud's FCC filing gives heights and a disposal plan (controlled re-entry, each satellite "designed for full demisability") but no mass or size [<a href="https://api-prod.fcc.gov/icfs-attachment/exp/api/v1/5c6840321b3e365068b6a64ce54bcb49">writeup-03</a>]; we could not read other filings.</li>
           <li>The share of satellites that fail before lowering themselves, which sets the size of the problem.</li>
           <li>Whether fleet designers treat a failed satellite as an open design question, and who decides it.</li>
@@ -70,16 +79,16 @@
         </ul>
       </section>
       <section>
-        <h3>What would change our mind</h3>
-        <ul class="plain">
+        <h3 data-reveal>What would change our mind</h3>
+        <ul data-reveal class="plain">
           <li><strong>Toward stopping:</strong> designers tell us failures are already handled by design (for example by flying low, as Starlink does [<a href="https://space-safety.starlink.com/docs/space-safety-articles/constellation_altitudes/">writeup-02</a>]). Or an engineer shows that satellites at 750-850 km clear five years unaided. Or fewer than 2 of 10 fleet designers we speak to by December 1 call it an open question.</li>
           <li><strong>Toward continuing:</strong> designers call it open, say what a failed satellite costs them, and name who decides.</li>
         </ul>
-        <p>If you design or run a satellite fleet, tell us how your team decides end of life and which number here is wrong: <a href="../about/#contact">tell us where we're wrong</a>.</p>
+        <p data-reveal>If you design or run a satellite fleet, tell us how your team decides end of life and which number here is wrong: <a href="../about/#contact">tell us where we're wrong</a>.</p>
       </section>
       <section aria-labelledby="sources">
-        <h3 id="sources">Sources</h3>
-        <div class="table-wrap"><table>
+        <h3 data-reveal id="sources">Sources</h3>
+        <div data-reveal class="table-wrap"><table>
           <thead><tr><th scope="col">Id</th><th scope="col">What</th><th scope="col">Grade</th></tr></thead>
           <tbody>
             <tr><th scope="row">odc-04</th><td><a href="https://www.starcloud.com/wp">Starcloud (Lumen Orbit) white paper</a>, Sept 2024, re-opened 2026-11-10</td><td>primary</td></tr>
@@ -102,24 +111,24 @@
       </section>
     </article>
     <section aria-labelledby="more-findings">
-      <h2 id="more-findings">More findings</h2>
+      <h2 data-reveal="lines" id="more-findings">More findings</h2>
       <ol class="rows">
-      <li><span class="num">01</span><div>
-        <h3>Data center nodes depend on which satellite you start with</h3>
-        <p><strong>High-power satellites:</strong> ten years of a retiring 3-tonne satellite's power is worth about $0.97M to $5.10M in our model. Servicing it costs about $8.32M at default inputs and $0.80M at best. So this needs servicing about 7 to 10 times cheaper, and a buyer for the compute. We haven't found one.</p>
-        <p><strong>Older, smaller satellites:</strong> one 200 kW node would take about 82 of them, at about $246M with best inputs. A new unit costs about $2.9M to $11M to launch in the same model.</p>
+      <li data-reveal><span class="num">01</span><div>
+        <h3 data-reveal>Data center nodes depend on which satellite you start with</h3>
+        <p data-reveal><strong>High-power satellites:</strong> ten years of a retiring 3-tonne satellite's power is worth about $0.97M to $5.10M in our model. Servicing it costs about $8.32M at default inputs and $0.80M at best. So this needs servicing about 7 to 10 times cheaper, and a buyer for the compute. We haven't found one.</p>
+        <p data-reveal><strong>Older, smaller satellites:</strong> one 200 kW node would take about 82 of them, at about $246M with best inputs. A new unit costs about $2.9M to $11M to launch in the same model.</p>
       </div></li>
-      <li><span class="num">02</span><div>
-        <h3>The money so far is small, and mostly government</h3>
-        <p>By our rough count, the world spends about $80M a year on removing and disposing of satellites, nearly all of it government money. That count uses assumed contract lengths. We haven't asked anyone to pay us.</p>
+      <li data-reveal><span class="num">02</span><div>
+        <h3 data-reveal>The money so far is small, and mostly government</h3>
+        <p data-reveal>By our rough count, the world spends about $80M a year on removing and disposing of satellites, nearly all of it government money. That count uses assumed contract lengths. We haven't asked anyone to pay us.</p>
       </div></li>
-      <li><span class="num">03</span><div>
-        <h3>The hardest hardware step is still unproven</h3>
-        <p>We found no completed capture of an unprepared dead satellite in low orbit. Katalyst's Link, a <a href="https://www.clickorlando.com/tech/2026/09/25/private-spacecraft-falls-back-to-earth-after-failing-to-rescue-aging-nasa-telescope/">$30M NASA-sponsored effort to rescue the Swift telescope</a>, re-entered in September 2026 without reaching it. Astroscale's project manager on its ADRAS-J inspection mission called the work <a href="https://astroscale.com/en/news/astroscales-adras-j-mission-completes-operations-begins-deorbit">"far more difficult than expected"</a>.</p>
+      <li data-reveal><span class="num">03</span><div>
+        <h3 data-reveal>The hardest hardware step is still unproven</h3>
+        <p data-reveal>We found no completed capture of an unprepared dead satellite in low orbit. Katalyst's Link, a <a href="https://www.clickorlando.com/tech/2026/09/25/private-spacecraft-falls-back-to-earth-after-failing-to-rescue-aging-nasa-telescope/">$30M NASA-sponsored effort to rescue the Swift telescope</a>, re-entered in September 2026 without reaching it. Astroscale's project manager on its ADRAS-J inspection mission called the work <a href="https://astroscale.com/en/news/astroscales-adras-j-mission-completes-operations-begins-deorbit">"far more difficult than expected"</a>.</p>
       </div></li>
-      <li><span class="num">04</span><div>
-        <h3>We aren't first</h3>
-        <div class="table-wrap"><table>
+      <li data-reveal><span class="num">04</span><div>
+        <h3 data-reveal>We aren't first</h3>
+        <div data-reveal class="table-wrap"><table>
           <thead><tr><th scope="col">Who</th><th scope="col">What they're doing</th></tr></thead>
           <tbody>
             <tr><th scope="row"><a href="https://www.kallmorris.com/future">KMI Space</a></th><td>Has a written plan for an orbital collection station and for repurposing debris. Closest to our long-term idea.</td></tr>
@@ -134,5 +143,6 @@
       </ol>
     </section>
   </main>
-  <footer class="site-foot"><span>Anvil Orbital. Estimates are unchecked models, not quotes or promises.</span><span><a href="../privacy/">Privacy</a> &middot; <a href="https://github.com/Berryderi/anvilorbital">Code</a></span></footer>
+  <footer class="foot"><p>Anvil Orbital. Estimates are unchecked models, not quotes or promises.</p><p><a href="../privacy/">Privacy</a> &middot; <a href="https://github.com/Berryderi/anvilorbital">Code</a></p></footer>
 </div>
+<script src="/assets/page.js" defer></script>
