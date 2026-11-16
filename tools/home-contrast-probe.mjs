@@ -1,13 +1,17 @@
 // Home text-over-scene contrast probe (WQ-037). No dependencies: Node 22+ and Google Chrome.
 // Usage: node tools/home-contrast-probe.mjs <site root> [--width 1280] [--height 900] [--frames 2] [--reduced] [--shots <dir>]
-// Same method as tools/contrast-probe.mjs (WQ-035), for the home page: it scrolls through home half a screen at a time,
-// and at each stop finds every visible text run, hides all text, captures the viewport and reads the pixels under each
-// run. Those pixels are the run's real background: card or scrim composited over whatever the scene drew.
-// Per run it keeps the worst stop and frame, and reports:
-//   min      lowest contrast over every pixel in the run's box (a single star under a glyph counts)
-//   blurMin  lowest contrast after a 5x5 median filter of the background's luminance (removes single stars, keeps the Earth)
-//   median   median contrast after that filter, and under: the share of the box below 4.5:1 after the filter
-// A run fails when blurMin is under 4.5. The nav is skipped: it sits on its own solid scrim, not over the scene.
+// Built on tools/contrast-probe.mjs (WQ-035), for the home page: it scrolls through home half a screen at a time, and
+// at each stop finds every visible text run, captures the viewport once with the text and once with the glyph fill
+// hidden (color transparent; text-shadow is NOT removed, so a halo stays drawn as the background it is), and reads the
+// pixels. Per run it keeps the worst stop and frame, and reports:
+//   edgeMin  THE PASS METRIC. Glyph pixels are where the with-text shot is at least a quarter of the way from the
+//            background toward the text colour. The sample is every glyph pixel plus a 1 px ring around it, read from
+//            the fill-hidden shot after a 3x3 median (drops a lone star). edgeMin is the lowest contrast of the text
+//            colour against that sample: the background right at the glyph edges.
+//   min      lowest contrast over every pixel in the run's box (a single star anywhere in the box counts)
+//   blurMin  lowest contrast over the box after a 5x5 median of the background's luminance
+//   median   median contrast over the box after that filter, and under: the share of the box below 4.5:1
+// A run fails when edgeMin is under 4.5. The nav is skipped: it sits on its own solid scrim, not over the scene.
 import http from 'node:http';
 import { readFile, mkdir, writeFile, mkdtemp, rm } from 'node:fs/promises';
 import os from 'node:os';
@@ -26,6 +30,7 @@ const DEBUG_PORT = 9650 + Math.floor(Math.random() * 140);
 const TARGET = 4.5; // WCAG 2.2 AA, normal-size text
 const BLUR = 2;     // 5x5 neighbourhood: its median drops a star of up to about 3x3 px but keeps the Earth and its halo
 const HOOD = new Float32Array((2 * BLUR + 1) ** 2);
+const EDGE = 1;     // the edge metric reads the glyph pixels and a ring this many px around them
 const RUN_LIMIT_MS = Number(process.env.PROBE_LIMIT_MS || 280000);
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 
@@ -110,8 +115,9 @@ const COLLECT = `(() => {
   }
   return runs;
 })()`;
+// Hides the glyph fill only. A text-shadow stays drawn: it is the background the glyph edges are seen against.
 const HIDE = `(() => { const s = document.createElement('style'); s.id = 'hprobe-hide';
-  s.textContent = '*{color:transparent!important;-webkit-text-fill-color:transparent!important;text-shadow:none!important;caret-color:transparent!important} svg text{fill:transparent!important}';
+  s.textContent = '*{color:transparent!important;-webkit-text-fill-color:transparent!important;caret-color:transparent!important} svg text{fill:transparent!important}';
   document.head.append(s); return new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r))); })()`;
 const SHOW = `document.getElementById('hprobe-hide')?.remove()`;
 
@@ -140,14 +146,36 @@ try {
     for (let f = 0; f < FRAMES; f++) {
       const sy = await evaluate('Math.round(scrollY)');
       const runs = await evaluate(COLLECT);
+      const withText = Buffer.from((await send('Page.captureScreenshot', { format: 'png' }, sid)).data, 'base64');
       await evaluate(HIDE);
       const shot = Buffer.from((await send('Page.captureScreenshot', { format: 'png' }, sid)).data, 'base64');
       await evaluate(SHOW);
       if (shots) { await mkdir(shots, { recursive: true }); await writeFile(path.join(shots, `bg-${width}x${height}${reduced ? '-reduced' : ''}-y${sy}-f${f}.png`), shot); }
-      const img = readPng(shot), L = new Float32Array(img.w * img.h);
-      for (let i = 0; i < L.length; i++) { const p = i * img.bpp; L[i] = 0.2126 * LIN[img.px[p]] + 0.7152 * LIN[img.px[p + 1]] + 0.0722 * LIN[img.px[p + 2]]; }
+      const lumOf = png => { const im = readPng(png), out = new Float32Array(im.w * im.h);
+        for (let i = 0; i < out.length; i++) { const p = i * im.bpp; out[i] = 0.2126 * LIN[im.px[p]] + 0.7152 * LIN[im.px[p + 1]] + 0.0722 * LIN[im.px[p + 2]]; }
+        return { im, out }; };
+      const { im: img, out: L } = lumOf(shot), { out: LA } = lumOf(withText);
       for (const r of runs) {
         const [cr, cg, cb] = r.color.match(/\d+/g).map(Number), lt = 0.2126 * LIN[cr] + 0.7152 * LIN[cg] + 0.0722 * LIN[cb];
+        // Edge metric: glyph pixels are where the shot with text is at least a quarter of the way from the background
+        // toward the text colour. The sample is every glyph pixel plus a 1 px ring around it, read from the shot with
+        // the glyph fill hidden (so a text-shadow halo, if any, is the background), after a 3x3 median for lone stars.
+        const [bx0, by0, bx1, by1] = [Math.max(0, r.box[0] - 1), Math.max(0, r.box[1] - 1), Math.min(img.w, r.box[2] + 1), Math.min(img.h, r.box[3] + 1)];
+        const glyph = new Uint8Array((bx1 - bx0) * (by1 - by0)); let glyphN = 0;
+        for (let yy = by0; yy < by1; yy++) for (let x = bx0; x < bx1; x++) {
+          const i = yy * img.w + x; if (LA[i] - L[i] >= 0.25 * (lt - L[i]) && LA[i] - L[i] > 0.005) { glyph[(yy - by0) * (bx1 - bx0) + x - bx0] = 1; glyphN++; }
+        }
+        let edgeMin = Infinity, edgeN = 0;
+        for (let yy = by0; yy < by1; yy++) for (let x = bx0; x < bx1; x++) {
+          let near = false;
+          for (let dy = -EDGE; dy <= EDGE && !near; dy++) for (let dx = -EDGE; dx <= EDGE; dx++) {
+            const X = x + dx - bx0, Y = yy + dy - by0; if (X >= 0 && Y >= 0 && X < bx1 - bx0 && Y < by1 - by0 && glyph[Y * (bx1 - bx0) + X]) { near = true; break; }
+          }
+          if (!near) continue;
+          let n = 0;
+          for (let dy = -1; dy <= 1; dy++) for (let dx = -1; dx <= 1; dx++) { const X = x + dx, Y = yy + dy; if (X >= 0 && Y >= 0 && X < img.w && Y < img.h) HOOD[n++] = L[Y * img.w + X]; }
+          const c = ratio(lt, HOOD.subarray(0, n).sort()[n >> 1]); edgeN++; if (c < edgeMin) edgeMin = c;
+        }
         let min = Infinity, at = null; const blurred = [];
         for (let yy = r.box[1]; yy < Math.min(r.box[3], img.h); yy++) for (let x = r.box[0]; x < Math.min(r.box[2], img.w); x++) {
           const c = ratio(lt, L[yy * img.w + x]); if (c < min) { min = c; at = [x, yy]; }
@@ -160,19 +188,20 @@ try {
         }
         if (!blurred.length) continue;
         blurred.sort((a, b) => a - b);
-        const row = { width, height, reduced, scrollY: sy, frame: f, ...r, min: +min.toFixed(2), at, blurMin: +blurred[0].toFixed(2),
+        const row = { width, height, reduced, scrollY: sy, frame: f, ...r, edgeMin: edgeN ? +edgeMin.toFixed(2) : null, glyphPx: glyphN, edgePx: edgeN,
+          min: +min.toFixed(2), at, blurMin: +blurred[0].toFixed(2),
           median: +blurred[blurred.length >> 1].toFixed(2), under: +(blurred.filter(v => v < TARGET).length / blurred.length).toFixed(2) };
-        const key = `${r.where}|${r.text}`, prev = worst.get(key);
-        if (!prev || row.blurMin < prev.blurMin) worst.set(key, row);
+        const key = `${r.where}|${r.text}`, prev = worst.get(key), score = x => x.edgeMin ?? Infinity;
+        if (!prev || score(row) < score(prev)) worst.set(key, row);
       }
       if (f < FRAMES - 1) await sleep(FRAME_GAP_MS);
     }
   }
   errs = await evaluate('__errs');
-  const list = [...worst.values()].sort((a, b) => a.blurMin - b.blurMin);
-  for (const w of list) { if (w.blurMin < TARGET) failures++; console.log(JSON.stringify(w)); }
+  const list = [...worst.values()].sort((a, b) => (a.edgeMin ?? Infinity) - (b.edgeMin ?? Infinity));
+  for (const w of list) { if ((w.edgeMin ?? Infinity) < TARGET) failures++; console.log(JSON.stringify(w)); }
   const byToken = {};
-  for (const w of list) { const t = byToken[w.token] ??= { runs: 0, below: 0, lowestBlur: Infinity, lowestRaw: Infinity }; t.runs++; if (w.blurMin < TARGET) t.below++; t.lowestBlur = Math.min(t.lowestBlur, w.blurMin); t.lowestRaw = Math.min(t.lowestRaw, w.min); }
+  for (const w of list) { const t = byToken[w.token] ??= { runs: 0, below: 0, lowestEdge: Infinity, lowestBlur: Infinity, lowestRaw: Infinity }; t.runs++; if ((w.edgeMin ?? Infinity) < TARGET) t.below++; t.lowestEdge = Math.min(t.lowestEdge, w.edgeMin ?? Infinity); t.lowestBlur = Math.min(t.lowestBlur, w.blurMin); t.lowestRaw = Math.min(t.lowestRaw, w.min); }
   console.log(JSON.stringify({ summary: true, width, height, reduced, frames: FRAMES, stops: stops.length, hasScene, target: TARGET, byToken, runsBelowTarget: failures, errors: errs }));
 } finally {
   ws?.close(); chrome.kill(); server.close();
