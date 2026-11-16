@@ -524,7 +524,7 @@ function summarize() {
       + `from ${fmt(m2.b)} km in ${fallText(m2.b, m2.L[m2.b], true)}. ${five} Planner model, not checked by a spacecraft engineer.`;
   } else if (mode === 3) {
     out.textContent = 'Step 03, tug mission. Concept, not built. A tug leaves a station at 700 km, sun-synchronous, fetches a 700 kg retiree from the same plane, '
-      + '150 km above or 100 km below, and tows it back, one at a time: about 75-170 m/s each way, about 12-18 kg of xenon per round trip, about 50 days per round trip (the day counter is sped up). '
+      + '150 km above or 100 km below, and tows it back, one at a time: about 75-170 m/s each way, about 12-17 kg of xenon per round trip, about 50 days per round trip (the day counter is sped up). '
       + 'Cost: about $18.6M per satellite (our model); about $3M per satellite at best (our model). Parts worth $46k-$116k at $200-500/kg launch prices. '
       + "At today's estimates it doesn't pay. This only works if fleets exist in the station's plane and keep their retirees up instead of de-orbiting them; those fleets don't exist yet.";
   } else if (mode === 4) {

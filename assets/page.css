@@ -6,6 +6,7 @@
   --scrim-strong: color-mix(in oklab, var(--bg) 84%, transparent);
   --scrim-soft: color-mix(in oklab, var(--bg) 48%, transparent);
   --scrim-nav: var(--bg);
+  --card-over-scene: color-mix(in oklab, var(--surface-1) 90%, transparent); /* the same mix as the simulator's --mc-card */
   --nav-h: 64px;
 }
 
@@ -90,6 +91,13 @@
 .ch-hero .ch-text { max-width: 52rem; }
 .ch-aside { display: grid; gap: var(--space-3); max-width: 34rem; }
 .ch-aside .list { gap: var(--space-2); font-size: var(--small-size); line-height: var(--small-lh); color: var(--ink-2); }
+/* "Where this really stands" sits over the lit Earth on wide screens (WQ-037), so it gets the simulator's card:
+   surface-1 at 90%, the --mc-card mix that keeps ink-3 at 4.5:1 or more even over white (WQ-035). The card is drawn
+   outside the list's box, so no text moves; on phones it stops short of the screen edge. Only with the scene. */
+.ch-aside { position: relative; isolation: isolate; }
+.has-scene .ch-aside::before { content: ""; position: absolute; z-index: -1; pointer-events: none;
+  inset: calc(-1 * var(--space-4)) calc(-1 * min(var(--space-4), var(--gutter) - var(--space-2)));
+  background: var(--card-over-scene); border: 1px solid var(--line); border-radius: var(--radius-0); }
 .scene-note { max-width: 34rem; }
 @media (min-width: 1100px) {
   .ch-hero { grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); column-gap: var(--space-7); align-items: end; }
@@ -124,6 +132,8 @@
 .answers { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-6) var(--space-6); margin: 0; }
 .answers > div { display: grid; gap: var(--space-2); align-content: start; min-width: 0; }
 .answers dt { font-size: var(--small-size); color: var(--ink-3); }
+/* On home, the planner chapter's Earth sits behind the answer labels and the findings note, so they use ink-2 (WQ-037). */
+.mini .answers dt, .ch-findings .trust { color: var(--ink-2); }
 .answers dd { margin: 0; }
 @media (max-width: 560px) { .answers { grid-template-columns: minmax(0, 1fr); gap: var(--space-5); } }
 .js .no-js-only { display: none; }
