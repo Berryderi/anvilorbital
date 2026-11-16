@@ -75,11 +75,13 @@
 .chapter::before { -webkit-mask-image: linear-gradient(to bottom, transparent, #000 var(--space-8), #000 calc(100% - var(--space-8)), transparent);
   mask-image: linear-gradient(to bottom, transparent, #000 var(--space-8), #000 calc(100% - var(--space-8)), transparent); }
 /* Text halo (WQ-037): small bright parts of the Earth (cloud, city lights, desert) still pass behind home's text, so
-   every glyph gets a solid ring of space colour, about 1px, with a short soft edge. Over space it is the colour of
-   space, so it can't be seen; over the Earth it is the background right at each glyph's edge. Home only, with the
-   scene. Text on a filled control already has its own background. */
-.has-scene .chapters { text-shadow: 0 0 1px var(--bg), 0 0 1px var(--bg), 0 0 1px var(--bg), 0 0 3px var(--bg); }
-.has-scene .chapters :is(.btn-primary, select, input) { text-shadow: none; }
+   every glyph gets a solid ring of space colour, 2px, with a short soft edge. Over space it is the colour of space,
+   so it can't be seen; over the Earth it is the background right at each glyph's edge. Home only, with the scene;
+   home's footer too (only home has .chapters, so tool pages keep theirs). Text on a filled control already has its
+   own background. The ring is a 4px stroke painted under the fill (half of it is hidden inside the glyph), one paint
+   per run instead of a stack of shadows. */
+.has-scene :is(.chapters, .chapters ~ .foot) { -webkit-text-stroke: 4px var(--bg); paint-order: stroke fill; text-shadow: 0 0 3px var(--bg); }
+.has-scene .chapters :is(.btn-primary, select, input) { -webkit-text-stroke: 0; text-shadow: none; }
 .ch-text { display: grid; gap: var(--space-5); max-width: 38rem; min-width: 0; }
 .ch-text > h3 { margin-top: var(--space-3); }
 .ch-read { max-width: var(--measure-wide); }

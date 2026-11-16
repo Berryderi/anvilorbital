@@ -2,8 +2,8 @@
 // Usage: node tools/home-contrast-probe.mjs <site root> [--width 1280] [--height 900] [--frames 2] [--reduced] [--shots <dir>]
 // Built on tools/contrast-probe.mjs (WQ-035), for the home page: it scrolls through home half a screen at a time, and
 // at each stop finds every visible text run, captures the viewport once with the text and once with the glyph fill
-// hidden (color transparent; text-shadow is NOT removed, so a halo stays drawn as the background it is), and reads the
-// pixels. Per run it keeps the worst stop and frame, and reports:
+// hidden (color transparent; a text-stroke or text-shadow halo is NOT removed, so it stays drawn as the background it
+// is), and reads the pixels. Per run it keeps the worst stop and frame, and reports:
 //   edgeMin  THE PASS METRIC. Glyph pixels are where the with-text shot is at least a quarter of the way from the
 //            background toward the text colour. The sample is every glyph pixel plus a 1 px ring around it, read from
 //            the fill-hidden shot after a 3x3 median (drops a lone star). edgeMin is the lowest contrast of the text
@@ -115,7 +115,7 @@ const COLLECT = `(() => {
   }
   return runs;
 })()`;
-// Hides the glyph fill only. A text-shadow stays drawn: it is the background the glyph edges are seen against.
+// Hides the glyph fill only. A text-stroke or text-shadow halo stays drawn: it is the background the glyph edges are seen against.
 const HIDE = `(() => { const s = document.createElement('style'); s.id = 'hprobe-hide';
   s.textContent = '*{color:transparent!important;-webkit-text-fill-color:transparent!important;caret-color:transparent!important} svg text{fill:transparent!important}';
   document.head.append(s); return new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r))); })()`;
@@ -159,7 +159,7 @@ try {
         const [cr, cg, cb] = r.color.match(/\d+/g).map(Number), lt = 0.2126 * LIN[cr] + 0.7152 * LIN[cg] + 0.0722 * LIN[cb];
         // Edge metric: glyph pixels are where the shot with text is at least a quarter of the way from the background
         // toward the text colour. The sample is every glyph pixel plus a 1 px ring around it, read from the shot with
-        // the glyph fill hidden (so a text-shadow halo, if any, is the background), after a 3x3 median for lone stars.
+        // the glyph fill hidden (so a text-stroke or text-shadow halo, if any, is the background), after a 3x3 median for lone stars.
         const [bx0, by0, bx1, by1] = [Math.max(0, r.box[0] - 1), Math.max(0, r.box[1] - 1), Math.min(img.w, r.box[2] + 1), Math.min(img.h, r.box[3] + 1)];
         const glyph = new Uint8Array((bx1 - bx0) * (by1 - by0)); let glyphN = 0;
         for (let yy = by0; yy < by1; yy++) for (let x = bx0; x < bx1; x++) {
