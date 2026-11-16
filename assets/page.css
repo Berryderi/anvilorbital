@@ -91,14 +91,17 @@
 .ch-hero .ch-text { max-width: 52rem; }
 .ch-aside { display: grid; gap: var(--space-3); max-width: 34rem; }
 .ch-aside .list { gap: var(--space-2); font-size: var(--small-size); line-height: var(--small-lh); color: var(--ink-2); }
-/* "Where this really stands" sits over the lit Earth on wide screens (WQ-037), so it gets the simulator's card:
-   surface-1 at 90%, the --mc-card mix that keeps ink-3 at 4.5:1 or more even over white (WQ-035). The card is drawn
-   outside the list's box, so no text moves; on phones it stops short of the screen edge. Only with the scene. */
-.ch-aside { position: relative; isolation: isolate; }
-.has-scene .ch-aside::before { content: ""; position: absolute; z-index: -1; pointer-events: none;
+/* "Where this really stands" and the simulator chapter's lede sit over the lit Earth on wide screens (WQ-037), so they
+   get the simulator's card: surface-1 at 90%, the --mc-card mix that keeps ink-3 at 4.5:1 or more even over white
+   (WQ-035). The card is drawn outside the text's box, so no text moves; on phones it stops short of the screen edge.
+   The lede's card overhangs less above and below, to keep clear of the heading and the tag. Only with the scene. */
+.ch-aside, .ch-simulator .lede { position: relative; isolation: isolate; }
+.has-scene :is(.ch-aside, .ch-simulator .lede)::before { content: ""; position: absolute; z-index: -1; pointer-events: none;
   inset: calc(-1 * var(--space-4)) calc(-1 * min(var(--space-4), var(--gutter) - var(--space-2)));
   background: var(--card-over-scene); border: 1px solid var(--line); border-radius: var(--radius-0); }
+.has-scene .ch-simulator .lede::before { inset-block: calc(-1 * var(--space-3)); }
 .scene-note { max-width: 34rem; }
+.ch-hero .scene-note { color: var(--ink-2); }   /* ink-2, not ink-3: it sits over the lit Earth on wide screens (WQ-037) */
 @media (min-width: 1100px) {
   .ch-hero { grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); column-gap: var(--space-7); align-items: end; }
   .ch-hero .scene-note { grid-column: 1 / -1; }
@@ -150,7 +153,7 @@
 .track::before { content: ""; position: absolute; left: 6px; right: 6px; top: 22px; height: 1px; background: var(--line); }
 .track button {
   position: relative; display: grid; justify-items: start; align-content: start; gap: var(--space-2); min-height: 44px; padding: var(--space-4) var(--space-1) var(--space-3) 0;
-  background: none; border: 0; border-bottom: 2px solid transparent; color: var(--ink-3); text-align: left; cursor: pointer;
+  background: none; border: 0; border-bottom: 2px solid transparent; color: var(--ink-2); text-align: left; cursor: pointer;   /* ink-2: the roadmap chapter's Earth sits behind the steps (WQ-037) */
   font: 500 var(--small-size)/1.3 var(--font-sans);
   transition: color var(--dur-micro) var(--ease-enter), border-color var(--dur-small) var(--ease-enter);
 }
@@ -159,7 +162,7 @@
 .track button[aria-selected="true"] { color: var(--ink); border-bottom-color: var(--accent); }
 .track .dot { width: 13px; height: 13px; border-radius: 50%; background: var(--bg); border: 1px solid var(--edge); transition: transform var(--dur-micro) var(--ease-enter); }
 .track .now .dot { background: var(--ok); border-color: var(--ok); }
-.track .n { font: 500 0.75rem/1 var(--font-mono); color: var(--ink-3); }
+.track .n { font: 500 0.75rem/1 var(--font-mono); color: var(--ink-2); }
 @media (max-width: 560px) { .track { grid-template-columns: repeat(3, minmax(0, 1fr)); } .track::before { display: none; } }
 .steps.panels > li { border-top: 0; padding-top: var(--space-3); }
 
